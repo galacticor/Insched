@@ -26,7 +26,7 @@ public class Appointment {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    String id_appointment;
+    String idAppointment;
 
     @Column(name = "description")
     String description;
@@ -34,7 +34,11 @@ public class Appointment {
     @Column(name = "date")
     LocalDate date;
 
-//    @OneToMany(mappedBy = "appointment")
-//    @Column(name = "list_event")
-//    List<Event> listEvent;
+    @OneToMany(mappedBy = "appointment")
+    @Column(name = "list_event")
+    List<Event> listEvent;
+
+    @ManyToOne
+    @JoinColumn(name = "id_discord")
+    Appointment appointment;
 }

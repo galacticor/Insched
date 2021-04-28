@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name="event")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class Event {
     @Id
     @Column(name="id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id_event;
+    private int idEvent;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
@@ -27,10 +28,9 @@ public class Event {
     @Column(name = "duration")
     private int duration;
 
-//    @ManyToOne
-//    @JoinColumn(name="id")
-//    @Column(name = "appointment")
-//    private Appointment appointment;
+    @ManyToOne
+    @JoinColumn(name="id_appointment")
+    private Appointment appointment;
 
     @Column(name = "is_available")
     private boolean isAvailable;
