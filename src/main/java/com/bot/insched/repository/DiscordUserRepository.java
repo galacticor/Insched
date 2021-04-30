@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiscordUserRepository extends JpaRepository<DiscordUser, String> {
     DiscordUser findByIdDiscord(String id);
-    DiscordUser findByGoogleToken(String token);
+    DiscordUser findByAccessToken(String token);
 }

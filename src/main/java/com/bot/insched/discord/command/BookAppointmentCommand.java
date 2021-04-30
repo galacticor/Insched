@@ -1,4 +1,4 @@
-package com.bot.insched.command;
+package com.bot.insched.discord.command;
 
 import com.bot.insched.service.EventService;
 import net.dv8tion.jda.api.events.Event;

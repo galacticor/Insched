@@ -1,18 +1,19 @@
-package com.bot.insched.command;
+package com.bot.insched.discord.command;
 
+import com.bot.insched.InschedApplication;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class errorCommand implements Command{
+public class HelloCommand implements Command{
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage("Command yang anda masukkan Salah \n" +
-                    "!help untuk mengetahui command setiap fitur yang tersedia").queue();
+            privateChannel.sendMessage("Hello!").queue();
         });
     }
 
     @Override
     public String getCommand() {
-        return "error";
+        return "hello";
     }
 }
