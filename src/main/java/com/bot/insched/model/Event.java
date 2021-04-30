@@ -17,7 +17,7 @@ public class Event {
     @Id
     @Column(name="id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idEvent;
+    private String idEvent;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
