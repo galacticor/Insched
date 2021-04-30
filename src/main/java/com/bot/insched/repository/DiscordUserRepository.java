@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DiscordUserRepository extends JpaRepository<DiscordUser, String> {
     DiscordUser findByIdDiscord(String id);
-    DiscordUser findByGoogleToken(String token);
+    DiscordUser findByAccessToken(String token);
 }

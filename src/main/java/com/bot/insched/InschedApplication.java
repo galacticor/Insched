@@ -1,6 +1,7 @@
 package com.bot.insched;
 
-import com.bot.insched.invoker.Invoker;
+import com.bot.insched.discord.invoker.Invoker;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;

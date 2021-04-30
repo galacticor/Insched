@@ -1,4 +1,4 @@
-package com.bot.insched.command;
+package com.bot.insched.discord.command;
 
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 

@@ -1,6 +1,6 @@
-package com.bot.insched.receiver;
+package com.bot.insched.discord.receiver;
 
-import com.bot.insched.command.*;
+import com.bot.insched.discord.command.*;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -18,6 +18,8 @@ public class Receiver extends ListenerAdapter {
         addCommand(new CreateEventCommand());
         addCommand(new CreateAppointmentCommand());
         addCommand(new ShowCalendarCommand());
+        addCommand(new HelpCommand());
+        addCommand(new errorCommand());
     }
 
 
@@ -40,10 +42,12 @@ public class Receiver extends ListenerAdapter {
         }
 
         String comm = message.split(" ")[0].replace("!","");
+        String[] msg = message.split(" ");
+        String[] args = Arrays.copyOfRange(msg, 1,msg.length);
         if (commands.containsKey(comm)) {
-            String[] msg = message.split(" ");
-            String[] args = Arrays.copyOfRange(msg, 1,msg.length);
             getCommand(comm).execute(args, event);
+        }else{
+            getCommand("error").execute(args,event);
         }
     }
 

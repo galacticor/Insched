@@ -1,6 +1,6 @@
-package com.bot.insched.invoker;
+package com.bot.insched.discord.invoker;
 
-import com.bot.insched.receiver.Receiver;
+import com.bot.insched.discord.receiver.Receiver;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

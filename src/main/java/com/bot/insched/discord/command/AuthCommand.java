@@ -1,8 +1,8 @@
-package com.bot.insched.command;
+package com.bot.insched.discord.command;
 
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class CreateEventCommand implements Command{
+public class AuthCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
@@ -11,6 +11,6 @@ public class CreateEventCommand implements Command{
 
     @Override
     public String getCommand() {
-        return null;
+        return "auth";
     }
 }
