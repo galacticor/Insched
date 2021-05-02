@@ -19,6 +19,7 @@ public class Receiver extends ListenerAdapter {
         addCommand(new CreateAppointmentCommand());
         addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
+        addCommand(new AuthCommand());
         addCommand(new errorCommand());
     }
 
