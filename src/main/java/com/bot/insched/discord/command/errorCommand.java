@@ -15,4 +15,9 @@ public class errorCommand implements Command{
     public String getCommand() {
         return "error";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }

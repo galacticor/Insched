@@ -18,21 +18,39 @@ public class CreateAppointmentCommand implements Command{
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        String desc = args[0];
-        String startDate = args[1];
-        String endDate = args[2];
-        String discordId = event.getAuthor().getId();
-        String response = appointmentService.createAppointment(desc, startDate, endDate, discordId);
+        if (args[0].equalsIgnoreCase("help")) {
+            sendPrivateMessage(getHelp(), event);
+        } else {
+            try {
+                String desc = args[0];
+                String startDate = args[1];
+                String endDate = args[2];
+                String discordId = event.getAuthor().getId();
+                String response = appointmentService.createAppointment(desc, startDate, endDate, discordId);
+                sendPrivateMessage(response, event);
 
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response);
-        });
+            } catch (Exception e) {
+                sendPrivateMessage("Argumen tidak valid. Gunakan perintah !createAppointment help untuk melihat detail argumen", event);
+            }
+        }
 
     }
 
     @Override
     public String getCommand() {
         return "createAppointment";
+    }
+
+    @Override
+    public String getHelp() {
+        return "!createAppointment <deskripsi_appointment> <tanggal_mulai> <tanggal_selesai>\n" +
+                "Contoh: !createAppointment DEMO_TP3 2021-05-03 2021-05-15";
+    }
+
+    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
+        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage(response).queue();
+        });
     }
 
 }

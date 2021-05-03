@@ -22,7 +22,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public String createAppointment(String desc, String start_date, String end_date, String discordId) {
+    public String createAppointment(String desc, String start_date, String end_date, String discordId) throws Exception{
         DiscordUser user = discordUserRepository.findByIdDiscord(discordId);
 
         if (user == null) {
@@ -37,7 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             return "Appointment yang dibuat hanya dapat dimulai dari hari ini dan selesai minimal hari ini!";
         }
 
-        Appointment appointment = new Appointment(desc, start_date, end_date);
+        Appointment appointment = new Appointment(desc, startDate, endDate);
         appointment.setOwner(user);
         appointmentRepository.save(appointment);
 
@@ -45,14 +45,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> getAllAppointment(String idDiscord) {
+    public List<Appointment> getAllUserAppointment(String idDiscord) {
         DiscordUser user = discordUserRepository.findByIdDiscord(idDiscord);
 
         List<Appointment> listAppointment = new ArrayList<>();
 
-        for (Appointment app: appointmentRepository.findAll()) {
-            if (app.getOwner() == user)
-                listAppointment.add(app);
+        for (Appointment app: appointmentRepository.findAllByOwner(user)) {
+            listAppointment.add(app);
         };
 
         return listAppointment;

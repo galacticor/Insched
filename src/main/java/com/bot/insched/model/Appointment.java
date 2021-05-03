@@ -21,10 +21,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Appointment {
 
-    public Appointment(String desc, String startDate, String endDate) {
+    public Appointment(String desc, LocalDate startDate, LocalDate endDate) {
         this.description = desc;
-        this.startDate = LocalDate.parse(startDate);
-        this.endDate = LocalDate.parse(endDate);
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     @Id
@@ -49,4 +49,9 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "appointment_owner")
     private DiscordUser owner;
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s %s", description, startDate.toString(),endDate.toString(),idAppointment.toString());
+    }
 }

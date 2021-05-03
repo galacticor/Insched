@@ -25,4 +25,9 @@ public class AuthTokenCommand implements Command {
     public String getCommand() {
         return "auth";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }

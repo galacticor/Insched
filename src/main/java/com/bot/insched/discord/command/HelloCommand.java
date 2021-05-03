@@ -15,4 +15,9 @@ public class HelloCommand implements Command{
     public String getCommand() {
         return "hello";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }

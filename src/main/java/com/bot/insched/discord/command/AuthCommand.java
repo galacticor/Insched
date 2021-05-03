@@ -23,4 +23,9 @@ public class AuthCommand implements Command {
     public String getCommand() {
         return "login";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }
