@@ -14,16 +14,13 @@ import java.util.Map;
 
 @Component
 public class Receiver {
-
     private final Map<String, Command> commands = new HashMap<>();
-
-    private GoogleService googleService;
 
     @Autowired
     public Receiver(
             GoogleService googleService
         ) {
-        addCommand(new HelloCommand());
+        addCommand(new HelloCommand(googleService));
         addCommand(new BookAppointmentCommand());
         addCommand(new CreateEventCommand());
         addCommand(new CreateAppointmentCommand());
@@ -35,7 +32,7 @@ public class Receiver {
     }
 
 
-    public void addCommand(Command command) {
+    private void addCommand(Command command) {
         if (command != null && !commands.containsKey(command.getCommand())) {
             commands.put(command.getCommand(), command);
         }

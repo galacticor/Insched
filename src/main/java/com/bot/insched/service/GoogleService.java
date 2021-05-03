@@ -5,4 +5,6 @@ public interface GoogleService {
 	String getAuthorizationUrl();
 
 	String authToken(String userId, String code);
+
+	String getUserInfo(String userId);
 }
