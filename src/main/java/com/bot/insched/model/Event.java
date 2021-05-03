@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="event")
@@ -14,10 +15,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Event {
 
+    public Event(String start_time, int duration, int capacity) {
+        this.startTime = LocalDateTime.parse(start_time);
+        this.endTime = this.startTime.plusMinutes(duration);
+        this.capacity = capacity;
+        this.isAvailable = true;
+    }
+
     @Id
     @Column(name="id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String idEvent;
+
+    @Column(name = "google_event_id")
+    private String idGoogleEvent;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
@@ -37,5 +48,17 @@ public class Event {
 
     @Column(name = "capacity")
     private int capacity;
+
+    @ManyToMany(mappedBy = "listEvent")
+    private List<DiscordUser> listAttendee;
+
+    public void updateAvailability() {
+        if (this.capacity < listAttendee.size()) {
+            isAvailable = true;
+            return;
+        }
+        isAvailable = false;
+        return;
+    }
 
 }

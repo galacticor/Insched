@@ -11,4 +11,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
     Appointment findByIdAppointment(String id);
     void deleteByIdAppointment(String id);
 
+
 }

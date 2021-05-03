@@ -42,6 +42,9 @@ public class DiscordUser {
     @Column(name = "list_appointment")
     private List<Appointment> listAppointment;
 
+    @ManyToMany
+    private List<Event> listEvent;
+
     public DiscordUser(String idDisc, StoredCredential credential) {
         this.idDiscord = idDisc;
         this.accessToken = credential.getAccessToken();

@@ -1,7 +1,6 @@
 package com.bot.insched.discord.command;
 
 import com.bot.insched.service.GoogleService;
-import com.bot.insched.service.GoogleServiceImpl;
 
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 

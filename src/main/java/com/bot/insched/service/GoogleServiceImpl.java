@@ -17,7 +17,7 @@ public class GoogleServiceImpl implements GoogleService{
 	public String authToken(String userId, String code) {
 		boolean response = manager.authToken(userId, code);
 		if (response) {
-			return "Succed";
+			return "Succeed";
 		} else {
 			return "Failed";
 		}

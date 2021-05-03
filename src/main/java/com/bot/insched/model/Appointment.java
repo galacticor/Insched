@@ -1,14 +1,17 @@
 package com.bot.insched.model;
 
 
+import jdk.vm.ci.meta.Local;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "appointment")
@@ -18,27 +21,32 @@ import java.util.List;
 @NoArgsConstructor
 public class Appointment {
 
-    public Appointment(String desc, String date) {
+    public Appointment(String desc, String startDate, String endDate) {
         this.description = desc;
-        this.date = LocalDate.parse(date);
+        this.startDate = LocalDate.parse(startDate);
+        this.endDate = LocalDate.parse(endDate);
     }
 
     @Id
-    @Column(updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    String idAppointment;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID idAppointment;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
-    @Column(name = "date")
-    LocalDate date;
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @OneToMany(mappedBy = "appointment")
     @Column(name = "list_event")
-    List<Event> listEvent;
+    private List<Event> listEvent;
 
     @ManyToOne
-    @JoinColumn(name = "id_discord")
-    Appointment appointment;
+    @JoinColumn(name = "appointment_owner")
+    private DiscordUser owner;
 }

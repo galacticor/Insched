@@ -21,12 +21,16 @@ public class Receiver {
 
     @Autowired
     public Receiver(
-            GoogleService googleService
+            GoogleService googleService,
+            AppointmentService appointmentService,
+            DiscordUserService discordUserService,
+            EventService eventService,
+            BookingAppointmentService bookingAppointmentService
         ) {
         addCommand(new HelloCommand());
         addCommand(new BookAppointmentCommand());
         addCommand(new CreateEventCommand());
-        addCommand(new CreateAppointmentCommand());
+        addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
         addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));

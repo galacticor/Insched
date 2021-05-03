@@ -1,6 +1,5 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.InschedApplication;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class HelloCommand implements Command{
