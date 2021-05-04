@@ -20,11 +20,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     DiscordUserRepository discordUserRepository;
 
+    @Override
+    public DiscordUser findUserById(String discordId) {
+        return discordUserRepository.findByIdDiscord(discordId);
+    }
+
 
     @Override
     public String createAppointment(String desc, String start_date, String end_date, String discordId) throws Exception{
-        DiscordUser user = discordUserRepository.findByIdDiscord(discordId);
-
+        DiscordUser user = findUserById(discordId);
         if (user == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }

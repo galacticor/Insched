@@ -32,10 +32,8 @@ public class ShowMyAppointment implements Command{
             info.setTitle("Your Appointment List");
             for (Appointment elem: listAppointment){
                 String desc = elem.getDescription();
-                String startDate = String.format("Start date: %s \n", elem.getStartDate().toString());
-                String endDate = String.format("End date: %s \n", elem.getEndDate().toString());
-                String token = String.format("Token: %s \n", elem.getIdAppointment());
-                info.addField(elem.getDescription(), startDate + endDate + token, false);
+                String field = handleInfo(elem);
+                info.addField(elem.getDescription(),field, false);
             }
 
             event.getAuthor().openPrivateChannel().queue(privateChannel -> {
@@ -60,4 +58,11 @@ public class ShowMyAppointment implements Command{
             privateChannel.sendMessage(response).queue();
         });
     };
+
+    private String handleInfo(Appointment app) {
+        String startDate = String.format("Start date: %s \n", app.getStartDate().toString());
+        String endDate = String.format("End date: %s \n", app.getEndDate().toString());
+        String token = String.format("Token: %s \n", app.getIdAppointment());
+        return startDate + endDate + token;
+    }
 }

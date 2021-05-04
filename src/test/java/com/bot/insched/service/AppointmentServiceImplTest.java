@@ -85,7 +85,7 @@ public class AppointmentServiceImplTest {
     public void testGetAllUserAppointment() {
         List<Appointment> appList = new ArrayList<>();
         appList.add(appointment);
-        when(appointmentRepository.findAll()).thenReturn(appList);
+        when(appointmentRepository.findAllByOwner(any())).thenReturn(appList);
         assertEquals(appointmentService.getAllUserAppointment("123456"), appList);
     }
 

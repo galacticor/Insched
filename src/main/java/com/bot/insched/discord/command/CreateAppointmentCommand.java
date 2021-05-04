@@ -4,6 +4,7 @@ import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
+
 public class CreateAppointmentCommand implements Command{
 
     private AppointmentService  appointmentService;
@@ -18,6 +19,7 @@ public class CreateAppointmentCommand implements Command{
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
+
         if (args[0].equalsIgnoreCase("help")) {
             sendPrivateMessage(getHelp(), event);
         } else {

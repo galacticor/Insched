@@ -13,7 +13,7 @@ public class Invoker extends ListenerAdapter {
     private Receiver receiver;
 
     @Override
-    public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
+    public void onPrivateMessageReceived(PrivateMessageReceivedEvent event)  {
         receiver.execute(event);
     }
 }
