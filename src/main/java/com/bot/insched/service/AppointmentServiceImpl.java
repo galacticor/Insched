@@ -2,14 +2,17 @@ package com.bot.insched.service;
 
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
+import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
+import com.bot.insched.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -19,6 +22,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     DiscordUserRepository discordUserRepository;
+
+    @Autowired
+    EventRepository eventRepository;
 
     @Override
     public DiscordUser findUserById(String discordId) {
@@ -59,6 +65,23 @@ public class AppointmentServiceImpl implements AppointmentService {
         };
 
         return listAppointment;
+    }
+
+    @Override
+    public Appointment findAppointmentById(String idAppointment) {
+        UUID uuid = UUID.fromString(idAppointment);
+        return appointmentRepository.findByIdAppointment(uuid);
+    }
+
+    @Override
+    public String createSlot(String jamMulai, int durasi, int kapasitas, Appointment appointment) {
+        Event event = new Event(jamMulai, durasi, kapasitas);
+        appointment.getListEvent().add(event);
+        event.setAppointment(appointment);
+        eventRepository.save(event);
+        appointmentRepository.save(appointment);
+
+        return "Slot berhasil dibuat!";
     }
 
     @Override

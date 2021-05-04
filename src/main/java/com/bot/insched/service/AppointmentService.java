@@ -10,4 +10,6 @@ public interface AppointmentService {
     void deleteAppointment();
     List<Appointment> getAllUserAppointment(String idDiscord);
     DiscordUser findUserById(String discordId);
+    Appointment findAppointmentById(String idAppointment);
+    String createSlot(String jamMulai, int durasi, int kapasitas, Appointment appointment);
 }

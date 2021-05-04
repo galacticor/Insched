@@ -42,7 +42,7 @@ public class Appointment {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "appointment")
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER)
     @Column(name = "list_event")
     private List<Event> listEvent;
 

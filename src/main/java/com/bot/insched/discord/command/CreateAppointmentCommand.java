@@ -16,7 +16,6 @@ public class CreateAppointmentCommand implements Command{
         this.discordUserService = discordUserService;
     }
 
-
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
 

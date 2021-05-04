@@ -3,10 +3,12 @@ package com.bot.insched.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="event")
@@ -15,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Event {
 
-    public Event(String start_time, int duration, int capacity) {
+    public Event(String start_time, int duration, int capacity)  {
         this.startTime = LocalDateTime.parse(start_time);
         this.endTime = this.startTime.plusMinutes(duration);
         this.capacity = capacity;
@@ -24,8 +26,9 @@ public class Event {
 
     @Id
     @Column(name="id", nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String idEvent;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID idEvent;
 
     @Column(name = "google_event_id")
     private String idGoogleEvent;
@@ -39,7 +42,7 @@ public class Event {
     @Column(name = "duration")
     private int duration;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_appointment")
     private Appointment appointment;
 
