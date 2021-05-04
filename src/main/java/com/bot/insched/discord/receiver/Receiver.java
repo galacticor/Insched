@@ -22,13 +22,15 @@ public class Receiver {
             AppointmentService appointmentService,
             DiscordUserService discordUserService,
             EventService eventService,
-            BookingAppointmentService bookingAppointmentService
+            BookingAppointmentService bookingAppointmentService,
+            ShowCalendarService showCalendarService
+
         ) {
         addCommand(new HelloCommand(googleService));
         addCommand(new BookAppointmentCommand());
         addCommand(new CreateEventCommand());
         addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
-        addCommand(new ShowCalendarCommand());
+        addCommand(new ShowCalendarCommand(showCalendarService));
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));

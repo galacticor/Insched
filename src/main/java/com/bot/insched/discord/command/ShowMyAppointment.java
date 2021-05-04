@@ -40,7 +40,6 @@ public class ShowMyAppointment implements Command{
                 privateChannel.sendMessage(info.build()).queue();
             });
         }
-
     }
 
     @Override
