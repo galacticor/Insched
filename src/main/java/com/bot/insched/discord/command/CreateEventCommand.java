@@ -18,4 +18,9 @@ public class CreateEventCommand implements Command{
     public String getCommand() {
         return "createEvent";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }

@@ -8,4 +8,6 @@ public interface Command {
 
     String getCommand();
 
+    String getHelp();
+
 }

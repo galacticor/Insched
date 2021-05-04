@@ -1,25 +1,40 @@
 package com.bot.insched.discord.receiver;
 
 import com.bot.insched.discord.command.*;
+import com.bot.insched.service.*;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Receiver extends ListenerAdapter {
-
+@Component
+public class Receiver {
     private final Map<String, Command> commands = new HashMap<>();
 
-    public Receiver() {
-        addCommand(new HelloCommand());
+    @Autowired
+    public Receiver(
+            GoogleService googleService,
+            AppointmentService appointmentService,
+            DiscordUserService discordUserService,
+            EventService eventService,
+            BookingAppointmentService bookingAppointmentService
+        ) {
+        addCommand(new HelloCommand(googleService));
         addCommand(new BookAppointmentCommand());
         addCommand(new CreateEventCommand());
-        addCommand(new CreateAppointmentCommand());
+        addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
         addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
+        addCommand(new AuthCommand(googleService));
+        addCommand(new AuthTokenCommand(googleService));
         addCommand(new errorCommand());
+        addCommand(new ShowMyAppointment(appointmentService, discordUserService));
+        addCommand(new CreateAppointmentSlot(appointmentService, discordUserService));
     }
 
 

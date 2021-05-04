@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.bot'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '1.8'
 
 configurations {
 	compileOnly {
@@ -32,9 +32,11 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation('org.mockito:mockito-inline:3.4.0')
 	compile 'net.dv8tion:JDA:4.2.1_262'
 	compile 'com.google.api-client:google-api-client:1.31.4'
     compile 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
+    compile 'com.google.apis:google-api-services-oauth2:v2-rev65-1.17.0-rc'
 }
 
 test {

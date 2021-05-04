@@ -19,4 +19,9 @@ public class ShowCalendarCommand implements Command{
     public String getCommand() {
         return "showCalendar";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }

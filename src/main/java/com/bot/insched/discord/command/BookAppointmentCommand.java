@@ -19,4 +19,9 @@ public class BookAppointmentCommand implements Command{
     public String getCommand() {
         return "bookAppointment";
     }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
 }
