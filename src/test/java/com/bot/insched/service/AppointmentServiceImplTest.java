@@ -2,6 +2,7 @@ package com.bot.insched.service;
 
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
+import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -21,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class AppointmentServiceImplTest {
 
     @Mock
@@ -28,6 +32,9 @@ public class AppointmentServiceImplTest {
 
     @Mock
     private DiscordUserRepository discordUserRepository;
+
+    @Mock
+    private EventService eventService;
 
     @InjectMocks
     AppointmentServiceImpl appointmentService;
@@ -87,6 +94,23 @@ public class AppointmentServiceImplTest {
         appList.add(appointment);
         when(appointmentRepository.findAllByOwner(any())).thenReturn(appList);
         assertEquals(appointmentService.getAllUserAppointment("123456"), appList);
+    }
+
+    @Test
+    public void testFindAppointmentById() {
+        when(appointmentRepository.findByIdAppointment(any()))
+                .thenReturn(appointment);
+        assertEquals(
+                appointmentService.findAppointmentById("0a22933c-eece-4c37-bccd-9e47d990ead1"),
+                appointment);
+    }
+
+    @Test
+    public void testCreateSlot() {
+        appointment.setListEvent(new ArrayList<Event>());
+        when(appointmentService.save(any())).thenReturn(appointment);
+        String res = appointmentService.createSlot("2024-03-24T15:30:00",30, 2, appointment);
+        assertEquals(res, "Slot berhasil dibuat!");
     }
 
 }
