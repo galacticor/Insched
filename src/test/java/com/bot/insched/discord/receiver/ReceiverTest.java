@@ -50,7 +50,8 @@ public class ReceiverTest {
 
     @BeforeAll
     public static void init() throws Exception {
-        Thread.sleep(2000); // Thread sleep for delaying test execution, prevent errors
+        // Thread sleep for delaying test execution, prevent errors
+//        Thread.sleep(2000);
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
         jda.retrieveUserById(userId).queue(user -> {
             user.openPrivateChannel().queue(privateChannel -> {
@@ -101,6 +102,13 @@ public class ReceiverTest {
     @Test
     public void testExecuteFalsePrefix() {
         message = new MessageBuilder().append(">myAppointment").build();
+        when(event.getMessage()).thenReturn(message);
+        receiver.execute(event);
+    }
+
+    @Test
+    public void testCommandNotExists() {
+        message = new MessageBuilder().append("!dummy").build();
         when(event.getMessage()).thenReturn(message);
         receiver.execute(event);
     }

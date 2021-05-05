@@ -31,7 +31,6 @@ public class CreateAppointmentCommand implements Command{
                 sendPrivateMessage(response, event);
 
             } catch (Exception e) {
-                System.out.println(e.toString());
                 sendPrivateMessage("Argumen tidak valid. Gunakan perintah !createAppointment help untuk melihat detail argumen", event);
             }
         }

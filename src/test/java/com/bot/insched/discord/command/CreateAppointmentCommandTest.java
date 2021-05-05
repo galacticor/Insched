@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureTestDatabase
@@ -42,6 +41,7 @@ public class CreateAppointmentCommandTest {
     private CreateAppointmentCommand command;
 
 
+    // Basic test setup
     private static JDA jda;
     private static String messageId = "838918902233956383";
     private static String userId = "461191404341821455";
