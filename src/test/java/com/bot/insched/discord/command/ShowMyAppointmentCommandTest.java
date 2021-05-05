@@ -49,7 +49,6 @@ public class ShowMyAppointmentCommandTest {
     private static long responseNumber = 8;
     private static String channelId = "836884748667846718";
     private static Message message;
-    private PrivateMessageReceivedEvent event;
     private static User jdaUser;
 
     LocalDate start;
@@ -68,7 +67,7 @@ public class ShowMyAppointmentCommandTest {
         });
     }
 
-    
+
     @BeforeEach
     public void setUp() {
         start = LocalDate.parse("2021-10-08");
