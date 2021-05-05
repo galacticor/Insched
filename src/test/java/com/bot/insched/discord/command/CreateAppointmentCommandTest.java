@@ -10,31 +10,39 @@ import com.google.api.client.auth.oauth2.StoredCredential;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.context.event.annotation.BeforeTestExecution;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureTestDatabase
 public class CreateAppointmentCommandTest {
 
-    @Spy
+    @Autowired
     private AppointmentRepository appointmentRepository;
 
-    @Spy
+    @Autowired
     private DiscordUserRepository discordUserRepository;
 
     @Mock
@@ -51,11 +59,15 @@ public class CreateAppointmentCommandTest {
     private static String channelId = "836884748667846718";
     private static Message message;
 
-
+    @Mock
     private PrivateMessageReceivedEvent event;
+
+    @InjectMocks
     private CreateAppointmentCommand command;
+
     private DiscordUser user;
     private StoredCredential storedCredential;
+    private static User jdaUser;
 
 
     @BeforeAll
@@ -64,6 +76,7 @@ public class CreateAppointmentCommandTest {
         jda.retrieveUserById(userId).queue(user -> {
             user.openPrivateChannel().queue(privateChannel -> {
                 privateChannel.retrieveMessageById(messageId).queue(message1 -> {
+                    jdaUser = privateChannel.getUser();
                     message = message1;
                 });
             });
@@ -73,26 +86,25 @@ public class CreateAppointmentCommandTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        command = new CreateAppointmentCommand(appointmentService, discordUserService);
         storedCredential = new StoredCredential();
         storedCredential.setAccessToken("dummy");
         storedCredential.setRefreshToken("dummy");
-        event = new PrivateMessageReceivedEvent(jda, responseNumber, message);
-        user = discordUserRepository.findByIdDiscord(userId);
+        lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        lenient().when(event.getMessage()).thenReturn(message);
     }
 
     @Test
     public void testCorrectArgument() throws Exception {
-        String[] args = {"testing_lagi", "2024-05-03", "2024-05-03"};
+        String[] args = {"testing_new", "2024-05-03", "2024-05-03"};
         LocalDate start = LocalDate.parse(args[1]);
         LocalDate end = LocalDate.parse(args[2]);
         Appointment appointment = new Appointment(args[0], start, end);
         appointment.setOwner(user);
-        appointmentRepository.save(appointment);
+        appointmentService.save(appointment);
 
-        when(appointmentService.createAppointment(anyString(), anyString(), anyString(), anyString()))
-        .thenReturn("Appointment berhasil dibuat!");
-
+        lenient().when(appointmentService.createAppointment(any(), any(), any(), any()))
+                .thenReturn("Appointment berhasil dibuat");
+        lenient().when(appointmentService.findUserById(anyString())).thenReturn(user);
         command.execute(args, event);
     }
 
@@ -106,6 +118,8 @@ public class CreateAppointmentCommandTest {
     @Test
     public void testHelpArgument() {
         String[] args = {"help"};
+        lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        lenient().when(event.getMessage()).thenReturn(message);
         command.execute(args, event);
     }
 

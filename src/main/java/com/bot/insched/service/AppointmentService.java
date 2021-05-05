@@ -12,4 +12,5 @@ public interface AppointmentService {
     DiscordUser findUserById(String discordId);
     Appointment findAppointmentById(String idAppointment);
     String createSlot(String jamMulai, int durasi, int kapasitas, Appointment appointment);
+    Appointment save(Appointment appointment);
 }

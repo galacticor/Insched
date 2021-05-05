@@ -31,6 +31,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         return discordUserRepository.findByIdDiscord(discordId);
     }
 
+    public Appointment save(Appointment app) {
+        return appointmentRepository.save(app);
+    }
+
 
     @Override
     public String createAppointment(String desc, String start_date, String end_date, String discordId) throws Exception{
@@ -49,7 +53,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = new Appointment(desc, startDate, endDate);
         appointment.setOwner(user);
-        appointmentRepository.save(appointment);
+        save(appointment);
 
         return "Appointment berhasil dibuat!";
     }
