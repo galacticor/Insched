@@ -2,8 +2,6 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
-import com.bot.insched.repository.AppointmentRepository;
-import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -13,20 +11,12 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
-import org.springframework.test.context.event.annotation.BeforeTestExecution;
-
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,17 +29,17 @@ import static org.mockito.Mockito.when;
 @AutoConfigureTestDatabase
 public class CreateAppointmentCommandTest {
 
-    @Autowired
-    private AppointmentRepository appointmentRepository;
-
-    @Autowired
-    private DiscordUserRepository discordUserRepository;
-
     @Mock
     private AppointmentService appointmentService;
 
     @Mock
     private DiscordUserService discordUserService;
+
+    @Mock
+    private PrivateMessageReceivedEvent event;
+
+    @InjectMocks
+    private CreateAppointmentCommand command;
 
 
     private static JDA jda;
@@ -58,12 +48,6 @@ public class CreateAppointmentCommandTest {
     private static long responseNumber = 8;
     private static String channelId = "836884748667846718";
     private static Message message;
-
-    @Mock
-    private PrivateMessageReceivedEvent event;
-
-    @InjectMocks
-    private CreateAppointmentCommand command;
 
     private DiscordUser user;
     private StoredCredential storedCredential;
@@ -75,8 +59,8 @@ public class CreateAppointmentCommandTest {
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
         jda.retrieveUserById(userId).queue(user -> {
             user.openPrivateChannel().queue(privateChannel -> {
+                jdaUser = privateChannel.getUser();
                 privateChannel.retrieveMessageById(messageId).queue(message1 -> {
-                    jdaUser = privateChannel.getUser();
                     message = message1;
                 });
             });
@@ -86,11 +70,19 @@ public class CreateAppointmentCommandTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+        Thread.sleep(500);
+        init();
         storedCredential = new StoredCredential();
         storedCredential.setAccessToken("dummy");
         storedCredential.setRefreshToken("dummy");
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
         lenient().when(event.getMessage()).thenReturn(message);
+    }
+
+    @AfterAll
+    public static void teardown() throws Exception {
+        jda.shutdownNow();
+        Thread.sleep(2000);
     }
 
     @Test
@@ -118,8 +110,6 @@ public class CreateAppointmentCommandTest {
     @Test
     public void testHelpArgument() {
         String[] args = {"help"};
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
         command.execute(args, event);
     }
 

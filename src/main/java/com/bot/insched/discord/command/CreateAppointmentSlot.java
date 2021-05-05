@@ -3,6 +3,7 @@ package com.bot.insched.discord.command;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class CreateAppointmentSlot implements Command{
             } catch (IndexOutOfBoundsException e) {
                 sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(),event);
+                sendPrivateMessage(e.toString(), event);
             }
         }
     }
