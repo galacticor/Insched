@@ -1,9 +1,5 @@
 package com.bot.insched.discord.invoker;
 
-import com.bot.insched.discord.command.Command;
-import com.bot.insched.discord.command.CreateAppointmentSlot;
-import com.bot.insched.discord.command.ShowMyAppointment;
-import com.bot.insched.discord.receiver.Receiver;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
 import net.dv8tion.jda.api.JDA;
@@ -20,9 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,12 +37,6 @@ public class InvokerTest {
 
     @Mock
     AppointmentService appointmentService;
-
-    @Mock
-    Receiver receiver;
-
-    @InjectMocks
-    ShowMyAppointment comm;
 
 
 
@@ -75,16 +63,17 @@ public class InvokerTest {
         });
     }
 
+    // // Thread.sleep to delay execution and prevent error
     @BeforeEach
     public void setUp() throws Exception{
-        Thread.sleep(500);
-        init();
+        Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
         start = LocalDate.parse("2024-05-03");
         end = LocalDate.parse("2024-05-10");
         app = new Appointment("testing", start, end);
     }
 
+    // Thread to delay and prevent error
     @AfterAll
     public static void tearDown() throws Exception {
         jda.shutdownNow();

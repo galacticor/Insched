@@ -3,7 +3,7 @@ package com.bot.insched.discord.receiver;
 import com.bot.insched.discord.command.Command;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
-import jdk.vm.ci.meta.Local;
+import com.google.api.services.oauth2.Oauth2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -52,24 +52,17 @@ public class ReceiverTest {
 
     @BeforeAll
     public static void init() throws Exception {
-        // Thread sleep for delaying test execution, prevent errors
-//        Thread.sleep(2000);
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
         jda.retrieveUserById(userId).queue(user -> {
-            user.openPrivateChannel().queue(privateChannel -> {
-                jdaUser = privateChannel.getUser();
-                privateChannel.retrieveMessageById(messageId).queue(message1 -> {
-                    message = message1;
-                });
-            });
+            jdaUser = user;
         });
-
+        message = new MessageBuilder().append("dummy message").build();
     }
 
+    // Thread.sleep to delay execution and prevent error
     @BeforeEach
     public void setUp() throws Exception{
-        Thread.sleep(500);
-        init();
+        Thread.sleep(1000);
         lenient().when(event.getMessage()).thenReturn(message);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
     }

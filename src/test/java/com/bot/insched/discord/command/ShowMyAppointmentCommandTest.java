@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 
 import java.time.LocalDate;
@@ -67,6 +66,7 @@ public class ShowMyAppointmentCommandTest {
         });
     }
 
+    // Thread.sleep to delay execution and prevent error
     @AfterAll
     public static void teardown() throws Exception {
         jda.shutdownNow();
@@ -76,8 +76,8 @@ public class ShowMyAppointmentCommandTest {
 
     @BeforeEach
     public void setUp() throws Exception{
-        Thread.sleep(500);
-        init();
+        Thread.sleep(1000);
+//        init();
         start = LocalDate.parse("2021-10-08");
         end = LocalDate.parse("2021-12-10");
         lenient().when(privateMessageReceivedEvent.getAuthor()).thenReturn(jdaUser);

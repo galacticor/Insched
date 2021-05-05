@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
@@ -52,7 +51,6 @@ public class CreateAppointmentSlotCommandTest {
     private Appointment app;
 
 
-
     @BeforeAll
     public static void init() throws Exception{
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
@@ -61,10 +59,10 @@ public class CreateAppointmentSlotCommandTest {
         });
     }
 
+    // Thread.sleep to delay execution and prevent error
     @BeforeEach
     public void setUp() throws Exception{
-        Thread.sleep(500);
-        init();
+        Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
         start = LocalDate.parse("2024-05-03");
         end = LocalDate.parse("2024-05-10");

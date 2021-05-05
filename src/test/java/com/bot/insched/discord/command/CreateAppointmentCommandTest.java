@@ -7,6 +7,7 @@ import com.bot.insched.service.DiscordUserService;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -17,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,9 +31,6 @@ public class CreateAppointmentCommandTest {
 
     @Mock
     private AppointmentService appointmentService;
-
-    @Mock
-    private DiscordUserService discordUserService;
 
     @Mock
     private PrivateMessageReceivedEvent event;
@@ -60,20 +56,16 @@ public class CreateAppointmentCommandTest {
     public static void init() throws Exception {
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
         jda.retrieveUserById(userId).queue(user -> {
-            user.openPrivateChannel().queue(privateChannel -> {
-                jdaUser = privateChannel.getUser();
-                privateChannel.retrieveMessageById(messageId).queue(message1 -> {
-                    message = message1;
-                });
-            });
+           jdaUser = user;
         });
+        message = new MessageBuilder().append("dummy message").build();
     }
 
 
+    // Thread.sleep to delay and prevent error
     @BeforeEach
     public void setUp() throws Exception {
-        Thread.sleep(500);
-        init();
+        Thread.sleep(1000);
         storedCredential = new StoredCredential();
         storedCredential.setAccessToken("dummy");
         storedCredential.setRefreshToken("dummy");

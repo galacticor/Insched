@@ -24,12 +24,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     DiscordUserRepository discordUserRepository;
 
     @Autowired
-    EventRepository eventRepository;
+    EventService eventService;
 
     @Override
     public DiscordUser findUserById(String discordId) {
         return discordUserRepository.findByIdDiscord(discordId);
     }
+
 
     public Appointment save(Appointment app) {
         return appointmentRepository.save(app);
@@ -82,14 +83,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         Event event = new Event(jamMulai, durasi, kapasitas);
         appointment.getListEvent().add(event);
         event.setAppointment(appointment);
-        eventRepository.save(event);
-        appointmentRepository.save(appointment);
+        eventService.save(event);
+        save(appointment);
 
         return "Slot berhasil dibuat!";
     }
 
-    @Override
-    public void deleteAppointment() {
-
-    }
 }
