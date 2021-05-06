@@ -3,6 +3,7 @@ package com.bot.insched.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,9 +16,10 @@ import java.time.Instant;
 @Entity
 @Table(name="discord_user")
 @Data
-@Getter
-@Setter
+// @Getter
+// @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class DiscordUser {
 
     @Id

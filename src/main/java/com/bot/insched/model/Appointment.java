@@ -1,7 +1,5 @@
 package com.bot.insched.model;
 
-
-import jdk.vm.ci.meta.Local;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
