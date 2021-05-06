@@ -1,4 +1,4 @@
-image: gradle:6.8.3-jdk11
+image: gradle:6.8.3-jdk8
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -18,8 +18,8 @@ checkstyle:
 test:
   stage: test
   script:
-    - ./gradlew test
-    - ./gradlew :jacocoTestReport
+    - gradle :check
+    - gradle :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
   only:
     - master
