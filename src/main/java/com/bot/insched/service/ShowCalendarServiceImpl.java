@@ -14,24 +14,20 @@ public class ShowCalendarServiceImpl implements ShowCalendarService{
     private GoogleAPIManager manager;
 
     public String getCalService(String userId){
+        Event event;
+        String summary = null;
+
         Calendar service = manager.getCalendarService(userId);
 
         // Retrieve an event
-        Event event = null;
         try {
             event = service.events().get("primary", "eventId").execute();
-        } catch (IOException e) {
+            summary = event.getSummary();
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-
-
         }
 
-        System.out.println(event.getSummary());
-
-        return event.getSummary();
-
-
-
+        return summary;
     }
 
 }
