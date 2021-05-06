@@ -29,12 +29,13 @@ import com.google.api.services.oauth2.model.Userinfoplus;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -46,37 +47,40 @@ public class GoogleAPIManager {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
-    private static final String CLIENT_SECRET = "oksfFIk_VzNxb9G08Iup7_1U";
-    private static final String CLIENT_ID = "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com";
-    private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+    private static String CLIENT_SECRET;
+    private static String CLIENT_ID; 
+    private static String REDIRECT_URI;
 
-	@Setter
-	@Getter
 	private DiscordUserRepository userRepo;
+	private Builder builder;
 
 	private GoogleAuthorizationCodeFlow flow;
 	private HttpTransport httpTransport;
 
 	@Autowired
 	public GoogleAPIManager(
-			DiscordUserRepository repository
-		){
+			DiscordUserRepository repository,
+			Builder builder,
+			@Value("${client_id}") String clientId,
+			@Value("${client_secret}") String clientSecret,
+			@Value("${redirect_uri}") String redirectUri)
+	{
 		this.userRepo = repository;
+		this.builder =  builder;
 		init();
 	}
 
 	public void init(){	
 		try {
-			// userRepo = new DiscordUserRepository();
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			DataStoreFactory dataStore = new JPADataStoreFactory(userRepo);			
-			flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPES)
+			flow = builder.getCodeFlowBuilder(httpTransport, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPES)
 					.setDataStoreFactory(dataStore)
 					.setApprovalPrompt("force")
 					.setAccessType("offline")
 					.build();	
 		} catch (Exception e){
-			log.error("------ Error when configurate");
+			log.error("------ Error when configurate: {}", e);
 		}
 		
 	}
@@ -110,26 +114,15 @@ public class GoogleAPIManager {
 				log.warn("------ Couldn't retrieve Google credential for user {}", userId);
 				return null;
 			}
-			GoogleCredential credential = new GoogleCredential.Builder()
+			GoogleCredential credential = builder.getCredentialBuilder()
 					.setTransport(httpTransport)
 					.setJsonFactory(JSON_FACTORY)
 					.setClientSecrets(CLIENT_ID, CLIENT_SECRET)
-					.addRefreshListener(new CredentialRefreshListener() {
-						public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) {
-							log.error("OAuth token refresh error: {}", tokenErrorResponse);
-						}
-
-						public void onTokenResponse(Credential credential, TokenResponse tokenResponse) {
-							log.debug("OAuth token was refreshed");
-						}
-					})
 					.addRefreshListener(new DataStoreCredentialRefreshListener(userId, flow.getCredentialDataStore()))
 					.build();
 
 			credential.setRefreshToken(storedCredential.getRefreshToken());
 			credential.setAccessToken(storedCredential.getAccessToken());
-			log.debug("Credential: Get Credential for user : {}", credential.getServiceAccountUser());
-
 			return credential;
 		} catch (Exception e) {
 			log.warn("Credential: Error while refreshing or saving the token for user {} : {}", userId, e.getMessage());
@@ -141,10 +134,10 @@ public class GoogleAPIManager {
 	public Calendar getCalendarService (String userId){
 		GoogleCredential credential = getCredential(userId);
 		if (credential == null) {
-			return null;
+			return null; // belom login (gada di database)
 		}
 
-		Calendar service = new Calendar.Builder(httpTransport, JSON_FACTORY, credential)
+		Calendar service = builder.getCalendarBuilder(httpTransport, JSON_FACTORY, credential)
 	            .setApplicationName(APPLICATION_NAME)
 	            .build();
 
@@ -153,8 +146,11 @@ public class GoogleAPIManager {
 
 	public Oauth2 getOauth2Service (String userId) {
 		GoogleCredential credential = getCredential(userId);
-		Oauth2 service = new Oauth2.Builder(httpTransport, JSON_FACTORY, credential)
-				.setApplicationName("Oauth2")
+		if (credential == null) {
+			return null; // belom login (gada di database)
+		}
+		Oauth2 service = builder.getOauth2Builder(httpTransport, JSON_FACTORY, credential)
+				.setApplicationName(APPLICATION_NAME)
 				.build();
 
 		return service;

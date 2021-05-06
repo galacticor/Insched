@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Invoker extends ListenerAdapter {
-	@Autowired
+    @Autowired
     private Receiver receiver;
 
     @Override

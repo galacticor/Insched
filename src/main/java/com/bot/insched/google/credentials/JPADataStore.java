@@ -42,20 +42,19 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
 
     @Override
     public boolean containsKey(String idDiscord) throws IOException {
-        // return repository.findByIdDiscord(idDiscord).isPresent();
-        return false;
+        return repository.findByIdDiscord(idDiscord) != null;
+        // return false;
     }
 
     @Override
     public boolean containsValue(StoredCredential value) throws IOException {
-        // return repository.findByAccessToken(value.getAccessToken()).isPresent();
-        return false;
+        return repository.findByAccessToken(value.getAccessToken()) != null;
+        // return false;
     }
 
     @Override
     public Set<String> keySet() throws IOException {
-        // return repository.findAllKeys();
-        return null;
+        return repository.findAllKeys();
     }
 
     @Override

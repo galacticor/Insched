@@ -77,6 +77,7 @@ public class ShowMyAppointmentCommandTest {
     @BeforeEach
     public void setUp() throws Exception{
         Thread.sleep(1000);
+
         start = LocalDate.parse("2021-10-08");
         end = LocalDate.parse("2021-12-10");
         lenient().when(privateMessageReceivedEvent.getAuthor()).thenReturn(jdaUser);

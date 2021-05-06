@@ -1,0 +1,61 @@
+image: gradle:6.8.3-jdk11
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - test
+  - deploy
+
+checkstyle:
+  stage: test
+  script: gradle checkstyleMain
+  allow_failure: true
+
+test:
+  stage: test
+  script:
+    - gradle :check
+    - gradle :jacocoTestReport
+    - cat build/reports/jacoco/test/html/index.html
+  only:
+    - master
+    - prod
+  services:
+    - "postgres:latest"
+  variables:
+    DATABASE_URL: jdbc:postgresql://postgres:5432/postgres
+    POSTGRES_USER: postgres
+    POSTGRES_DB: postgres
+    POSTGRES_PASSWORD: postgres
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+    SPRING_DATASOURCE_USER: postgres
+    SPRING_DATASOURCE_PASSWORD: postgres
+    DISCORD_TOKEN: token-discord
+
+
+Production:
+  image: ruby:2.4
+  stage: deploy
+  before_script:
+    - gem install dpl
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+    - export HEROKU_API_KEY=$HEROKU_API_KEY
+    - heroku run --app $HEROKU_APP_NAME migrate
+  environment:
+    name: production
+    url: $HEROKU_APP_HOST
+  only:
+    - master
+    - prod
+
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  paths:
+    - $GRADLE_USER_HOME/wrapper
+    - $GRADLE_USER_HOME/caches
