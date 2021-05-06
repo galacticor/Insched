@@ -31,9 +31,8 @@ public class GoogleServiceImpl implements GoogleService{
 		if (userinfo == null) {
 			return "";
 		}
-
-		String email = userinfo.getEmail();
-		return email;
+		
+		return userinfo.getEmail();
 
 	}
 }
