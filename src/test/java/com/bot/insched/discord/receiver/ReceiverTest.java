@@ -27,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 public class ReceiverTest {
 
     @InjectMocks

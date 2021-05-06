@@ -1,9 +1,6 @@
 package com.bot.insched.model;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> ce0c91a68484e1dee8aaf75e3a20c413be6980c7
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

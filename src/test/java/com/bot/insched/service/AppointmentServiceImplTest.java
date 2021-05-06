@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 public class AppointmentServiceImplTest {
 
     @Mock
