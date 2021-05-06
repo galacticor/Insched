@@ -3,7 +3,6 @@ package com.bot.insched.discord.receiver;
 import com.bot.insched.discord.command.Command;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
-import com.google.api.services.oauth2.Oauth2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;

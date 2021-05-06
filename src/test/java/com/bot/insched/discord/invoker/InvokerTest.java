@@ -1,5 +1,6 @@
 package com.bot.insched.discord.invoker;
 
+import com.bot.insched.discord.receiver.Receiver;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
 import net.dv8tion.jda.api.JDA;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class InvokerTest {
-    @InjectMocks
+    @Autowired
     Invoker invoker;
 
     @Mock
@@ -37,6 +39,7 @@ public class InvokerTest {
 
     @Mock
     AppointmentService appointmentService;
+
 
 
 
@@ -82,7 +85,7 @@ public class InvokerTest {
 
     @Test
     public void testExecute() throws Exception{
-        message = new MessageBuilder().append("!myAppointment").build();
+        message = new MessageBuilder().append(">pppp").build();
         List<Appointment> listApp = new ArrayList<>();
         listApp.add(app);
 
