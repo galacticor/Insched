@@ -1,9 +1,7 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.model.Appointment;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.ShowCalendarService;
-import com.bot.insched.discord.command.ShowCalendarCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,22 +16,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.core.annotation.Order;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureTestDatabase
-public class ShowCalendarCommandTest {
-
+class ShowCalendarCommandTest {
     @Mock
     ShowCalendarService showCalendarService;
 
@@ -65,11 +58,13 @@ public class ShowCalendarCommandTest {
         });
     }
 
+    // Thread.sleep to delay execution and prevent error
     @AfterAll
     public static void teardown() throws Exception {
         jda.shutdownNow();
         Thread.sleep(2000);
     }
+
 
     @BeforeEach
     public void setUp() throws Exception{
@@ -79,19 +74,20 @@ public class ShowCalendarCommandTest {
         lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
     }
 
+
     @Test
-    public void testOpening() {
+     void testOpening() {
         String[] args = {"Selamat Datang di fitur showCalendar"};
         showCalendarCommand.execute(args, privateMessageReceivedEvent);
     }
 
     @Test
-    public void testGetHelp() {
-        assertEquals(null, showCalendarCommand.getHelp());
+    void testGetHelp() {
+        assertNull(showCalendarCommand.getHelp());
     }
 
     @Test
-    public void testGetCommand() {
+     void testGetCommand() {
         assertEquals("showCalendar", showCalendarCommand.getCommand());
     }
 }
