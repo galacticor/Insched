@@ -1,5 +1,5 @@
-package com.bot.insched.discord.command;
-
+package com.bot.insched.service;
+import com.bot.insched.discord.command.ShowCalendarCommand;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.ShowCalendarService;
 import net.dv8tion.jda.api.JDA;
@@ -17,14 +17,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.lenient;
 
 
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureTestDatabase
-class ShowCalendarCommandTest {
+@SpringBootTest
+public class ShowCalendarServiceTest {
     @Mock
     ShowCalendarService showCalendarService;
 
@@ -34,9 +36,6 @@ class ShowCalendarCommandTest {
     @Mock
     PrivateMessageReceivedEvent privateMessageReceivedEvent;
 
-    @Mock
-    Event event;
-
     private static JDA jda;
     private static String messageId = "838918902233956383";
     private static String userId = "461191404341821455";
@@ -45,6 +44,9 @@ class ShowCalendarCommandTest {
     private static Message message;
     private static User jdaUser;
 
+
+    @Mock
+    Event event;
 
     @BeforeAll
     public static void init() throws Exception {
@@ -75,27 +77,9 @@ class ShowCalendarCommandTest {
         lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
     }
 
-
     @Test
-     void testOpening() {
-        String[] args = {"Selamat Datang di fitur showCalendar"};
-        showCalendarCommand.execute(args, privateMessageReceivedEvent);
+    public void testGetCalService() {
+        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
+        assertNull(showCalendarService.getCalService(userId));
     }
-
-    @Test
-    void testGetHelp() {
-        assertNull(showCalendarCommand.getHelp());
-    }
-
-    @Test
-     void testGetCommand() {
-        assertEquals("showCalendar", showCalendarCommand.getCommand());
-    }
-
-//    @Test
-//    void testgetCal(){
-//        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
-//        String[] args = {showCalendarService.getCalService(userId)};
-//        showCalendarCommand.execute(args,privateMessageReceivedEvent);
-//    }
 }

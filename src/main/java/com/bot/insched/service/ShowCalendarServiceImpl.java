@@ -27,7 +27,7 @@ public class ShowCalendarServiceImpl implements ShowCalendarService{
             e.printStackTrace();
         }
 
-        return summary;
+        return null;
     }
 
 }

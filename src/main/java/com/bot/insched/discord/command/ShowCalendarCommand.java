@@ -18,6 +18,7 @@ public class ShowCalendarCommand implements Command{
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         sendPrivateMessage("Selamat Datang di fitur showCalendar", event);
         sendPrivateMessage(event.getMessage().getAuthor().getId(), event);
+        sendPrivateMessage(event.getAuthor().getId(), event);
 
         String userId = event.getMessage().getAuthor().getId();
         if(service.getCalService(userId)!=null) {
