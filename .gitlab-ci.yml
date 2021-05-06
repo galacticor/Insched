@@ -21,10 +21,6 @@ test:
     - gradle :check
     - gradle :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
-  only:
-    - master
-    - prod
-    - dev/fikri3
   services:
     - "postgres:latest"
   variables:

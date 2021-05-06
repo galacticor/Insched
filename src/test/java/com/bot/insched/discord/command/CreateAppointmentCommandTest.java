@@ -42,10 +42,7 @@ public class CreateAppointmentCommandTest {
 
     // Basic test setup
     private static JDA jda;
-    private static String messageId = "838918902233956383";
     private static String userId = "461191404341821455";
-    private static long responseNumber = 8;
-    private static String channelId = "836884748667846718";
     private static Message message;
 
     private DiscordUser user;

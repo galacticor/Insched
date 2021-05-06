@@ -48,6 +48,8 @@ public class GoogleAPIManager {
     private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
     private static String CLIENT_SECRET;
+
+    @Value("${client_id}")
     private static String CLIENT_ID; 
     private static String REDIRECT_URI;
 
@@ -57,13 +59,23 @@ public class GoogleAPIManager {
 	private GoogleAuthorizationCodeFlow flow;
 	private HttpTransport httpTransport;
 
-	@Autowired
+//	@Autowired
+//	public GoogleAPIManager(
+//			DiscordUserRepository repository,
+//			Builder builder,
+//			@Value("${client_id}") String clientId,
+//			@Value("${client_secret}") String clientSecret,
+//			@Value("${redirect_uri}") String redirectUri)
+//	{
+//		this.userRepo = repository;
+//		this.builder =  builder;
+//		init();
+//	}
+
+		@Autowired
 	public GoogleAPIManager(
 			DiscordUserRepository repository,
-			Builder builder,
-			@Value("${client_id}") String clientId,
-			@Value("${client_secret}") String clientSecret,
-			@Value("${redirect_uri}") String redirectUri)
+			Builder builder)
 	{
 		this.userRepo = repository;
 		this.builder =  builder;

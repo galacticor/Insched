@@ -39,11 +39,7 @@ public class CreateAppointmentSlotCommandTest {
 
     // Basic setup
     private static JDA jda;
-    private static String messageId = "838918902233956383";
     private static String userId = "461191404341821455";
-    private static long responseNumber = 8;
-    private static String channelId = "836884748667846718";
-    private static Message message;
     private static User jdaUser;
 
     private String[] args;
@@ -64,11 +60,11 @@ public class CreateAppointmentSlotCommandTest {
     @BeforeEach
     public void setUp() throws Exception{
         Thread.sleep(1000);
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
         start = LocalDate.parse("2024-05-03");
         end = LocalDate.parse("2024-05-10");
         app = new Appointment("testing", start, end);
         args = new String[]{"dummy_token", "2024-05-03", "15:30", "30", "2"};
+        lenient().when(event.getAuthor()).thenReturn(jdaUser);
     }
 
     @AfterAll
@@ -82,7 +78,6 @@ public class CreateAppointmentSlotCommandTest {
         when(appointmentService.findAppointmentById(any())).thenReturn(app);
         when(command.handleCreation(args))
                 .thenReturn("Slot berhasil dibuat!");
-
         command.execute(args, event);
     }
 
@@ -109,8 +104,8 @@ public class CreateAppointmentSlotCommandTest {
 
     @Test
     public void testGetHelp() {
-        String expected = "!createSlot <token_appointment> <tanggal> <jam_mulai> <durasi (menit)> <kapasitas_attendee>\n" +
-                "Contoh: !createSlot 1234-rsrf0-ir9-3 2021-05-20 15:30 30 2";
+        String expected = "!createSlot <token_appointment> <tanggal> <jam_mulai> <durasi (menit)> <kapasitas_attendee>" +
+                "\nContoh: !createSlot 1234-rsrf0-ir9-3 2021-05-20 15:30 30 2";
 
         assertEquals(expected, command.getHelp());
     }

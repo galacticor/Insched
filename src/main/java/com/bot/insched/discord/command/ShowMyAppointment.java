@@ -22,22 +22,16 @@ public class ShowMyAppointment implements Command{
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        String idDiscord = event.getAuthor().getId();
-        List<Appointment> listAppointment = appointmentService.getAllUserAppointment(idDiscord);
 
         if (args.length != 0 && args[0].equalsIgnoreCase("help")) {
-            sendPrivateMessage("test help", event);
+            sendPrivateMessage("Fitur yang digunakan untuk melihat appointment mu.", event);
         } else {
-            InschedEmbed info = new InschedEmbed();
-            info.setTitle("Your Appointment List");
-            for (Appointment elem: listAppointment){
-                String desc = elem.getDescription();
-                String field = handleInfo(elem);
-                info.addField(elem.getDescription(),field, false);
-            }
+            String idDiscord = event.getAuthor().getId();
+            List<Appointment> listAppointment = appointmentService.getAllUserAppointment(idDiscord);
+            InschedEmbed embed = embedHandler(listAppointment);
 
             event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-                privateChannel.sendMessage(info.build()).queue();
+                privateChannel.sendMessage(embed.build()).queue();
             });
         }
 
@@ -59,7 +53,18 @@ public class ShowMyAppointment implements Command{
         });
     };
 
-    private String handleInfo(Appointment app) {
+    private InschedEmbed embedHandler(List<Appointment> appointmentList) {
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Your Appointment List");
+        for (Appointment elem: appointmentList){
+            String desc = elem.getDescription();
+            String field = fieldHandler(elem);
+            embed.addField(desc, field, false);
+        }
+        return embed;
+    }
+
+    private String fieldHandler(Appointment app) {
         String startDate = String.format("Start date: %s \n", app.getStartDate().toString());
         String endDate = String.format("End date: %s \n", app.getEndDate().toString());
         String token = String.format("Token: %s \n", app.getIdAppointment());

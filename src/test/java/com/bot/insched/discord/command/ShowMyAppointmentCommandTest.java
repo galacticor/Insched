@@ -43,10 +43,7 @@ public class ShowMyAppointmentCommandTest {
 
     // Basic test setup
     private static JDA jda;
-    private static String messageId = "838918902233956383";
     private static String userId = "461191404341821455";
-    private static long responseNumber = 8;
-    private static String channelId = "836884748667846718";
     private static Message message;
     private static User jdaUser;
 
@@ -57,12 +54,7 @@ public class ShowMyAppointmentCommandTest {
     public static void init() throws Exception {
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
         jda.retrieveUserById(userId).queue(user -> {
-            user.openPrivateChannel().queue(privateChannel -> {
-                jdaUser = privateChannel.getUser();
-                privateChannel.retrieveMessageById(messageId).queue(message1 -> {
-                    message = message1;
-                });
-            });
+            jdaUser = user;
         });
     }
 
@@ -85,7 +77,6 @@ public class ShowMyAppointmentCommandTest {
     }
 
     @Test
-    @Order(1)
     public void testExecute() {
         String[] args = {};
         Appointment app = new Appointment("ngetest", start, end);
@@ -97,20 +88,17 @@ public class ShowMyAppointmentCommandTest {
     }
 
     @Test
-    @Order(2)
     public void testHelp() {
         String[] args = {"help"};
         showMyAppointment.execute(args, privateMessageReceivedEvent);
     }
 
     @Test
-    @Order(3)
     public void testGetHelp() {
         assertEquals(showMyAppointment.getHelp(), null);
     }
 
     @Test
-    @Order(4)
     public void testGetCommand() {
         assertEquals(showMyAppointment.getCommand(), "myAppointment");
     }

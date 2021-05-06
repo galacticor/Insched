@@ -1,6 +1,7 @@
 package com.bot.insched.model;
 
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

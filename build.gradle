@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'jacoco'
+	id 'checkstyle'
 }
 
 group = 'com.bot'
@@ -20,6 +21,7 @@ repositories {
 	maven { // on kotlin dsl use `maven("https://m2.dv8tion.net/releases")` instead
 		url "https://m2.dv8tion.net/releases"
 	}
+
 	jcenter()
 }
 
