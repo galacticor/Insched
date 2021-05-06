@@ -18,12 +18,13 @@ checkstyle:
 test:
   stage: test
   script:
-    - gradle :check
-    - gradle :jacocoTestReport
+    - ./gradlew test
+    - ./gradlew :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
   only:
     - master
     - prod
+    - dev/fikri3
   services:
     - "postgres:latest"
   variables:
