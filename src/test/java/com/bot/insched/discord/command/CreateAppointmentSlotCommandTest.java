@@ -119,9 +119,4 @@ public class CreateAppointmentSlotCommandTest {
         String expected = "createSlot";
         assertEquals(command.getCommand(), expected);
     }
-
-
-
-
-
 }

@@ -45,7 +45,6 @@ class ShowCalendarCommandTest {
     private static Message message;
     private static User jdaUser;
 
-
     @BeforeAll
     public static void init() throws Exception {
         jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
