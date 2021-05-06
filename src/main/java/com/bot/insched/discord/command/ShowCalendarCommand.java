@@ -22,16 +22,14 @@ public class ShowCalendarCommand implements Command{
         String userId = event.getMessage().getAuthor().getId();
         if(service.getCalService(userId)!=null) {
             String reply = service.getCalService(userId);
-            event.getAuthor().openPrivateChannel().queue(privateChannel ->
-                privateChannel.sendMessage(reply).queue();
-            );
+            sendPrivateMessage(reply,event);
         }
         else sendPrivateMessage("Ups.. kalender kamu belum ada, masukkan perintah !login", event);
 
 
     }
 
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
+    public void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
         event.getAuthor().openPrivateChannel().queue(privateChannel -> {
             privateChannel.sendMessage(response).queue();
         });
