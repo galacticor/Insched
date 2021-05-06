@@ -17,9 +17,8 @@ public class ShowCalendarCommand implements Command{
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage("Selamat Datang di fitur showCalendar").queue();
-        });
+        sendPrivateMessage("Selamat Datang di fitur showCalendar", event);
+        sendPrivateMessage(event.getMessage().getAuthor().getId(), event);
 
         String userId = event.getMessage().getAuthor().getId();
         if(service.getCalService(userId)!=null) {
@@ -28,11 +27,16 @@ public class ShowCalendarCommand implements Command{
                 privateChannel.sendMessage(reply).queue();
             });
         }
-        else event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage("Ups.. kalender kamu belum ada, masukkan perintah !login untuk login").queue();
-        });
+        else sendPrivateMessage("Ups.. kalender kamu belum ada, masukkan perintah !login", event);
+
 
     }
+
+    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
+        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage(response).queue();
+        });
+    };
 
 
     @Override
