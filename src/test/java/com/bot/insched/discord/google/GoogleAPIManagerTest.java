@@ -15,6 +15,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.oauth2.Oauth2;
@@ -29,8 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -52,7 +52,33 @@ public class GoogleAPIManagerTest{
 
 	@BeforeEach
 	public void setUp(){
-		// manager = new GoogleAPIManager(userRepo);
+		ReflectionTestUtils.setField(manager, "CLIENT_ID", "client_id");
+		ReflectionTestUtils.setField(manager, "CLIENT_SECRET", "client_secret");
+		ReflectionTestUtils.setField(manager, "REDIRECT_URI", "redirect_uri");
+	}
+
+	@Test
+	public void testInitFailed(){
+		Builder builder = mock(Builder.class);
+
+		ReflectionTestUtils.setField(manager, "builder", builder);
+
+		when(builder.getCodeFlowBuilder(any(HttpTransport.class), any(JsonFactory.class), anyString(), anyString(), anyList())).thenReturn(null);
+		manager.init();
+	}
+
+	@Test
+	public void testInitSuccess()throws IOException {
+		Builder builder = mock(Builder.class);
+		GoogleAuthorizationCodeFlow.Builder flowBuilder = mock(GoogleAuthorizationCodeFlow.Builder.class);
+
+		ReflectionTestUtils.setField(manager, "builder", builder);
+
+		when(builder.getCodeFlowBuilder(any(HttpTransport.class), any(JsonFactory.class), anyString(), anyString(), anyList())).thenReturn(flowBuilder);
+		when(flowBuilder.setDataStoreFactory(any(DataStoreFactory.class))).thenReturn(flowBuilder);
+		when(flowBuilder.setApprovalPrompt(anyString())).thenReturn(flowBuilder);
+		when(flowBuilder.setAccessType(anyString())).thenReturn(flowBuilder);
+		manager.init();
 	}
 
 	@Test
@@ -61,7 +87,7 @@ public class GoogleAPIManagerTest{
 		ReflectionTestUtils.setField(manager, "flow", flow);
 
 		when(flow.newAuthorizationUrl()).thenReturn(codeUrl);
-		when(codeUrl.setRedirectUri(REDIRECT_URI)).thenReturn(codeUrl);
+		when(codeUrl.setRedirectUri(anyString())).thenReturn(codeUrl);
 		when(codeUrl.build()).thenReturn(url);
 
 		assertNotEquals(manager.getAuthorizationUrl(),"bukan_url");
@@ -76,8 +102,10 @@ public class GoogleAPIManagerTest{
 		GoogleTokenResponse response = mock(GoogleTokenResponse.class);		
 		GoogleAuthorizationCodeTokenRequest token = mock( GoogleAuthorizationCodeTokenRequest.class);
 
+		ReflectionTestUtils.setField(manager, "flow", flow);
+
 		when(flow.newTokenRequest(code)).thenReturn(token);
-		when(token.setRedirectUri(REDIRECT_URI)).thenReturn(token);
+		when(token.setRedirectUri(anyString())).thenReturn(token);
 		when(token.execute()).thenReturn(response);
 		when(flow.createAndStoreCredential(response, userId)).thenReturn(cred);
 

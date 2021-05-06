@@ -29,6 +29,9 @@ import com.google.api.services.oauth2.model.Userinfoplus;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +47,9 @@ public class GoogleAPIManager {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
-    private static final String CLIENT_SECRET = "oksfFIk_VzNxb9G08Iup7_1U";
-    private static final String CLIENT_ID = "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com";
-    private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+    private static String CLIENT_SECRET;
+    private static String CLIENT_ID; 
+    private static String REDIRECT_URI;
 
 	private DiscordUserRepository userRepo;
 	private Builder builder;
@@ -57,8 +60,11 @@ public class GoogleAPIManager {
 	@Autowired
 	public GoogleAPIManager(
 			DiscordUserRepository repository,
-			Builder builder
-		){
+			Builder builder,
+			@Value("${client_id}") String clientId,
+			@Value("${client_secret}") String clientSecret,
+			@Value("${redirect_uri}") String redirectUri)
+	{
 		this.userRepo = repository;
 		this.builder =  builder;
 		init();
@@ -68,13 +74,13 @@ public class GoogleAPIManager {
 		try {
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			DataStoreFactory dataStore = new JPADataStoreFactory(userRepo);			
-			flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPES)
+			flow = builder.getCodeFlowBuilder(httpTransport, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPES)
 					.setDataStoreFactory(dataStore)
 					.setApprovalPrompt("force")
 					.setAccessType("offline")
 					.build();	
 		} catch (Exception e){
-			log.error("------ Error when configurate");
+			log.error("------ Error when configurate: {}", e);
 		}
 		
 	}

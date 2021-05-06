@@ -2,12 +2,14 @@ package com.bot.insched.google;
 
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 
 
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 public class Builder {
@@ -22,5 +24,14 @@ public class Builder {
 
 	public Oauth2.Builder getOauth2Builder(HttpTransport httpTransport, JsonFactory jsonFactory, GoogleCredential credential){
 		return new Oauth2.Builder(httpTransport, jsonFactory, credential);
+	}
+
+	public GoogleAuthorizationCodeFlow.Builder getCodeFlowBuilder(
+		HttpTransport httpTransport, 
+		JsonFactory jsonFactory,
+		String client_id,
+		String client_secret,		
+		List<String> scopes){
+		return new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, client_id, client_secret, scopes);
 	}
 }

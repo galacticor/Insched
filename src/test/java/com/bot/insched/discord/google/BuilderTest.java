@@ -1,7 +1,9 @@
 package com.bot.insched.google;
 
 import com.google.api.services.oauth2.Oauth2;
+import com.google.api.services.oauth2.Oauth2Scopes;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -56,6 +58,19 @@ public class BuilderTest{
 		GoogleCredential cred = mock(GoogleCredential.class);
 
 		Oauth2.Builder oauth2 = builder.getOauth2Builder(transport, jsonFactory, cred);
+
+		assertEquals(oauth2.getTransport(), transport);
+		assertEquals(oauth2.getJsonFactory(), jsonFactory);
+	}
+
+	@Test
+	public void testGetFlowBuilder() {
+		HttpTransport transport = mock(HttpTransport.class);
+		JsonFactory jsonFactory = mock(JsonFactory.class);
+		GoogleCredential cred = mock(GoogleCredential.class);
+		List<String> scopes= Arrays.asList(Oauth2Scopes.USERINFO_EMAIL);
+
+		GoogleAuthorizationCodeFlow.Builder oauth2 = builder.getCodeFlowBuilder(transport, jsonFactory, "secret", "id", scopes);
 
 		assertEquals(oauth2.getTransport(), transport);
 		assertEquals(oauth2.getJsonFactory(), jsonFactory);

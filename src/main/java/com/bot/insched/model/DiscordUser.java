@@ -16,8 +16,8 @@ import java.time.Instant;
 @Entity
 @Table(name="discord_user")
 @Data
-// @Getter
-// @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiscordUser {

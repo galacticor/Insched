@@ -30,7 +30,7 @@ public class CreateAppointmentSlot implements Command{
             } catch (IndexOutOfBoundsException e) {
                 sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(),event);
+                sendPrivateMessage(e.getMessage(), event);
             }
         }
     }
@@ -46,7 +46,7 @@ public class CreateAppointmentSlot implements Command{
                 "Contoh: !createSlot 1234-rsrf0-ir9-3 2021-05-20 15:30 30 2";
     }
 
-    private String handleCreation(String[] args) throws Exception {
+    public String handleCreation(String[] args) throws Exception {
         String token = args[0];
         LocalDate tanggal = LocalDate.parse(args[1]);
         LocalDateTime jam = LocalDateTime.parse(args[1] + "T" + args[2] + ":00");

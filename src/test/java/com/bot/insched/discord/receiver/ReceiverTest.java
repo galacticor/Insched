@@ -1,69 +1,86 @@
 package com.bot.insched.discord.receiver;
 
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.api.entities.Message;
 import com.bot.insched.discord.command.Command;
 import com.bot.insched.discord.command.HelloCommand;
-import com.bot.insched.discord.command.errorCommand;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Field;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ReceiverTest {
-	@Mock
-	PrivateMessageReceivedEvent event;
 
-	@Mock
-	Message message;
+    @InjectMocks
+    Receiver receiver;
 
-	@InjectMocks
-	Receiver receiver;
+    @Mock
+    PrivateMessageReceivedEvent event;
 
-	private String commandMessage = "!hello";
-	private String unknownMessage = "!lol message";
+    @Mock
+    HelloCommand helloCommand;
 
-	@BeforeEach
-    public void setUp() {
-    	
+    @BeforeEach
+    public void setUp() throws Exception{
+        Map<String, Command> commands = new HashMap<>();
+        commands.put("success", helloCommand);
+        commands.put("error", helloCommand);
+
+        // Get field instance
+        Field field = Receiver.class.getDeclaredField("commands");
+        field.setAccessible(true); // Suppress Java language access checking
+         
+        // Remove "final" modifier
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+         
+        // Set value
+        field.set(receiver, commands);
     }
 
-    // @Test
-    // public void testExecuteSuccess(){
-    // 	HelloCommand hello = mock(HelloCommand.class);
-    // 	Command error = mock(errorCommand.class);
-    // 	receiver.addCommand(hello);
-    // 	receiver.addCommand(error);
+    @Test
+    public void testExecuteSuccess(){
+        Message message = new MessageBuilder().append("!success").build();
+        when(event.getMessage()).thenReturn(message);
+        doNothing().when(helloCommand).execute(any(String[].class), any(PrivateMessageReceivedEvent.class));
 
-    // 	String[] args = new String[]{"message"};
-    // 	when(event.getMessage()).thenReturn(message);
-    // 	when(message.getContentRaw()).thenReturn(commandMessage);
-    // 	doNothing().when(hello).execute(args, event);
+        receiver.execute(event);
+    }
 
-    // 	receiver.execute(event);
-    // }
+    @Test
+    public void testExecuteFailed(){
+        Message message = new MessageBuilder().append("!haha").build();
+        when(event.getMessage()).thenReturn(message);
+        doNothing().when(helloCommand).execute(any(String[].class), any(PrivateMessageReceivedEvent.class));
 
-    // @Test
-    // public void testExecuteFailed(){
-    // 	String[] args = new String[]{"message"};
-    // 	when(event.getMessage()).thenReturn(message);
-    // 	when(message.getContentRaw()).thenReturn(unknownMessage);
-    // 	doNothing().when(errorCommand).execute(args, event);
+        receiver.execute(event);
+    }
 
-    // 	receiver.execute(event);
-    // }
+    @Test
+    public void testExecuteFalse(){
+        Message message = new MessageBuilder().append("haha").build();
+        when(event.getMessage()).thenReturn(message);
 
+        receiver.execute(event);
+    }
 }
