@@ -14,11 +14,13 @@ public class CreateEventCommand implements Command{
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
+
     public CreateEventCommand(EventService eventService,
                               DiscordUserService discordUserService){
         this.eventService = eventService;
         this.discordUserService = discordUserService;
     }
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         sendPrivateMessage("Selamat Datang di fitur Create Event \n" +
@@ -36,10 +38,11 @@ public class CreateEventCommand implements Command{
             }
         }
     }
+
     private String handleCreation(String[] args,String idUser) throws Exception {
         String id = args[0];
         String summary = args[1];
-        DateTime dateTimeMulai = new DateTime(args[2]+"T" + args[3] + ":00-07:00");
+        DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00-07:00");
         EventDateTime eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai)
                 .setTimeZone("America/Los_Angeles");
         DateTime dateTimeSelesai = new DateTime(args[4]+"T" + args[5] + ":00-07:00");
@@ -54,6 +57,7 @@ public class CreateEventCommand implements Command{
         event.setDescription(deskripsi);
         return eventService.createEventService(idUser,event);
     }
+
     @Override
     public String getCommand() {
         return "createEvent";
@@ -61,9 +65,9 @@ public class CreateEventCommand implements Command{
 
     @Override
     public String getHelp() {
-        return "!createEvent <summary> <token_event> <tanggal_mulai> <jam_mulai> " +
-                "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n" +
-                "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
+        return "!createEvent <summary> <token_event> <tanggal_mulai> <jam_mulai> "
+                + "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n"
+                + "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
     }
 
     private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
