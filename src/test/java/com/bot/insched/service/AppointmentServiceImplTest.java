@@ -71,11 +71,11 @@ public class AppointmentServiceImplTest {
         assertEquals(response, "70bab1b3-7e8e-4b3e-84b5-e95901e1925d");
     }
 
-    @Test
-    public void testGetUserTokenNull() {
-        String response = appointmentService.getUserToken(user);
-        assertEquals(response, anyString());
-    }
+//    @Test
+//    public void testGetUserTokenNull() {
+//        String response = appointmentService.getUserToken(user);
+//        assertEquals(response, anyString());
+//    }
 
     @Test
     public void testCreateSlotNoUser() {

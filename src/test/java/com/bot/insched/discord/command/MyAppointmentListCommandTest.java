@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@Order
 public class MyAppointmentListCommandTest {
 
     @InjectMocks
@@ -56,6 +58,7 @@ public class MyAppointmentListCommandTest {
             jdaUser = user;
         });
         message = new MessageBuilder().append("dummy").build();
+        Thread.sleep(2000);
     }
 
     @BeforeEach
@@ -72,12 +75,14 @@ public class MyAppointmentListCommandTest {
 
 
     @Test
+    @Order(1)
     public void testExecuteHelp() throws Exception {
         String[] args = {"help"};
         command.execute(args, event);
     }
 
     @Test
+    @Order(2)
     public void testExecuteSuccess() {
         String[] args = {"2021-05-08"};
         List<Event> eventList = new ArrayList<>();
@@ -96,6 +101,7 @@ public class MyAppointmentListCommandTest {
     }
 
     @Test
+    @Order(3)
     public void testGetCommand() {
         String res = command.getCommand();
         String expected = "myAppointmentList";

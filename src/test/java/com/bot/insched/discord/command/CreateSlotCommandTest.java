@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.annotation.Order;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@Order
 public class CreateSlotCommandTest {
 
     @InjectMocks
@@ -51,6 +53,8 @@ public class CreateSlotCommandTest {
             jdaUser = user;
         });
         message = new MessageBuilder().append("dummy").build();
+        Thread.sleep(2000);
+
     }
 
     @AfterAll
@@ -67,30 +71,35 @@ public class CreateSlotCommandTest {
     }
 
     @Test
+    @Order(1)
     public void testExecuteSuccess() throws Exception{
         String[] args = {"2021-05-08", "15:30", "30", "2", "DEMO_TP"};
         command.execute(args, event);
     }
 
     @Test
+    @Order(2)
     public void testInsufficientArgumentExecution() throws Exception {
         String[] args = {"2021-05-08", "15:30", "30", "2"};
         command.execute(args, event);
     }
 
     @Test
+    @Order(3)
     public void testNotLoggedIn() throws Exception {
         String[] args = {"2021-05-08", "15:30", "30", "2", "DEMO_TP"};
         command.execute(args, event);
     }
 
     @Test
+    @Order(4)
     public void testGetCommand() {
         String res = command.getCommand();
         assertEquals(res, "createSlot");
     }
 
     @Test
+    @Order(5)
     public void testGetHelp() {
         String res = command.getHelp();
         String expected = "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi" +

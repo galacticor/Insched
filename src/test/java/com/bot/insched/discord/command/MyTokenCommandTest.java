@@ -9,10 +9,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -54,6 +51,8 @@ public class MyTokenCommandTest {
             jdaUser = user;
         });
         message = new MessageBuilder().append("dummy").build();
+        Thread.sleep(2000);
+
     }
 
     @AfterAll
@@ -70,6 +69,7 @@ public class MyTokenCommandTest {
     }
 
     @Test
+//    @Order(1)
     public void testTokenNotExists() {
         String[] args = {};
         when(discordUserService.findByUserId(anyString())).thenReturn(null);
@@ -77,6 +77,7 @@ public class MyTokenCommandTest {
     }
 
     @Test
+//    @Order(2)
     public void testTokenExists() {
         String[] args = {};
         DiscordUser dummy = new DiscordUser();
@@ -87,12 +88,14 @@ public class MyTokenCommandTest {
     }
 
     @Test
+//    @Order(3)
     public void testGetCommand() {
         String res = myTokenCommand.getCommand();
         assertEquals(res, "myToken");
     }
 
     @Test
+//    @Order(4)
     public void testGetHelp() {
         String res = myTokenCommand.getHelp();
         assertEquals(res, "!myToken");

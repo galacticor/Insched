@@ -10,6 +10,8 @@ stages:
   - test
   - deploy
 
+
+
 checkstyle:
   stage: test
   script: gradle checkstyleMain
@@ -18,8 +20,8 @@ checkstyle:
 test:
   stage: test
   script:
-    - gradle :check
-    - gradle :jacocoTestReport
+    - ./gradlew check
+    - ./gradle :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
   services:
     - "postgres:latest"
