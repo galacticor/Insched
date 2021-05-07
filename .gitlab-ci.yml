@@ -12,13 +12,14 @@ stages:
 
 checkstyle:
   stage: test
-  script: gradle checkstyleMain
+  script: ./gradlew checkstyleMain
   allow_failure: true
 
 test:
   stage: test
   script:
-    - gradle :jacocoTestReport
+    - ./gradlew :check
+    - ./gradlew :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
 
 Production:
