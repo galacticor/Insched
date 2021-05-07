@@ -18,7 +18,7 @@ public class Receiver {
             DiscordUserService discordUserService, EventService eventService,
             BookingAppointmentService bookingAppointmentService) {
         addCommand(new HelloCommand(googleService));
-        addCommand(new BookAppointmentCommand());
+        addCommand(new BookAppointmentCommand(bookingAppointmentService));
         addCommand(new CreateEventCommand());
         addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
