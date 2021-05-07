@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'jacoco'
+	id 'checkstyle'
 }
 
 group = 'com.bot'
@@ -20,6 +21,7 @@ repositories {
 	maven { // on kotlin dsl use `maven("https://m2.dv8tion.net/releases")` instead
 		url "https://m2.dv8tion.net/releases"
 	}
+
 	jcenter()
 }
 
@@ -28,17 +30,28 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation('org.mockito:mockito-inline:3.4.0')
+
 	compile 'net.dv8tion:JDA:4.2.1_262'
 	compile 'com.google.api-client:google-api-client:1.31.4'
     compile 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
     compile 'com.google.apis:google-api-services-oauth2:v2-rev65-1.17.0-rc'
+	compile files('libs/checkstyle-8.37.jar')
 }
+
+checkstyle {
+	toolVersion = '8.37'
+	config = resources.text.fromFile(rootProject.file('config/checkstyle/google_checkstyle.xml'))
+	maxWarnings = 0
+}
+
 
 test {
 	useJUnitPlatform()

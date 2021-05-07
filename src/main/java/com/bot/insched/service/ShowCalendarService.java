@@ -1,7 +1,7 @@
 package com.bot.insched.service;
 
-import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Event;
 
 public interface ShowCalendarService {
-    String getCalService(String userId);
+    Event getCalService(String userId);
 }

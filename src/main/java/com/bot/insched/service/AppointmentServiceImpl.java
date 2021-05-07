@@ -4,15 +4,11 @@ import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
-import com.bot.insched.repository.DiscordUserRepository;
-import com.bot.insched.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -21,72 +17,65 @@ public class AppointmentServiceImpl implements AppointmentService {
     AppointmentRepository appointmentRepository;
 
     @Autowired
-    DiscordUserRepository discordUserRepository;
+    DiscordUserService discordUserService;
 
     @Autowired
     EventService eventService;
 
+
+
     @Override
-    public DiscordUser findUserById(String discordId) {
-        return discordUserRepository.findByIdDiscord(discordId);
-    }
-
-
     public Appointment save(Appointment app) {
         return appointmentRepository.save(app);
     }
 
 
     @Override
-    public String createAppointment(String desc, String start_date, String end_date, String discordId) throws Exception{
-        DiscordUser user = findUserById(discordId);
+    public String getUserToken(DiscordUser discordUser) {
+        if (discordUser.getAppointment() == null) {
+            Appointment app = new Appointment();
+            app.setOwner(discordUser);
+            discordUser.setAppointment(app);
+            appointmentRepository.save(app);
+            discordUserService.save(discordUser);
+        }
+        return discordUser.getAppointment().getIdAppointment().toString();
+    }
+
+
+    @Override
+    public String createSlot(String deskripsi, String waktu, int durasi, int kapasitas, String idDiscord)
+    throws Exception{
+
+        LocalDateTime mulai = LocalDateTime.parse(waktu);
+        DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
-            return "Silahkan login terlebih dahulu menggunakan !login";
+            throw new Exception("Kamu belum login. Silahkan login terlebih dahulu!");
+        }
+        List<Event> userAppointment = user.getAppointment().getListEvent();
+
+        for (Event e: userAppointment) {
+            if (e.getStartTime().isEqual(mulai))
+                throw new Exception("Jam sudah memiliki slot! Silahkan pilih jam/tanggal lain");
         }
 
-        LocalDate startDate = LocalDate.parse(start_date);
-        LocalDate endDate = LocalDate.parse(end_date);
-        LocalDate now = LocalDate.now();
+        Event event = new Event(mulai.toString(), durasi, kapasitas, deskripsi);
+        DiscordUser discordUser = discordUserService.findByUserId(idDiscord);
+        Appointment app = appointmentRepository.findAppointmentByOwner(discordUser);
 
-        if (startDate.isBefore(now) || endDate.isBefore(now) || endDate.isBefore(startDate)) {
-            return "Appointment yang dibuat hanya dapat dimulai dari hari ini dan selesai minimal hari ini!";
-        }
-
-        Appointment appointment = new Appointment(desc, startDate, endDate);
-        appointment.setOwner(user);
-        save(appointment);
-
-        return "Appointment berhasil dibuat!";
-    }
-
-    @Override
-    public List<Appointment> getAllUserAppointment(String idDiscord) {
-        DiscordUser user = discordUserRepository.findByIdDiscord(idDiscord);
-
-        List<Appointment> listAppointment = new ArrayList<>();
-
-        for (Appointment app: appointmentRepository.findAllByOwner(user)) {
-            listAppointment.add(app);
-        };
-
-        return listAppointment;
-    }
-
-    @Override
-    public Appointment findAppointmentById(String idAppointment) {
-        UUID uuid = UUID.fromString(idAppointment);
-        return appointmentRepository.findByIdAppointment(uuid);
-    }
-
-    @Override
-    public String createSlot(String jamMulai, int durasi, int kapasitas, Appointment appointment) {
-        Event event = new Event(jamMulai, durasi, kapasitas);
-        appointment.getListEvent().add(event);
-        event.setAppointment(appointment);
+        app.getListEvent().add(event);
+        event.setAppointment(app);
         eventService.save(event);
-        save(appointment);
+        save(app);
 
         return "Slot berhasil dibuat!";
+    }
+
+    @Override
+    public List<Event> getAllAppointment(String idDiscord) {
+        DiscordUser user = discordUserService.findByUserId(idDiscord);
+        Appointment app = appointmentRepository.findAppointmentByOwner(user);
+        return app.getListEvent();
     }
 
 }

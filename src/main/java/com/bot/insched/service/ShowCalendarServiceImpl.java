@@ -12,22 +12,26 @@ import java.io.IOException;
 public class ShowCalendarServiceImpl implements ShowCalendarService{
     @Autowired
     private GoogleAPIManager manager;
+    Event event;
 
-    public String getCalService(String userId){
-        Event event;
-        String summary = null;
-
+    public Event getCalService(String userId){
         Calendar service = manager.getCalendarService(userId);
-
         // Retrieve an event
         try {
-            event = service.events().get("primary", "eventId").execute();
-            summary = event.getSummary();
-        } catch (IOException | NullPointerException e) {
+            event = service.events().get("primary","eventId").execute();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return event;
     }
+
+    public String getCalSummary(Event event){
+        return event.getSummary();
+    }
+
+    public String getCalDescription(Event event){
+        return event.getDescription();
+    }
+
 
 }
