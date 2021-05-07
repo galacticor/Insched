@@ -1,6 +1,6 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.repository.EventRepository;
@@ -31,7 +31,7 @@ public class EventServiceImplTest {
     private EventRepository eventRepository;
 
     @Mock
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
 
     @InjectMocks
     EventServiceImpl eventService;

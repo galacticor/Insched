@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Builder {
-
     public GoogleCredential.Builder getCredentialBuilder() {
         return new GoogleCredential.Builder();
     }

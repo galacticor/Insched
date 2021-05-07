@@ -1,7 +1,7 @@
 
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.repository.EventRepository;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventServiceImpl implements EventService {
     @Autowired
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
     @Autowired
     EventRepository eventRepository;
 
