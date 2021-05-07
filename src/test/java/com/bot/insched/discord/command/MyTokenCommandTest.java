@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -36,7 +35,6 @@ public class MyTokenCommandTest {
 
     @Mock
     AppointmentService appointmentService;
-
 
     // Basic test setup
     private static JDA jda;
@@ -61,15 +59,13 @@ public class MyTokenCommandTest {
         Thread.sleep(2000);
     }
 
-
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
     }
 
     @Test
-//    @Order(1)
     public void testTokenNotExists() {
         String[] args = {};
         when(discordUserService.findByUserId(anyString())).thenReturn(null);
@@ -77,7 +73,6 @@ public class MyTokenCommandTest {
     }
 
     @Test
-//    @Order(2)
     public void testTokenExists() {
         String[] args = {};
         DiscordUser dummy = new DiscordUser();
@@ -88,14 +83,12 @@ public class MyTokenCommandTest {
     }
 
     @Test
-//    @Order(3)
     public void testGetCommand() {
         String res = myTokenCommand.getCommand();
         assertEquals(res, "myToken");
     }
 
     @Test
-//    @Order(4)
     public void testGetHelp() {
         String res = myTokenCommand.getHelp();
         assertEquals(res, "!myToken");

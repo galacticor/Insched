@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShowCalendarServiceImpl implements ShowCalendarService{
+public class ShowCalendarServiceImpl implements ShowCalendarService {
     @Autowired
     private GoogleAPIManager manager;
     Event event;
@@ -19,7 +19,7 @@ public class ShowCalendarServiceImpl implements ShowCalendarService{
         Calendar service = manager.getCalendarService(userId);
         // Retrieve an event
         try {
-            event = service.events().get("primary","eventId").execute();
+            event = service.events().get("primary", "eventId").execute();
         } catch (IOException e) {
             e.printStackTrace();
         }catch (NullPointerException e){
@@ -37,6 +37,4 @@ public class ShowCalendarServiceImpl implements ShowCalendarService{
         event.getDescription();
         return null;
     }
-
-
 }

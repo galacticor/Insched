@@ -20,5 +20,4 @@ public class DiscordUserServiceImpl implements DiscordUserService {
         return discordUserRepository.save(user);
     }
 
-
 }

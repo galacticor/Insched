@@ -28,7 +28,6 @@ public class ShowCalendarCommand implements Command {
 //        }
 //        else sendPrivateMessage("Ups.. kalender kamu belum ada, masukkan perintah !login", event);
         InschedEmbed response = handleEmbed();
-
         event.getAuthor().openPrivateChannel().queue(privateChannel -> {
             privateChannel.sendMessage(response.build()).queue();
         });
