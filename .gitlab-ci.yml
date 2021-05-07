@@ -21,7 +21,7 @@ test:
   stage: test
   script:
     - ./gradlew check
-    - ./gradle :jacocoTestReport
+    - ./gradlew :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
   services:
     - "postgres:latest"
