@@ -31,7 +31,6 @@ public class Receiver {
         addCommand(new UpdateEventCommand(eventService,discordUserService));
         addCommand(new DeleteEventCommand(eventService,discordUserService));
         //addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
-        addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));
