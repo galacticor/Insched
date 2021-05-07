@@ -18,10 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.annotation.Order;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,47 +60,42 @@ public class CreateSlotCommandTest {
         Thread.sleep(2000);
     }
 
-
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        lenient().when(event.getMessage()).thenReturn(message);
     }
 
     @Test
-    @Order(1)
-    public void testExecuteSuccess() throws Exception{
-        String[] args = {"2021-05-08", "15:30", "30", "2", "DEMO_TP"};
+    public void testExecuteSuccess() throws Exception {
+        String[] args = { "2021-05-08", "15:30", "30", "2", "DEMO_TP" };
         command.execute(args, event);
     }
 
     @Test
-    @Order(2)
     public void testInsufficientArgumentExecution() throws Exception {
-        String[] args = {"2021-05-08", "15:30", "30", "2"};
+        String[] args = { "2021-05-08", "15:30", "30", "2" };
         command.execute(args, event);
     }
 
     @Test
-    @Order(3)
     public void testNotLoggedIn() throws Exception {
-        String[] args = {"2021-05-08", "15:30", "30", "2", "DEMO_TP"};
+        String[] args = { "2021-05-08", "15:30", "30", "2", "DEMO_TP" };
         command.execute(args, event);
     }
 
     @Test
-    @Order(4)
     public void testGetCommand() {
         String res = command.getCommand();
         assertEquals(res, "createSlot");
     }
 
     @Test
-    @Order(5)
     public void testGetHelp() {
         String res = command.getHelp();
-        String expected = "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi" +
-                "Contoh: !createSlot 2022-02-03 15:30 30 2 meeting_startup";
+        String expected = "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi"
+                + "Contoh: !createSlot 2022-02-03 15:30 30 2 meeting_startup";
 
         assertEquals(res, expected);
     }

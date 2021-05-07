@@ -1,26 +1,25 @@
 package com.bot.insched.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="event")
+@Table(name = "event")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Event {
 
-    public Event(String start_time, int duration, int capacity, String desc)  {
-        this.startTime = LocalDateTime.parse(start_time);
+    public Event(String startTime, int duration, int capacity, String desc) {
+        this.startTime = LocalDateTime.parse(startTime);
         this.endTime = this.startTime.plusMinutes(duration);
         this.capacity = capacity;
         this.isAvailable = true;
@@ -29,7 +28,7 @@ public class Event {
     }
 
     @Id
-    @Column(name="id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID idEvent;
@@ -50,7 +49,7 @@ public class Event {
     private int duration;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="id_appointment")
+    @JoinColumn(name = "id_appointment")
     private Appointment appointment;
 
     @Column(name = "is_available")
@@ -68,12 +67,12 @@ public class Event {
             return;
         }
         isAvailable = false;
-        return;
     }
 
     public String getStatusBooking() {
-        if (listAttendee != null && listAttendee.size()>0)
+        if (listAttendee != null && listAttendee.size() > 0) {
             return "Telah dibooking";
+        }
         return "Belum ada yang booking";
     }
 

@@ -2,9 +2,9 @@ package com.bot.insched.service;
 
 public interface GoogleService {
 
-	String getAuthorizationUrl();
+    String getAuthorizationUrl();
 
-	String authToken(String userId, String code);
+    String authToken(String userId, String code);
 
-	String getUserInfo(String userId);
+    String getUserInfo(String userId);
 }
