@@ -32,10 +32,10 @@ public class Builder {
     public GoogleAuthorizationCodeFlow.Builder getCodeFlowBuilder(
         HttpTransport httpTransport,
         JsonFactory jsonFactory,
-        String client_id,
-        String client_secret,
+        String clientId,
+        String clientSecret,
         List<String> scopes) {
-        return new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, client_id,
-            client_secret, scopes);
+        return new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, clientId,
+            clientSecret, scopes);
     }
 }

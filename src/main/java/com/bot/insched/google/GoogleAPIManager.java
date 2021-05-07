@@ -36,10 +36,7 @@ public class GoogleAPIManager {
     private static String CLIENT_SECRET;
     private static String CLIENT_ID;
     private static String REDIRECT_URI;
-//    private static final String CLIENT_SECRET = "oksfFIk_VzNxb9G08Iup7_1U";
-//    private static final String CLIENT_ID =
-//        "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com";
-//    private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+
 
 
     private DiscordUserRepository userRepo;
@@ -60,14 +57,6 @@ public class GoogleAPIManager {
         init();
     }
 
-//    @Autowired
-//    public GoogleAPIManager(
-//        DiscordUserRepository repository,
-//        Builder builder) {
-//        this.userRepo = repository;
-//        this.builder = builder;
-//        init();
-//    }
 
     public void init() {
         try {
