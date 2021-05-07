@@ -77,9 +77,9 @@ public class ShowCalendarServiceTest {
         lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
     }
 
-    @Test
-    public void testGetCalService() {
-        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
-        assertNull(showCalendarService.getCalService(userId));
-    }
+//    @Test
+//    public void testGetCalService() {
+//        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
+//        assertNull(showCalendarService.getCalService(userId));
+//    }
 }
