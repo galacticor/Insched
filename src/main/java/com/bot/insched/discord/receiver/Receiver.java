@@ -14,20 +14,28 @@ public class Receiver {
     private final Map<String, Command> commands = new HashMap<>();
 
     @Autowired
-    public Receiver(GoogleService googleService, AppointmentService appointmentService,
-            DiscordUserService discordUserService, EventService eventService,
-            BookingAppointmentService bookingAppointmentService) {
+    public Receiver(
+            GoogleService googleService,
+            AppointmentService appointmentService,
+            DiscordUserService discordUserService,
+            EventService eventService,
+            BookingAppointmentService bookingAppointmentService,
+            ShowCalendarService showCalendarService
+        ) {
         addCommand(new HelloCommand(googleService));
         addCommand(new BookAppointmentCommand());
-        addCommand(new CreateEventCommand());
-        addCommand(new ShowCalendarCommand());
+        addCommand(new CreateEventCommand(eventService,discordUserService));
+        addCommand(new UpdateEventCommand(eventService,discordUserService));
+        addCommand(new DeleteEventCommand(eventService,discordUserService));
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));
-        addCommand(new errorCommand());
-        addCommand(new MyTokenCommand(appointmentService, discordUserService));
+        addCommand(new ErrorCommand());
+        addCommand(new MyTokenCommand(appointmentService,discordUserService));
         addCommand(new CreateSlotCommand(appointmentService));
         addCommand(new MyAppointmentListCommand(appointmentService));
+        addCommand(new ShowCalendarCommand(showCalendarService));
+
     }
 
     private void addCommand(Command command) {
