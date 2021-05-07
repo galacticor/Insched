@@ -6,7 +6,9 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +19,13 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Event {
 
-    public Event(String start_time, int duration, int capacity)  {
+    public Event(String start_time, int duration, int capacity, String desc)  {
         this.startTime = LocalDateTime.parse(start_time);
         this.endTime = this.startTime.plusMinutes(duration);
         this.capacity = capacity;
         this.isAvailable = true;
+        this.description = desc;
+        this.listAttendee = new ArrayList<>();
     }
 
     @Id
@@ -32,6 +36,9 @@ public class Event {
 
     @Column(name = "google_event_id")
     private String idGoogleEvent;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
@@ -52,7 +59,7 @@ public class Event {
     @Column(name = "capacity")
     private int capacity;
 
-    @ManyToMany(mappedBy = "listEvent")
+    @ManyToMany(mappedBy = "listEvent", fetch = FetchType.EAGER)
     private List<DiscordUser> listAttendee;
 
     public void updateAvailability() {
@@ -62,6 +69,28 @@ public class Event {
         }
         isAvailable = false;
         return;
+    }
+
+    public String getStatusBooking() {
+        if (listAttendee != null && listAttendee.size()>0)
+            return "Telah dibooking";
+        return "Belum ada yang booking";
+    }
+
+    public String getWaktu() {
+        return getWaktuMulai() + " - " + getWaktuSelesai();
+    }
+
+    private String getWaktuMulai() {
+        return startTime.getHour() + ":" + startTime.getMinute();
+    }
+
+    private String getWaktuSelesai() {
+        return endTime.getHour() + ":" + endTime.getMinute();
+    }
+
+    public LocalDate getTanggal() {
+        return startTime.toLocalDate();
     }
 
 }

@@ -29,14 +29,17 @@ public class Receiver {
         addCommand(new CreateEventCommand(eventService,discordUserService));
         addCommand(new UpdateEventCommand(eventService,discordUserService));
         addCommand(new DeleteEventCommand(eventService,discordUserService));
-        addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
+        //addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
         addCommand(new ShowCalendarCommand());
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));
         addCommand(new errorCommand());
-        addCommand(new ShowMyAppointment(appointmentService, discordUserService));
-        addCommand(new CreateAppointmentSlot(appointmentService, discordUserService));
+        addCommand(new MyTokenCommand(appointmentService,discordUserService));
+        addCommand(new CreateSlotCommand(appointmentService, discordUserService));
+        addCommand(new MyAppointmentListCommand(appointmentService, discordUserService));
+//        addCommand(new ShowMyAppointment(appointmentService, discordUserService));
+//        addCommand(new CreateAppointmentSlot(appointmentService, discordUserService));
     }
 
 

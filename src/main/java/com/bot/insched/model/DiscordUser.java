@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.google.api.client.auth.oauth2.StoredCredential;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.time.Instant;
 
@@ -40,10 +41,10 @@ public class DiscordUser {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToMany
-    @Column(name = "list_appointment")
-    private List<Appointment> listAppointment;
+    @OneToOne
+    private Appointment appointment;
 
+    // Event attended by user
     @ManyToMany
     private List<Event> listEvent;
 
