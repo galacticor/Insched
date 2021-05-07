@@ -22,10 +22,8 @@ public class CreateSlotCommand implements Command{
             String response = creationHandler(args, event);
             sendMessage(response, event);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
             sendMessage("Masukan argumen yang sesuai!", event);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             sendMessage(e.getMessage(), event);
         }
     }

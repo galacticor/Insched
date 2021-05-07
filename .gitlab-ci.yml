@@ -10,11 +10,9 @@ stages:
   - test
   - deploy
 
-
-
 checkstyle:
   stage: test
-  script: gradle checkstyleMain
+  script: ./gradlew checkstyleMain
   allow_failure: true
 
 test:
