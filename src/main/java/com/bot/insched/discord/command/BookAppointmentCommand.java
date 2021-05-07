@@ -5,8 +5,7 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class BookAppointmentCommand implements Command{
-    private Event event;
-    private EventService eventService;
+    
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         event.getAuthor().openPrivateChannel().queue(privateChannel -> {
