@@ -5,9 +5,9 @@ import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class MyTokenCommand implements Command{
+public class MyTokenCommand implements Command {
 
-    private AppointmentService  appointmentService;
+    private AppointmentService appointmentService;
     private DiscordUserService discordUserService;
 
     public MyTokenCommand(AppointmentService appointmentService,
@@ -15,7 +15,6 @@ public class MyTokenCommand implements Command{
         this.appointmentService = appointmentService;
         this.discordUserService = discordUserService;
     }
-
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {

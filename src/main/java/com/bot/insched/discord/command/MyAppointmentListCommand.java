@@ -3,29 +3,22 @@ package com.bot.insched.discord.command;
 import com.bot.insched.discord.embed.InschedEmbed;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
-import com.bot.insched.service.DiscordUserService;
+import java.time.LocalDate;
+import java.util.List;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 public class MyAppointmentListCommand implements Command {
 
-
     private AppointmentService appointmentService;
-    private DiscordUserService discordUserService;
 
-    public MyAppointmentListCommand(AppointmentService appointmentService,
-                                    DiscordUserService discordUserService)
-    {
+    public MyAppointmentListCommand(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
-        this.discordUserService = discordUserService;
     }
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        if (args[0].equalsIgnoreCase("help")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("help")) {
             sendMessage(getHelp(), event);
         } else {
             String idDiscord = event.getAuthor().getId();
@@ -46,8 +39,7 @@ public class MyAppointmentListCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!myAppointmentList tanggal\n" +
-                "Contoh: !myAppointmentList 2021-05-03";
+        return "!myAppointmentList tanggal\n" + "Contoh: !myAppointmentList 2021-05-03";
     }
 
     private InschedEmbed handleEmbed(String idDiscord, String tanggal) {
@@ -56,14 +48,14 @@ public class MyAppointmentListCommand implements Command {
 
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Your Appointment");
-        embed.setDescription("Pada tanggal "+ tanggal);
+        embed.setDescription("Pada tanggal " + tanggal);
 
-        for (Event event: eventList) {
+        for (Event event : eventList) {
             if (event.getTanggal().isEqual(date)) {
                 String desc = event.getDescription();
                 String waktu = event.getWaktu() + "\n";
                 String statusBooking = event.getStatusBooking();
-                embed.addField(desc, waktu+statusBooking, false);
+                embed.addField(desc, waktu + statusBooking, false);
             }
         }
         return embed;
@@ -74,6 +66,5 @@ public class MyAppointmentListCommand implements Command {
             privateChannel.sendMessage(response).queue();
         });
     }
-
 
 }

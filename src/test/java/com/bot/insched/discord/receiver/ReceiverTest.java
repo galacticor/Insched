@@ -11,20 +11,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import java.lang.reflect.Method;
+
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Field;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import static org.mockito.ArgumentMatchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 
 @ExtendWith(MockitoExtension.class)
 public class ReceiverTest {
@@ -39,7 +34,7 @@ public class ReceiverTest {
     HelloCommand helloCommand;
 
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Map<String, Command> commands = new HashMap<>();
         commands.put("success", helloCommand);
         commands.put("error", helloCommand);
@@ -47,18 +42,18 @@ public class ReceiverTest {
         // Get field instance
         Field field = Receiver.class.getDeclaredField("commands");
         field.setAccessible(true); // Suppress Java language access checking
-         
+
         // Remove "final" modifier
         Field modifiersField = Field.class.getDeclaredField("modifiers");
         modifiersField.setAccessible(true);
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-         
+
         // Set value
         field.set(receiver, commands);
     }
 
     @Test
-    public void testExecuteSuccess(){
+    public void testExecuteSuccess() {
         Message message = new MessageBuilder().append("!success").build();
         when(event.getMessage()).thenReturn(message);
         doNothing().when(helloCommand).execute(any(String[].class), any(PrivateMessageReceivedEvent.class));
@@ -67,7 +62,7 @@ public class ReceiverTest {
     }
 
     @Test
-    public void testExecuteFailed(){
+    public void testExecuteFailed() {
         Message message = new MessageBuilder().append("!haha").build();
         when(event.getMessage()).thenReturn(message);
         doNothing().when(helloCommand).execute(any(String[].class), any(PrivateMessageReceivedEvent.class));
@@ -76,7 +71,7 @@ public class ReceiverTest {
     }
 
     @Test
-    public void testExecuteFalse(){
+    public void testExecuteFalse() {
         Message message = new MessageBuilder().append("haha").build();
         when(event.getMessage()).thenReturn(message);
 
