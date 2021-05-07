@@ -1,9 +1,13 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.embed.InschedEmbed;
 import com.bot.insched.service.EventService;
 import com.bot.insched.service.ShowCalendarService;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class ShowCalendarCommand implements Command {
     Event event;
@@ -26,12 +30,21 @@ public class ShowCalendarCommand implements Command {
 //            sendPrivateMessage(reply,event);
 //        }
 //        else sendPrivateMessage("Ups.. kalender kamu belum ada, masukkan perintah !login", event);
+        InschedEmbed response = handleEmbed();
+        sendPrivateMessage(response,event);
     }
 
     public void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
         event.getAuthor().openPrivateChannel().queue(privateChannel -> {
             privateChannel.sendMessage(response).queue();
         });
+    }
+
+    private InschedEmbed handleEmbed() {
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Calendar Mu : ");
+
+        return embed;
     }
 
 

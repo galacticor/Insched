@@ -22,8 +22,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     EventService eventService;
 
-
-
     @Override
     public Appointment save(Appointment app) {
         return appointmentRepository.save(app);
@@ -33,7 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public String getUserToken(DiscordUser discordUser) {
         if (discordUser.getAppointment() == null) {
-            Appointment app = new Appointment();
+            Appointment app 0= new Appointment();
             app.setOwner(discordUser);
             discordUser.setAppointment(app);
             appointmentRepository.save(app);
