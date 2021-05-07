@@ -1,10 +1,7 @@
 package com.bot.insched.service;
 
 import com.bot.insched.google.GoogleAPIManager;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.oauth2.model.Userinfoplus;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
