@@ -4,10 +4,9 @@ import com.bot.insched.model.Booking;
 import com.bot.insched.model.DiscordUser;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface BookingAppointmentService {
-    String createBooking(String title, String desc, String appointmentId, String discordId) throws Exception;
+    String createBooking(String requesterId, String token, String datetime) throws Exception;
 
     List<Booking> getAllUserBooking(String discordId);
 

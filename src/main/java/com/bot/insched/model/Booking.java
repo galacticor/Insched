@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,17 +24,20 @@ public class Booking {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "description")
-    private String description;
-
-    @OneToOne(mappedBy = "booking")
+    @Column(name = "appointment")
     private Appointment appointment;
 
+    @Column(name = "event")
+    private Event event;
+
     @ManyToOne
-    @JoinColumn(name = "requester")
+    @Column(name = "requester")
     private DiscordUser requester;
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s %s %s",
+                requester.getIdDiscord(), appointment.getIdAppointment(), event.getTanggal(), event.getWaktu());
+    }
 
 }

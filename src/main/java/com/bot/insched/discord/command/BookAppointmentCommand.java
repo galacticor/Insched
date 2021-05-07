@@ -34,18 +34,17 @@ public class BookAppointmentCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!bookAppointment <ID appointment> <judul> <deskripsi>\n" +
-                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 Demo_AP tutorial_2";
+        return "!bookAppointment <token_owner> <tanggal> <jam>\n" +
+                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 2021-08-03 15:30";
     }
 
     public String createBooking(String[] args, PrivateMessageReceivedEvent event) throws Exception {
 
         String userId = event.getAuthor().getId();
-        String appointmentId = args[0];
-        String title = args[1];
-        String description = args[2];
+        String token = args[0];
+        String datetime = args[1] + "T" + args[1] + ":00";;
 
-        return bookingAppointmentService.createBooking(title, description, appointmentId, userId);
+        return bookingAppointmentService.createBooking(userId, token, datetime);
     }
 
     private void sendMessage(String response, PrivateMessageReceivedEvent event) {
