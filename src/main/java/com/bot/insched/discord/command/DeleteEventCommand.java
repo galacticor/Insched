@@ -26,9 +26,7 @@ public class DeleteEventCommand implements Command{
             try{
                 String res = handleCreation(args,event.getAuthor().getId());
                 sendPrivateMessage(res, event);
-            } catch (IndexOutOfBoundsException e) {
-                sendPrivateMessage("Masukan argumen yang sesuai!", event);
-            } catch (Exception e) {
+            }catch (Exception e) {
                 sendPrivateMessage(e.toString(),event);
             }
         }

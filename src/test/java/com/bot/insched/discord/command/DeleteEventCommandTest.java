@@ -99,7 +99,7 @@ public class DeleteEventCommandTest {
 
     @Test
     public void testFalseArgument() {
-        String[] args = {"dummy", "dummy", "dummy"};
+        String[] args = {"dummy"};
         command.execute(args, event);
     }
 
@@ -114,5 +114,10 @@ public class DeleteEventCommandTest {
         String expected = "!deleteEvent <idEvent>\n" +
                 "Contoh: !deleteEvent absfuoqebfojdbvqe";
         assertEquals(command.getHelp(), expected);
+    }
+
+    @Test
+    public void testGetCommand(){
+        assertEquals(command.getCommand(),"deleteEvent");
     }
 }
