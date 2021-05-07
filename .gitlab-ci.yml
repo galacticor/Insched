@@ -1,4 +1,4 @@
-image: gradle:6.8.3-jdk11
+image: gradle:6.8.3-jdk8
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -18,9 +18,21 @@ checkstyle:
 test:
   stage: test
   script:
-    - ./gradlew :check
+    - ./gradlew test
     - ./gradlew :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
+  services:
+    - "postgres:latest"
+  variables:
+    DATABASE_URL: jdbc:postgresql://postgres:5432/postgres
+    POSTGRES_USER: postgres
+    POSTGRES_DB: postgres
+    POSTGRES_PASSWORD: postgres
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+    SPRING_DATASOURCE_USER: postgres
+    SPRING_DATASOURCE_PASSWORD: postgres
+    DISCORD_TOKEN: token-discord
+
 
 Production:
   image: ruby:2.4
@@ -37,6 +49,7 @@ Production:
     url: $HEROKU_APP_HOST
   only:
     - master
+    - prod
 
 cache:
   key: "$CI_COMMIT_REF_NAME"
