@@ -47,9 +47,19 @@ public class GoogleAPIManager {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
+//    @Value("${client_secret}")
     private static String CLIENT_SECRET;
-    private static String CLIENT_ID; 
-    private static String REDIRECT_URI;
+//
+//    @Value("${client_id}")
+    private static String CLIENT_ID;
+
+//    @Value("%{redirect_uri}")
+	private static String REDIRECT_URI;
+//	private static final String CLIENT_SECRET = "oksfFIk_VzNxb9G08Iup7_1U";
+//	private static final String CLIENT_ID = "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com";
+//	private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+
+
 
 	private DiscordUserRepository userRepo;
 	private Builder builder;
@@ -69,6 +79,16 @@ public class GoogleAPIManager {
 		this.builder =  builder;
 		init();
 	}
+
+//		@Autowired
+//	public GoogleAPIManager(
+//			DiscordUserRepository repository,
+//			Builder builder)
+//	{
+//		this.userRepo = repository;
+//		this.builder =  builder;
+//		init();
+//	}
 
 	public void init(){	
 		try {
