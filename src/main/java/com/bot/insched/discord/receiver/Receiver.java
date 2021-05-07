@@ -23,7 +23,7 @@ public class Receiver {
             ShowCalendarService showCalendarService
         ) {
         addCommand(new HelloCommand(googleService));
-        addCommand(new BookAppointmentCommand());
+        addCommand(new BookAppointmentCommand(bookingAppointmentService));
         addCommand(new CreateEventCommand(eventService,discordUserService));
         addCommand(new UpdateEventCommand(eventService,discordUserService));
         addCommand(new DeleteEventCommand(eventService,discordUserService));
@@ -33,8 +33,8 @@ public class Receiver {
         addCommand(new AuthTokenCommand(googleService));
         addCommand(new ErrorCommand());
         addCommand(new MyTokenCommand(appointmentService,discordUserService));
-        addCommand(new CreateSlotCommand(appointmentService, discordUserService));
-        addCommand(new MyAppointmentListCommand(appointmentService, discordUserService));
+        addCommand(new CreateSlotCommand(appointmentService));
+        addCommand(new MyAppointmentListCommand(appointmentService));
         addCommand(new ShowCalendarCommand(showCalendarService));
 //        addCommand(new ShowMyAppointment(appointmentService, discordUserService));
 //        addCommand(new CreateAppointmentSlot(appointmentService, discordUserService));
