@@ -18,7 +18,7 @@ checkstyle:
 test:
   stage: test
   script:
-    - ./gradlew check
+    - ./gradlew test
     - ./gradlew :jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html
   services:
