@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -55,61 +56,21 @@ public class AppointmentServiceImplTest {
         storedCredential.setAccessToken(accessToken);
         storedCredential.setRefreshToken(refreshToken);
         user = new DiscordUser("123456", storedCredential);
-        appointment = new Appointment("deskripsi", LocalDate.now(), LocalDate.now());
+        appointment = new Appointment();
     }
 
-
-    // Create Appointment Block Test
-    @Test
-    public void testCreateAppointmentSuccess() throws Exception{
-        when(discordUserRepository.findByIdDiscord(any(String.class))).thenReturn(user);
-        String end_date = start_date.toString();
-        String res = appointmentService.createAppointment(desc, start_date.toString(), end_date, "123456");
-        assertEquals(res, "Appointment berhasil dibuat!");
-    }
 
     @Test
-    public void testCreateAppointmentNotLoggedIn() throws Exception{
-        when(discordUserRepository.findByIdDiscord(any(String.class))).thenReturn(null);
-        String startDate = start_date.toString();
-        String endDate = startDate;
-        String res = appointmentService.createAppointment(desc, startDate, endDate, "123456");
-        assertEquals(res, "Silahkan login terlebih dahulu menggunakan !login");
-    }
+    public void testGetUserToken() {
+        Appointment app = new Appointment();
+        app.setIdAppointment(UUID.fromString("123"));
+        user.setAppointment(app);
 
-    @Test
-    public void testCreateAppointmentDateError() throws Exception {
-        when(discordUserRepository.findByIdDiscord(any(String.class))).thenReturn(user);
-        String end_date = LocalDate.now().minusDays(1).toString();
-        String res = appointmentService.createAppointment(desc, start_date.toString(), end_date, "123456");
-        assertEquals(res, "Appointment yang dibuat hanya dapat dimulai dari hari ini dan selesai minimal hari ini!");
+        String response = appointmentService.getUserToken(user);
+        assertEquals(response, "123");
     }
 
 
-    // Get user's Appointment test
-    @Test
-    public void testGetAllUserAppointment() {
-        List<Appointment> appList = new ArrayList<>();
-        appList.add(appointment);
-        when(appointmentRepository.findAllByOwner(any())).thenReturn(appList);
-        assertEquals(appointmentService.getAllUserAppointment("123456"), appList);
-    }
 
-    @Test
-    public void testFindAppointmentById() {
-        when(appointmentRepository.findByIdAppointment(any()))
-                .thenReturn(appointment);
-        assertEquals(
-                appointmentService.findAppointmentById("0a22933c-eece-4c37-bccd-9e47d990ead1"),
-                appointment);
-    }
-
-    @Test
-    public void testCreateSlot() {
-        appointment.setListEvent(new ArrayList<Event>());
-        when(appointmentService.save(any())).thenReturn(appointment);
-        String res = appointmentService.createSlot("2024-03-24T15:30:00",30, 2, appointment);
-        assertEquals(res, "Slot berhasil dibuat!");
-    }
 
 }
