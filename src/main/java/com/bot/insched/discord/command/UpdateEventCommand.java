@@ -5,10 +5,7 @@ import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
-
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-
-import java.util.Base64;
 
 public class UpdateEventCommand implements Command{
     private Event event;
@@ -19,10 +16,11 @@ public class UpdateEventCommand implements Command{
         this.eventService = eventService;
         this.discordUserService = discordUserService;
     }
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sendPrivateMessage("Selamat Datang di fitur Create Event \n" +
-                "Tunggu sebentar,Event anda sedang dibuat",event);
+        sendPrivateMessage("Selamat Datang di fitur Create Event \n"
+                + "Tunggu sebentar,Event anda sedang dibuat",event);
         if (args[0].equalsIgnoreCase("help")) {
             sendPrivateMessage(getHelp(), event);
         } else {
@@ -36,6 +34,7 @@ public class UpdateEventCommand implements Command{
             }
         }
     }
+
     private String handleCreation(String[] args,String idUser) throws Exception {
         String idEvent = args[0];
         String summary = args[1];
@@ -50,8 +49,8 @@ public class UpdateEventCommand implements Command{
 
     @Override
     public String getHelp() {
-        return "!updateEvent <eventID> <summary> <deskripsi_event> \n" +
-                "Contoh: !createEvent fjbqeoaufbqeo KUIS Kuliah";
+        return "!updateEvent <eventID> <summary> <deskripsi_event> \n"
+                + "Contoh: !createEvent fjbqeoaufbqeo KUIS Kuliah";
     }
 
     private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {

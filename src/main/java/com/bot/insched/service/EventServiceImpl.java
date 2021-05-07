@@ -13,6 +13,7 @@ public class EventServiceImpl implements EventService{
     private GoogleAPIManager manager;
     @Autowired
     EventRepository eventRepository;
+
     @Override
     public String getEventService(String discordId, String eventId){
         Calendar calendar = manager.getCalendarService(discordId);
@@ -27,10 +28,12 @@ public class EventServiceImpl implements EventService{
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
+
     @Override
     public Calendar getCalendarbyId(String discordId) {
         return manager.getCalendarService(discordId);
     }
+
     @Override
     public String createEventService(String discordId,Event event) {
         Calendar calendar = getCalendarbyId(discordId);
@@ -48,6 +51,7 @@ public class EventServiceImpl implements EventService{
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
+
     @Override
     public String deleteEventService(String discordId,String eventId) {
         Calendar calendar = getCalendarbyId(discordId);
@@ -62,6 +66,7 @@ public class EventServiceImpl implements EventService{
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
+
     @Override
     public String updateEventService(String discordId,String eventId,Event event) {
         Calendar calendar = getCalendarbyId(discordId);
@@ -77,6 +82,7 @@ public class EventServiceImpl implements EventService{
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
+
     @Override
     public com.bot.insched.model.Event save(com.bot.insched.model.Event event) {
         return eventRepository.save(event);

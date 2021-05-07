@@ -4,8 +4,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import java.lang.reflect.Array;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class ErrorCommandTest {
@@ -27,6 +30,9 @@ public class ErrorCommandTest {
 
     @Mock
     PrivateMessageReceivedEvent event;
+
+    @Mock
+    PrivateChannel privateChannel;
     // Basic test setup
     private static JDA jda;
     private static String userId = "461191404341821455";
@@ -62,6 +68,7 @@ public class ErrorCommandTest {
         String res = command.getHelp();
         String expected = "Command yang anda masukkan Salah \n" +
                 "!help untuk mengetahui command setiap fitur yang tersedia";
+        assertEquals(command.getHelp(), expected);
         assertEquals(res, expected);
     }
 

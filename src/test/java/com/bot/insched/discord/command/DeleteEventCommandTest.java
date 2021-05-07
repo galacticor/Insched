@@ -8,8 +8,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteEventCommandTest {
@@ -34,6 +37,9 @@ public class DeleteEventCommandTest {
 
     @InjectMocks
     private DeleteEventCommand command;
+
+    @Mock
+    PrivateChannel privateChannel;
 
 
     // Basic test setup
@@ -113,6 +119,8 @@ public class DeleteEventCommandTest {
     public void testGetHelp() {
         String expected = "!deleteEvent <idEvent>\n" +
                 "Contoh: !deleteEvent absfuoqebfojdbvqe";
+        lenient().when(privateChannel.sendMessage(expected)).thenReturn(mock(MessageAction.class));
+        lenient().when(privateChannel.sendMessage(expected).toString()).thenReturn("cek");
         assertEquals(command.getHelp(), expected);
     }
 
