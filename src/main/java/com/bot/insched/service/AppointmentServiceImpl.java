@@ -31,7 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public String getUserToken(DiscordUser discordUser) {
         if (discordUser.getAppointment() == null) {
-            Appointment app 0= new Appointment();
+            Appointment app = new Appointment();
             app.setOwner(discordUser);
             discordUser.setAppointment(app);
             appointmentRepository.save(app);

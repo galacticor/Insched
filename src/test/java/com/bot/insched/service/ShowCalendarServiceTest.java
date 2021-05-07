@@ -24,24 +24,63 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.lenient;
 
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+public class ShowCalendarServiceTest {
+    @Mock
+    ShowCalendarService showCalendarService;
 
-//@ExtendWith(MockitoExtension.class)
-//public class ShowCalendarServiceTest {
-//    ShowCalendarService showCalendarService;
-//
+    @InjectMocks
+    ShowCalendarCommand showCalendarCommand;
+
+    @Mock
+    PrivateMessageReceivedEvent privateMessageReceivedEvent;
+
+    private static JDA jda;
+    private static String messageId = "838918902233956383";
+    private static String userId = "461191404341821455";
+    private static long responseNumber = 8;
+    private static String channelId = "836884748667846718";
+    private static Message message;
+    private static User jdaUser;
+
+
+    @Mock
+    Event event;
+
+    @BeforeAll
+    public static void init() throws Exception {
+        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
+        jda.retrieveUserById(userId).queue(user -> {
+            user.openPrivateChannel().queue(privateChannel -> {
+                jdaUser = privateChannel.getUser();
+                privateChannel.retrieveMessageById(messageId).queue(message1 -> {
+                    message = message1;
+                });
+            });
+        });
+    }
+
+    // Thread.sleep to delay execution and prevent error
+    @AfterAll
+    public static void teardown() throws Exception {
+        jda.shutdownNow();
+        Thread.sleep(2000);
+    }
+
+
+    @BeforeEach
+    public void setUp() throws Exception{
+        Thread.sleep(1000);
+//        init();
+        lenient().when(privateMessageReceivedEvent.getAuthor()).thenReturn(jdaUser);
+        lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
+    }
+
 //    @Test
-//    public void testGetCalendarServiceNull(){
-//        String userId = null;
+//    public void testGetCalService() {
+//        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
 //        assertNull(showCalendarService.getCalService(userId));
-//    }
-
-//    @Test
-//    public void testGetSummary(){
-//        assertNull(showCalendarService.getCalSummary(event));
-//    }
-//
-//    @Test
-//    public void testGetDescription(){
-//        assertNull(showCalendarService.getCalDescription(event));
+>>>>>>> f8e497b2032f53c2cb60158d07297d63e8212b03
 //    }
 }

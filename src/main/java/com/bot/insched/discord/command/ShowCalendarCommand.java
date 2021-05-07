@@ -6,9 +6,6 @@ import com.bot.insched.service.ShowCalendarService;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-import java.time.LocalDate;
-import java.util.List;
-
 public class ShowCalendarCommand implements Command {
     Event event;
     EventService eventService;
@@ -31,7 +28,11 @@ public class ShowCalendarCommand implements Command {
 //        }
 //        else sendPrivateMessage("Ups.. kalender kamu belum ada, masukkan perintah !login", event);
         InschedEmbed response = handleEmbed();
-        sendPrivateMessage(response,event);
+
+        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage(response.build()).queue();
+        });
+
     }
 
     public void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
@@ -58,3 +59,5 @@ public class ShowCalendarCommand implements Command {
         return null;
     }
 }
+
+
