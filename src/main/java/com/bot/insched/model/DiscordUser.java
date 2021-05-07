@@ -44,6 +44,10 @@ public class DiscordUser {
     @OneToOne
     private Appointment appointment;
 
+    @OneToMany
+    @Column(name = "list_booking")
+    private List<Booking> listBooking;
+
     // Event attended by user
     @ManyToMany
     private List<Event> listEvent;

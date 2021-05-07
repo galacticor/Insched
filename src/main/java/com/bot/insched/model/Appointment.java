@@ -36,4 +36,12 @@ public class Appointment {
 //    @JoinColumn(name = "appointment_owner")
     private DiscordUser owner;
 
+    // Non-mandatory one-to-one relation
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "appointment_booking",
+        joinColumns =
+                {@JoinColumn(name = "appointment_id", referencedColumnName = "id")},
+        inverseJoinColumns =
+                {@JoinColumn(name = "bid", referencedColumnName = "id")})
+    private Booking booking;
 }
