@@ -1,15 +1,12 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.InschedApplication;
 import com.bot.insched.service.GoogleService;
-import com.bot.insched.service.GoogleServiceImpl;
-
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class HelloCommand implements Command{
+public class HelloCommand implements Command {
     private GoogleService googleService;
 
-    public HelloCommand (GoogleService googleService){
+    public HelloCommand(GoogleService googleService) {
         this.googleService = googleService;
     }
 

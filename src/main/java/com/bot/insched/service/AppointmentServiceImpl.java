@@ -4,11 +4,11 @@ import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -22,13 +22,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     EventService eventService;
 
-
-
     @Override
     public Appointment save(Appointment app) {
         return appointmentRepository.save(app);
     }
-
 
     @Override
     public String getUserToken(DiscordUser discordUser) {
@@ -42,21 +39,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         return discordUser.getAppointment().getIdAppointment().toString();
     }
 
-
     @Override
-    public String createSlot(String deskripsi, String waktu, int durasi, int kapasitas, String idDiscord)
-    throws Exception{
+    public String createSlot(String deskripsi, String waktu, int durasi, int kapasitas,
+                             String idDiscord) throws Exception {
 
         LocalDateTime mulai = LocalDateTime.parse(waktu);
         DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
             throw new Exception("Kamu belum login. Silahkan login terlebih dahulu!");
         }
-        List<Event> userAppointment = user.getAppointment().getListEvent();
+        List<Event> userAppointment =  user.getAppointment().getListEvent();
 
-        for (Event e: userAppointment) {
-            if (e.getStartTime().isEqual(mulai))
+        for (Event e : userAppointment) {
+            if (e.getStartTime().isEqual(mulai)) {
                 throw new Exception("Jam sudah memiliki slot! Silahkan pilih jam/tanggal lain");
+            }
         }
 
         Event event = new Event(mulai.toString(), durasi, kapasitas, deskripsi);

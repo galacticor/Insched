@@ -18,7 +18,7 @@ import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 public class GoogleServiceImplTest {
-	@Mock
+    @Mock
     private GoogleAPIManager manager;
 
     @InjectMocks
@@ -37,34 +37,34 @@ public class GoogleServiceImplTest {
     }
 
     @Test
-    public void testGetAuthUrl(){
-    	when(manager.getAuthorizationUrl()).thenReturn(authUrl);
-    	String url = service.getAuthorizationUrl();
+    public void testGetAuthUrl() {
+        when(manager.getAuthorizationUrl()).thenReturn(authUrl);
+        String url = service.getAuthorizationUrl();
 
-    	assertEquals(url, authUrl);
+        assertEquals(url, authUrl);
     }
 
     @Test
-    public void testAuthTokenSuccess(){
-    	when(manager.authToken(dummyId,dummyCode)).thenReturn(true);
-    	assertNotEquals(service.authToken(dummyId, dummyCode), "Failed");
+    public void testAuthTokenSuccess() {
+        when(manager.authToken(dummyId, dummyCode)).thenReturn(true);
+        assertNotEquals(service.authToken(dummyId, dummyCode), "Failed");
     }
 
     @Test
-    public void testAuthTokenFailed(){
-    	when(manager.authToken(dummyId,dummyCode)).thenReturn(false);
-    	assertEquals(service.authToken(dummyId, dummyCode), "Failed");
+    public void testAuthTokenFailed() {
+        when(manager.authToken(dummyId, dummyCode)).thenReturn(false);
+        assertEquals(service.authToken(dummyId, dummyCode), "Failed");
     }
 
     @Test
-    public void testGetUserInfoSuccess(){
-    	when(manager.getUserInfo(dummyId)).thenReturn(userinfo);
-    	assertEquals(service.getUserInfo(dummyId), email);
+    public void testGetUserInfoSuccess() {
+        when(manager.getUserInfo(dummyId)).thenReturn(userinfo);
+        assertEquals(service.getUserInfo(dummyId), email);
     }
 
     @Test
-    public void testGetUserInfoFailed(){
-    	when(manager.getUserInfo(dummyId)).thenReturn(null);
-    	assertEquals(service.getUserInfo(dummyId), "");
+    public void testGetUserInfoFailed() {
+        when(manager.getUserInfo(dummyId)).thenReturn(null);
+        assertEquals(service.getUserInfo(dummyId), "");
     }
 }
