@@ -34,7 +34,7 @@ public class Receiver {
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));
-        addCommand(new errorCommand());
+        addCommand(new ErrorCommand());
         addCommand(new MyTokenCommand(appointmentService,discordUserService));
         addCommand(new CreateSlotCommand(appointmentService, discordUserService));
         addCommand(new MyAppointmentListCommand(appointmentService, discordUserService));
