@@ -15,23 +15,23 @@ public class Receiver {
 
     @Autowired
     public Receiver(
-            GoogleService googleService,
-            AppointmentService appointmentService,
-            DiscordUserService discordUserService,
-            EventService eventService,
-            BookingAppointmentService bookingAppointmentService,
-            ShowCalendarService showCalendarService
-        ) {
+        GoogleService googleService,
+        AppointmentService appointmentService,
+        DiscordUserService discordUserService,
+        EventService eventService,
+        BookingAppointmentService bookingAppointmentService,
+        ShowCalendarService showCalendarService
+    ) {
         addCommand(new HelloCommand(googleService));
         addCommand(new BookAppointmentCommand());
-        addCommand(new CreateEventCommand(eventService,discordUserService));
-        addCommand(new UpdateEventCommand(eventService,discordUserService));
-        addCommand(new DeleteEventCommand(eventService,discordUserService));
+        addCommand(new CreateEventCommand(eventService, discordUserService));
+        addCommand(new UpdateEventCommand(eventService, discordUserService));
+        addCommand(new DeleteEventCommand(eventService, discordUserService));
         addCommand(new HelpCommand());
         addCommand(new AuthCommand(googleService));
         addCommand(new AuthTokenCommand(googleService));
         addCommand(new ErrorCommand());
-        addCommand(new MyTokenCommand(appointmentService,discordUserService));
+        addCommand(new MyTokenCommand(appointmentService, discordUserService));
         addCommand(new CreateSlotCommand(appointmentService));
         addCommand(new MyAppointmentListCommand(appointmentService));
         addCommand(new ShowCalendarCommand(showCalendarService));

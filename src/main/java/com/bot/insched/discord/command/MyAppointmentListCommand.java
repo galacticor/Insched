@@ -18,7 +18,7 @@ public class MyAppointmentListCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        if (args.length >0 && args[0].equalsIgnoreCase("help")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("help")) {
             sendMessage(getHelp(), event);
         } else {
             String idDiscord = event.getAuthor().getId();
