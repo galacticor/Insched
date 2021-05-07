@@ -42,6 +42,6 @@ public class Appointment {
         joinColumns =
                 {@JoinColumn(name = "appointment_id", referencedColumnName = "id")},
         inverseJoinColumns =
-                {@JoinColumn(name = "bid", referencedColumnName = "id")})
+                {@JoinColumn(name = "booking_id", referencedColumnName = "id")})
     private Booking booking;
 }
