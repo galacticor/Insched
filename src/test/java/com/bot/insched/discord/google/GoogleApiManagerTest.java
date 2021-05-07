@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
-public class GoogleAPIManagerTest{
+public class GoogleApiManagerTest{
 
 	@Mock
 	private DiscordUserRepository userRepo;
@@ -45,7 +45,7 @@ public class GoogleAPIManagerTest{
 	@Mock
 	private HttpTransport httpTransport;
 	@InjectMocks
-	private GoogleAPIManager manager;
+	private GoogleApiManager manager;
 
     private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     private String url = "auth url";

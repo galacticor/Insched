@@ -1,6 +1,6 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShowCalendarServiceImpl implements ShowCalendarService {
     @Autowired
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
     Event event;
 
     public Event getCalService(String userId) {

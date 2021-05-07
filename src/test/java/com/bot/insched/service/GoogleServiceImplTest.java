@@ -1,6 +1,6 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 
 import com.google.api.services.oauth2.model.Userinfoplus;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.lenient;
 @ExtendWith(MockitoExtension.class)
 public class GoogleServiceImplTest {
     @Mock
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
 
     @InjectMocks
     GoogleServiceImpl service;
