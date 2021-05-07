@@ -1,6 +1,5 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.model.Appointment;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
@@ -23,8 +22,6 @@ import org.springframework.core.annotation.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,7 +59,7 @@ public class MyAppointmentListCommandTest {
     }
 
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
     }
@@ -73,18 +70,17 @@ public class MyAppointmentListCommandTest {
         Thread.sleep(2000);
     }
 
-
     @Test
     @Order(1)
     public void testExecuteHelp() throws Exception {
-        String[] args = {"help"};
+        String[] args = { "help" };
         command.execute(args, event);
     }
 
     @Test
     @Order(2)
     public void testExecuteSuccess() {
-        String[] args = {"2021-05-08"};
+        String[] args = { "2021-05-08" };
         List<Event> eventList = new ArrayList<>();
 
         String start = "2021-05-08T17:00:00";
@@ -108,6 +104,5 @@ public class MyAppointmentListCommandTest {
         assertEquals(res, expected);
 
     }
-
 
 }

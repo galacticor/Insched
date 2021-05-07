@@ -1,21 +1,20 @@
 package com.bot.insched.model;
 
+import com.google.api.client.auth.oauth2.StoredCredential;
+import java.time.Instant;
+import java.util.List;
+import javax.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import com.google.api.client.auth.oauth2.StoredCredential;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.time.Instant;
 
 @Entity
-@Table(name="discord_user")
+@Table(name = "discord_user")
 @Data
 @Getter
 @Setter

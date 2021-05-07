@@ -28,12 +28,12 @@ public class InvokerTest {
     Receiver receiver;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
 
     }
 
     @Test
-    public void testExecute(){
+    public void testExecute() {
         ReflectionTestUtils.setField(invoker, "receiver", receiver);
         doNothing().when(receiver).execute(any(PrivateMessageReceivedEvent.class));
 

@@ -15,26 +15,26 @@ import javax.security.auth.login.LoginException;
 
 @SpringBootApplication
 public class InschedApplication {
-	public static JDA jda;
-	private static String TOKEN;
+    public static JDA jda;
+    private static String TOKEN;
 
-	@Autowired
-	private Invoker botListener;
+    @Autowired
+    private Invoker botListener;
 
-	@Autowired
-	public InschedApplication(@Value("${discord_token}") String token){
-		TOKEN = token;
-	}
+    @Autowired
+    public InschedApplication(@Value("${discord_token}") String token) {
+        TOKEN = token;
+    }
 
-	public static void main(String[] args) throws LoginException {
-		SpringApplication.run(InschedApplication.class, args);
-	}
+    public static void main(String[] args) throws LoginException {
+        SpringApplication.run(InschedApplication.class, args);
+    }
 
-	@PostConstruct
-	public void run() throws LoginException {
-		jda = JDABuilder.createDefault(TOKEN).build();
-		jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
-		jda.addEventListener(botListener);
-	}
+    @PostConstruct
+    public void run() throws LoginException {
+        jda = JDABuilder.createDefault(TOKEN).build();
+        jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+        jda.addEventListener(botListener);
+    }
 
 }

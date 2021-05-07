@@ -1,17 +1,14 @@
 package com.bot.insched.model;
 
-
-
+import java.util.List;
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "appointment")
@@ -27,13 +24,11 @@ public class Appointment {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID idAppointment;
 
-
     @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER)
     @Column(name = "list_event")
     private List<Event> listEvent;
 
     @OneToOne
-//    @JoinColumn(name = "appointment_owner")
     private DiscordUser owner;
 
     // Non-mandatory one-to-one relation

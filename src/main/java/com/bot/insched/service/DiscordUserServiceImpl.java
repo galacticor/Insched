@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DiscordUserServiceImpl implements DiscordUserService{
+public class DiscordUserServiceImpl implements DiscordUserService {
 
     @Autowired
     DiscordUserRepository discordUserRepository;
@@ -19,6 +19,5 @@ public class DiscordUserServiceImpl implements DiscordUserService{
     public DiscordUser save(DiscordUser user) {
         return discordUserRepository.save(user);
     }
-
 
 }
