@@ -1,5 +1,4 @@
 discord_token: "ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI"
-#
-#client_id: ${CLIENT_ID}
-#client_secret: ${CLIENT_SECRET}
-#redirect_uri: ${REDIRECT_URI}
+client_id: "38754712208-3qiupu0km1hr49bldavt5tq5875k6c08.apps.googleusercontent.com"
+client_secret: "G9A0eSoEBNtxjrdguPOhkmUC"
+redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
