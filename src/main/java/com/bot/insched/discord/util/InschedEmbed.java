@@ -1,4 +1,4 @@
-package com.bot.insched.discord.embed;
+package com.bot.insched.discord.util;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 

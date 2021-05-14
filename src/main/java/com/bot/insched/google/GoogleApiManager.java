@@ -37,8 +37,6 @@ public class GoogleApiManager {
     private static String CLIENT_ID;
     private static String REDIRECT_URI;
 
-
-
     private DiscordUserRepository userRepo;
     private Builder builder;
 
@@ -51,7 +49,8 @@ public class GoogleApiManager {
         Builder builder,
         @Value("${client_id}") String clientId,
         @Value("${client_secret}") String clientSecret,
-        @Value("${redirect_uri}") String redirectUri) {
+        @Value("${redirect_uri}") String redirectUri) 
+    {
         this.userRepo = repository;
         this.builder = builder;
         CLIENT_ID = clientId;
@@ -89,9 +88,9 @@ public class GoogleApiManager {
             GoogleTokenResponse googleResponse = flow.newTokenRequest(code)
                 .setRedirectUri(REDIRECT_URI)
                 .execute();
-
+            log.warn("------ Nyampe sini googleResponse");
             Credential cred = flow.createAndStoreCredential(googleResponse, userId);
-
+            log.warn("------ Nyampe sini createAndStoreCredential");
             return true;
         } catch (Exception e) {
             log.warn("------ Error when save credential for user {} : {}", userId, e);
