@@ -99,7 +99,7 @@ public class CreateSlotCommandTest {
     @Test
     public void testGetHelp() {
         String res = command.getHelp();
-        String expected = "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi"
+        String expected = "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi\n"
                 + "Contoh: !createSlot 2022-02-03 15:30 30 2 meeting_startup";
 
         assertEquals(res, expected);

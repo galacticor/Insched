@@ -6,6 +6,7 @@ import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -90,27 +91,27 @@ public class AppointmentServiceImpl implements AppointmentService {
         return app.getListEvent();
     }
 
-
     @Override
-    public String editSlot(String tanggal, String jamLama, String jamBaru, int durasiBaru, String judulBaru,
+    public String editSlot(String token, String jamBaru, int durasiBaru, String judulBaru,
                                   String idDiscord) throws Exception {
         DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
             throw new NotLoggedInException();
         }
 
-        Appointment app = appointmentRepository.findAppointmentByOwner(user);
-        List<Event> eventList = app.getListEvent();
-        LocalDateTime oldStartTime = LocalDateTime.parse(tanggal + "T" + jamLama + ":00");
-        LocalDateTime newStartTime = LocalDateTime.parse(tanggal + "T" + jamBaru + ":00");
+        Event event = eventRepository.findByIdEvent(UUID.fromString(token));
 
-        for (Event event: eventList) {
-            if (event.getStartTime().equals(oldStartTime) && event.getListAttendee().size() == 0) {
-                event.setStartTime(newStartTime);
-                event.setEndTime(newStartTime.plusMinutes(durasiBaru));
-                return "Appointment berhasil di-update!";
-            }
+        if (event == null) {
+            return "Tidak ada slot dengan kode tersebut!";
+        } else if (event.getListAttendee().size() == 0) {
+            String tanggal = event.getStartTime().toLocalDate().toString();
+            LocalDateTime newStartTime = LocalDateTime.parse(tanggal + "T" + jamBaru + ":00");
+
+            event.setStartTime(newStartTime);
+            event.setEndTime(newStartTime.plusMinutes(durasiBaru));
+            return "Appointment berhasil di-update!";
         }
+
         return "Jangan melanggar ketentuan yang sudah diberikan!";
     }
 

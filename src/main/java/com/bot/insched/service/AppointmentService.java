@@ -15,7 +15,7 @@ public interface AppointmentService {
 
     String getUserToken(DiscordUser discordUser);
 
-    String editSlot(String tanggal, String jamLama, String jamBaru, int durasiBaru, String judulBaru,
+    String editSlot(String token, String jamBaru, int durasiBaru, String judulBaru,
                            String idDiscord) throws Exception;
 
     String deleteSlot(String token, String idDiscord) throws Exception;
