@@ -5,7 +5,7 @@ import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class EditSlotCommand implements Command{
+public class EditSlotCommand implements Command {
 
     private MessageSender sender = MessageSender.getInstance();
 
@@ -14,7 +14,9 @@ public class EditSlotCommand implements Command{
 
     public EditSlotCommand(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
-    };
+    }
+
+    ;
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
@@ -40,15 +42,15 @@ public class EditSlotCommand implements Command{
 
     @Override
     public String getHelp() {
-        String help = "Digunakan untuk update judul dan jam appointment.\n" +
-            "Hanya dapat mengupdate appointment yang belum dibooking.\n\n" +
-            "Penggunaan: !editSlot token_slot jam_baru durasi_baru judul_baru\n\n" +
-            "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n" +
-            "Jika kamu tidak ingin mengupdate field tertentu, isikan dengan -";
+        String help = "Digunakan untuk update judul dan jam appointment.\n"
+            + "Hanya dapat mengupdate appointment yang belum dibooking.\n\n"
+            + "Penggunaan: !editSlot token_slot jam_baru durasi_baru judul_baru\n\n"
+            + "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n"
+            + "Jika kamu tidak ingin mengupdate field tertentu, isikan dengan -";
         return help;
     }
 
-    public String handleUpdate(String[] args, PrivateMessageReceivedEvent event) throws Exception{
+    public String handleUpdate(String[] args, PrivateMessageReceivedEvent event) throws Exception {
         String token = args[0];
         String jamBaru = args[1];
         int durasiBaru = Integer.parseInt(args[2]);

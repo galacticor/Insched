@@ -6,17 +6,13 @@ import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
-
+import com.bot.insched.repository.EventRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import com.bot.insched.repository.EventRepository;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-
 
 @Service
 @Transactional
@@ -60,7 +56,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (user == null) {
             throw new NotLoggedInException();
         }
-        List<Event> userAppointment =  user.getAppointment().getListEvent();
+        List<Event> userAppointment = user.getAppointment().getListEvent();
 
         for (Event e : userAppointment) {
             if (e.getStartTime().isEqual(mulai)) {
@@ -93,7 +89,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public String editSlot(String token, String jamBaru, int durasiBaru, String judulBaru,
-                                  String idDiscord) throws Exception {
+                           String idDiscord) throws Exception {
         DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
             throw new NotLoggedInException();
@@ -125,7 +121,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Event event = eventRepository.findByIdEvent(UUID.fromString(token));
         if (event == null) {
             throw new SlotUnavailableException("Tidak ada slot pada keterangan waktu seperti itu!");
-        } else if (event.getListAttendee().size() == 0){
+        } else if (event.getListAttendee().size() == 0) {
             eventRepository.deleteByIdEvent(UUID.fromString(token));
             return "Slot berhasil dihapus!";
         }

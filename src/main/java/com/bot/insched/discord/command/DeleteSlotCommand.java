@@ -36,9 +36,9 @@ public class DeleteSlotCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "Digunakan untuk menghapus appointment yang belum dibooking.\n" +
-            "Penggunaan: !deleteSlot slot_token\n" +
-            "Contoh: !deleteSlot 12f8ca5e-8888-45b8-881b-a58d349e5269";
+        return "Digunakan untuk menghapus appointment yang belum dibooking.\n"
+            + "Penggunaan: !deleteSlot slot_token\n"
+            + "Contoh: !deleteSlot 12f8ca5e-8888-45b8-881b-a58d349e5269";
     }
 
     public String handleDelete(String[] args, String idDiscord) throws Exception {

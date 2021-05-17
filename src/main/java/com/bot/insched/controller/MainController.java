@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/")
 public class MainController {
-	@Autowired
-	private GoogleService service;
+    @Autowired
+    private GoogleService service;
 
-	@GetMapping(path = "auth", produces = {"application/json"})
-	@ResponseBody
-	public String authToken(@RequestParam String state, @RequestParam String code){
-		String response = service.authToken(state, code);
-		return response;
-	}
+    @GetMapping(path = "auth", produces = {"application/json"})
+    @ResponseBody
+    public String authToken(@RequestParam String state, @RequestParam String code) {
+        String response = service.authToken(state, code);
+        return response;
+    }
 
-	@GetMapping(path = "ping", produces = {"application/json"})
-	@ResponseBody
-	public String healthCheck(){
-		return "PONG";
-	}
+    @GetMapping(path = "ping", produces = {"application/json"})
+    @ResponseBody
+    public String healthCheck() {
+        return "PONG";
+    }
 }
