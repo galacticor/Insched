@@ -1,11 +1,15 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.AfterAll;
@@ -17,9 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.annotation.Order;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.mockito.Mockito.lenient;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Order
@@ -28,16 +33,15 @@ public class CreateSlotCommandTest {
     @InjectMocks
     CreateSlotCommand command;
 
+
     @Mock
     PrivateMessageReceivedEvent event;
 
     @Mock
-    DiscordUserService discordUserService;
+    MessageSender sender;
 
-    @Mock
-    AppointmentService appointmentService;
 
-    // Basic test setup
+//     Basic test setup
     private static JDA jda;
     private static String userId = "461191404341821455";
     private static Message message;
@@ -65,6 +69,7 @@ public class CreateSlotCommandTest {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
         lenient().when(event.getMessage()).thenReturn(message);
+        ReflectionTestUtils.setField(command, "sender", sender);
     }
 
     @Test

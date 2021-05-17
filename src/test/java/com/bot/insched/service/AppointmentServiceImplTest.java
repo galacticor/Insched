@@ -107,7 +107,7 @@ public class AppointmentServiceImplTest {
     }
 
     @Test
-    public void testGetAllAppointment() {
+    public void testGetAllAppointment() throws Exception{
         when(discordUserService.findByUserId(any())).thenReturn(user);
         when(appointmentRepository.findAppointmentByOwner(any())).thenReturn(appointment);
         appointment.setListEvent(new ArrayList<>());

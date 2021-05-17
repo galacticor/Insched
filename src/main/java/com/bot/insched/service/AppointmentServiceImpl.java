@@ -8,6 +8,8 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jdk.vm.ci.meta.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,10 +74,59 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Event> getAllAppointment(String idDiscord) {
+    public List<Event> getAllAppointment(String idDiscord) throws Exception {
         DiscordUser user = discordUserService.findByUserId(idDiscord);
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
         Appointment app = appointmentRepository.findAppointmentByOwner(user);
         return app.getListEvent();
     }
 
+
+    @Override
+    public String editSlot(String tanggal, String jamLama, String jamBaru, int durasiBaru, String judulBaru,
+                                  String idDiscord) throws Exception {
+        DiscordUser user = discordUserService.findByUserId(idDiscord);
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
+
+        Appointment app = appointmentRepository.findAppointmentByOwner(user);
+        List<Event> eventList = app.getListEvent();
+        LocalDateTime oldStartTime = LocalDateTime.parse(tanggal + "T" + jamLama + ":00");
+        LocalDateTime newStartTime = LocalDateTime.parse(tanggal + "T" + jamBaru + ":00");
+
+        for (Event event: eventList) {
+            if (event.getStartTime().equals(oldStartTime) && event.getListAttendee().size() == 0) {
+                event.setStartTime(newStartTime);
+                event.setEndTime(newStartTime.plusMinutes(durasiBaru));
+                return "Appointment berhasil di-update!";
+            }
+        }
+        return "Jangan melanggar ketentuan yang sudah diberikan!";
+    }
+
+    @Override
+    public String deleteSlot(String tanggal, String jamMulai, String idDiscord) throws Exception {
+        DiscordUser user = discordUserService.findByUserId(idDiscord);
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
+
+        Appointment app = appointmentRepository.findAppointmentByOwner(user);
+        LocalDateTime startTime = LocalDateTime.parse(tanggal + "T" + jamMulai + ":00");
+        List<Event> eventList = app.getListEvent();
+
+        if (eventList != null) {
+            for (Event event: eventList) {
+                if (event.getStartTime().equals(startTime)) {
+                    eventList.remove(event);
+                    return "Slot berhasil dihapus!";
+                }
+            }
+        }
+
+        return "Tidak ada slot yang bersangkutan!";
+    }
 }

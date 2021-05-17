@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +38,9 @@ public class MyTokenCommandTest {
 
     @Mock
     AppointmentService appointmentService;
+
+    @Mock
+    MessageSender sender;
 
     // Basic test setup
     private static JDA jda;
@@ -63,6 +69,7 @@ public class MyTokenCommandTest {
     public void setUp() throws Exception {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        ReflectionTestUtils.setField(myTokenCommand, "sender", sender);
     }
 
     @Test

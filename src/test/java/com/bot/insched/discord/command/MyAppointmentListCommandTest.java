@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.DiscordUserService;
@@ -18,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.annotation.Order;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,9 @@ public class MyAppointmentListCommandTest {
     @Mock
     AppointmentService appointmentService;
 
+    @Mock
+    MessageSender sender;
+
     // Basic test setup
     private static JDA jda;
     private static String userId = "461191404341821455";
@@ -62,6 +67,7 @@ public class MyAppointmentListCommandTest {
     public void setUp() throws Exception {
         Thread.sleep(1000);
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        ReflectionTestUtils.setField(command, "sender", sender);
     }
 
     @AfterAll
@@ -79,7 +85,7 @@ public class MyAppointmentListCommandTest {
 
     @Test
     @Order(2)
-    public void testExecuteSuccess() {
+    public void testExecuteSuccess() throws Exception {
         String[] args = { "2021-05-08" };
         List<Event> eventList = new ArrayList<>();
 

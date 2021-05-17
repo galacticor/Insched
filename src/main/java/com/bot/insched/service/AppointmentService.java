@@ -6,7 +6,7 @@ import com.bot.insched.model.Event;
 import java.util.List;
 
 public interface AppointmentService {
-    List<Event> getAllAppointment(String idDiscord);
+    List<Event> getAllAppointment(String idDiscord) throws Exception;
 
     String createSlot(String deskripsi, String waktu, int durasi, int kapasitas, String idDiscord)
         throws Exception;
@@ -14,4 +14,9 @@ public interface AppointmentService {
     Appointment save(Appointment appointment);
 
     String getUserToken(DiscordUser discordUser);
+
+    String editSlot(String tanggal, String jamLama, String jamBaru, int durasiBaru, String judulBaru,
+                           String idDiscord) throws Exception;
+
+    String deleteSlot(String tanggal, String jamMulai, String idDiscord) throws Exception;
 }

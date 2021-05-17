@@ -61,7 +61,7 @@ public class BookAppointmentCommandTest {
     }
 
     @Test
-    public void testGetCommand() s {
+    public void testGetCommand() {
         assertEquals(command.getCommand(), "bookAppointment");
     }
 }

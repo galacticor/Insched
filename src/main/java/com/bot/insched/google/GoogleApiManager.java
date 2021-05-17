@@ -43,33 +43,33 @@ public class GoogleApiManager {
     private GoogleAuthorizationCodeFlow flow;
     private HttpTransport httpTransport;
 
-    //    @Autowired
-    //    public GoogleApiManager(
-    //        DiscordUserRepository repository,
-    //        Builder builder,
-    //        @Value("${client_id}") String clientId,
-    //        @Value("${client_secret}") String clientSecret,
-    //        @Value("${redirect_uri}") String redirectUri) {
-    //        this.userRepo = repository;
-    //        this.builder = builder;
-    //        CLIENT_ID = clientId;
-    //        CLIENT_SECRET = clientSecret;
-    //        REDIRECT_URI = redirectUri;
-    //        init();
-    //    }
+        @Autowired
+        public GoogleApiManager(
+            DiscordUserRepository repository,
+            Builder builder,
+            @Value("${client_id}") String clientId,
+            @Value("${client_secret}") String clientSecret,
+            @Value("${redirect_uri}") String redirectUri) {
+            this.userRepo = repository;
+            this.builder = builder;
+            CLIENT_ID = clientId;
+            CLIENT_SECRET = clientSecret;
+            REDIRECT_URI = redirectUri;
+            init();
+        }
 
-    @Autowired
-    public GoogleApiManager(
-        DiscordUserRepository repository,
-        Builder builder,
-        @Value("${client_id}") String clientId,
-        @Value("${client_secret}") String clientSecret,
-        @Value("${redirect_uri}") String redirectUri) 
-    {
-        this.userRepo = repository;
-        this.builder = builder;
-        init();
-    }
+//    @Autowired
+//    public GoogleApiManager(
+//        DiscordUserRepository repository,
+//        Builder builder,
+//        @Value("${client_id}") String clientId,
+//        @Value("${client_secret}") String clientSecret,
+//        @Value("${redirect_uri}") String redirectUri)
+//    {
+//        this.userRepo = repository;
+//        this.builder = builder;
+//        init();
+//    }
 
 
     public void init() {
