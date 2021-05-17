@@ -33,61 +33,50 @@ public class CreateSlotCommandTest {
     @InjectMocks
     CreateSlotCommand command;
 
-
     @Mock
     PrivateMessageReceivedEvent event;
 
     @Mock
     MessageSender sender;
 
+    @Mock
+    AppointmentService appointmentService;
 
-//     Basic test setup
-    private static JDA jda;
-    private static String userId = "461191404341821455";
-    private static Message message;
-    private static User jdaUser;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
-        jda.retrieveUserById(userId).queue(user -> {
-            jdaUser = user;
-        });
-        message = new MessageBuilder().append("dummy").build();
-        Thread.sleep(2000);
-
-    }
-
-    @AfterAll
-    public static void teardown() throws Exception {
-        jda.shutdownNow();
-        Thread.sleep(2000);
-    }
 
     @BeforeEach
     public void setUp() throws Exception {
-        Thread.sleep(1000);
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
         ReflectionTestUtils.setField(command, "sender", sender);
+        User user = mock(User.class);
+        String res = "Slot berhasil dihapus!";
+
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
     }
 
     @Test
     public void testExecuteSuccess() throws Exception {
         String[] args = { "2021-05-08", "15:30", "30", "2", "DEMO_TP" };
+        String tanggal = args[0];
+        String jamMulai = args[1];
+        int durasi = Integer.parseInt(args[2]);
+        int kapasitas = Integer.parseInt(args[3]);
+        String deskripsi = args[4];
+        String res = "Slot berhasil dibuat!";
+
+        lenient().when(appointmentService.createSlot(tanggal, jamMulai, durasi, kapasitas, deskripsi))
+            .thenReturn(res);
+
         command.execute(args, event);
     }
 
     @Test
     public void testInsufficientArgumentExecution() throws Exception {
-        String[] args = { "2021-05-08", "15:30", "30", "2" };
+        String[] args = { "2021-05-08", "15:30", "30", "2"};
+        String res = "Masukkan argumen yang sesuai!";
+        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
         command.execute(args, event);
-    }
 
-    @Test
-    public void testNotLoggedIn() throws Exception {
-        String[] args = { "2021-05-08", "15:30", "30", "2", "DEMO_TP" };
-        command.execute(args, event);
     }
 
     @Test

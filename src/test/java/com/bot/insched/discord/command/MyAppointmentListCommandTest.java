@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
@@ -24,9 +25,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Order
@@ -38,8 +38,6 @@ public class MyAppointmentListCommandTest {
     @Mock
     PrivateMessageReceivedEvent event;
 
-    @Mock
-    DiscordUserService discordUserService;
 
     @Mock
     AppointmentService appointmentService;
@@ -48,40 +46,21 @@ public class MyAppointmentListCommandTest {
     MessageSender sender;
 
 
-
-    // Basic test setup
-    private static JDA jda;
-    private static String userId = "461191404341821455";
-    private static Message message;
-    private static User jdaUser;
-
-    @BeforeAll
-    public static void init() throws Exception {
-        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
-        jda.retrieveUserById(userId).queue(user -> {
-            jdaUser = user;
-        });
-        message = new MessageBuilder().append("dummy").build();
-        Thread.sleep(2000);
-    }
-
     @BeforeEach
     public void setUp() throws Exception {
-        Thread.sleep(1000);
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
+        User user = mock(User.class);
         ReflectionTestUtils.setField(command, "sender", sender);
-    }
-
-    @AfterAll
-    public static void teardown() throws Exception {
-        jda.shutdownNow();
-        Thread.sleep(2000);
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
     }
 
     @Test
     @Order(1)
     public void testExecuteHelp() throws Exception {
         String[] args = { "help" };
+        String res = "!myAppointmentList tanggal\n" +
+            "Contoh: !myAppointmentList 2021-05-03";
+        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
         command.execute(args, event);
     }
 
@@ -95,12 +74,16 @@ public class MyAppointmentListCommandTest {
         int duration = 30;
         int capacity = 2;
         String desc = "testing";
+        String userId = "461191404341821455";
 
         Event e = new Event(start, duration, capacity, desc);
         eventList.add(e);
 
         when(appointmentService.getAllAppointment(userId)).thenReturn(eventList);
+        InschedEmbed embed = new InschedEmbed();
+        embed.setDescription("dummy embed");
 
+        lenient().doNothing().when(sender).sendPrivateMessage(embed.build(), event);
         command.execute(args, event);
     }
 
