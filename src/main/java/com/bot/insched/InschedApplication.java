@@ -35,4 +35,8 @@ public class InschedApplication {
         jda.addEventListener(botListener);
     }
 
+    public static JDA getJda() {
+        return jda;
+    }
+
 }

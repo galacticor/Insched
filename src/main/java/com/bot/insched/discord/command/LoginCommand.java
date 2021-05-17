@@ -15,7 +15,8 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        String url = service.getAuthorizationUrl();
+        String userId = event.getAuthor().getId();
+        String url = service.getAuthorizationUrl(userId);
 
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Login");
