@@ -16,14 +16,17 @@ public class DeleteSlotCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        if (args[0].equalsIgnoreCase("help")) {
-            sender.sendPrivateMessage(getHelp(), event);
-        } else {
-            String idDiscord = event.getAuthor().getId();
-            String response = handleDelete(args[0], args[1], idDiscord);
-            sender.sendPrivateMessage(response, event);
+        try {
+            if (args[0].equalsIgnoreCase("help")) {
+                sender.sendPrivateMessage(getHelp(), event);
+            } else {
+                String idDiscord = event.getAuthor().getId();
+                String response = handleDelete(args, idDiscord);
+                sender.sendPrivateMessage(response, event);
+            }
+        } catch (Exception e) {
+            sender.sendPrivateMessage(e.getMessage(), event);
         }
-
     }
 
     @Override
@@ -38,7 +41,10 @@ public class DeleteSlotCommand implements Command {
             "Contoh: !deleteAppointment 2021-06-07 15:30";
     }
 
-    public String handleDelete(String tanggal, String jam, String idDiscord) {
-
+    public String handleDelete(String[] args, String idDiscord) throws Exception {
+        String tanggal = args[0];
+        String jam = args[1];
+        String response = appointmentService.deleteSlot(tanggal, jam, idDiscord);
+        return response;
     }
 }
