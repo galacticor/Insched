@@ -58,9 +58,10 @@ public class MyAppointmentListCommand implements Command {
         for (Event event : eventList) {
             if (event.getTanggal().isEqual(date)) {
                 String desc = event.getDescription();
+                String token = "Token: " + event.getIdEvent().toString() + "\n";
                 String waktu = event.getWaktu() + "\n";
                 String statusBooking = event.getStatusBooking();
-                embed.addField(desc, waktu + statusBooking, false);
+                embed.addField(desc, waktu + token + statusBooking, false);
             }
         }
         return embed;

@@ -88,9 +88,10 @@ public class GoogleApiManager {
 
     }
 
-    public String getAuthorizationUrl() {
+    public String getAuthorizationUrl(String userId) {
         String redirectTo = flow.newAuthorizationUrl()
             .setRedirectUri(REDIRECT_URI)
+            .setState(userId)
             .build();
         return redirectTo;
     }
@@ -100,9 +101,9 @@ public class GoogleApiManager {
             GoogleTokenResponse googleResponse = flow.newTokenRequest(code)
                 .setRedirectUri(REDIRECT_URI)
                 .execute();
-            log.warn("------ Nyampe sini googleResponse");
+
             Credential cred = flow.createAndStoreCredential(googleResponse, userId);
-            log.warn("------ Nyampe sini createAndStoreCredential");
+
             return true;
         } catch (Exception e) {
             log.warn("------ Error when save credential for user {} : {}", userId, e);

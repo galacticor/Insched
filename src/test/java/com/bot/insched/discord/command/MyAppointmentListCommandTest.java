@@ -47,6 +47,8 @@ public class MyAppointmentListCommandTest {
     @Mock
     MessageSender sender;
 
+
+
     // Basic test setup
     private static JDA jda;
     private static String userId = "461191404341821455";

@@ -18,14 +18,22 @@ public class CreateSlotCommand implements Command {
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
 
-        try {
-            String response = creationHandler(args, event);
-            sender.sendPrivateMessage(response, event);
-        } catch (IndexOutOfBoundsException e) {
-            sender.sendPrivateMessage("Masukkan argumen yang sesuai!", event);
-        } catch (Exception e) {
-            sender.sendPrivateMessage(e.getMessage(), event);
+        if (args.length > 0) {
+            if (args[0].equalsIgnoreCase("help")) {
+                sender.sendPrivateMessage(getHelp(), event);
+            } else {
+                try {
+                    String response = creationHandler(args, event);
+                    sender.sendPrivateMessage(response, event);
+                } catch (IndexOutOfBoundsException e) {
+                    sender.sendPrivateMessage("Masukkan argumen yang sesuai!", event);
+                } catch (Exception e) {
+                    sender.sendPrivateMessage(e.getMessage(), event);
+                }
+            }
         }
+
+
     }
 
     @Override

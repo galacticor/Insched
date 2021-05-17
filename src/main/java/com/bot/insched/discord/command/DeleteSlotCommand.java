@@ -31,20 +31,19 @@ public class DeleteSlotCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "deleteAppointment";
+        return "deleteSlot";
     }
 
     @Override
     public String getHelp() {
         return "Digunakan untuk menghapus appointment yang belum dibooking.\n" +
-            "Penggunaan: !deleteAppointment tanggal jam_mulai\n" +
-            "Contoh: !deleteAppointment 2021-06-07 15:30";
+            "Penggunaan: !deleteSlot slot_token\n" +
+            "Contoh: !deleteSlot 12f8ca5e-8888-45b8-881b-a58d349e5269";
     }
 
     public String handleDelete(String[] args, String idDiscord) throws Exception {
-        String tanggal = args[0];
-        String jam = args[1];
-        String response = appointmentService.deleteSlot(tanggal, jam, idDiscord);
+        String token = args[0];
+        String response = appointmentService.deleteSlot(token, idDiscord);
         return response;
     }
 }

@@ -66,4 +66,12 @@ jacocoTestReport {
         xml.destination file("${buildDir}/jacoco/jacoco.xml")
         html.destination file("${buildDir}/reports/jacoco/test/html")
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/*Application**', 
+            							'com/bot/insched/model/**', 
+            							'**/*Config**',
+            							'com/bot/insched/controller/**'])
+        }))
+    }
 }

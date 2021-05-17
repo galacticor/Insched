@@ -7,10 +7,9 @@ import com.bot.insched.service.DiscordUserService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class MyTokenCommand implements Command {
-
+    private MessageSender sender = MessageSender.getInstance();
     private AppointmentService appointmentService;
     private DiscordUserService discordUserService;
-    private MessageSender sender = MessageSender.getInstance();
 
     public MyTokenCommand(AppointmentService appointmentService,
                           DiscordUserService discordUserService) {

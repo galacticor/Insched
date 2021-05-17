@@ -18,5 +18,5 @@ public interface AppointmentService {
     String editSlot(String tanggal, String jamLama, String jamBaru, int durasiBaru, String judulBaru,
                            String idDiscord) throws Exception;
 
-    String deleteSlot(String tanggal, String jamMulai, String idDiscord) throws Exception;
+    String deleteSlot(String token, String idDiscord) throws Exception;
 }

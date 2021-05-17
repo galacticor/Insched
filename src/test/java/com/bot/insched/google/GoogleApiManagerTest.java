@@ -88,9 +88,10 @@ public class GoogleApiManagerTest{
 
 		when(flow.newAuthorizationUrl()).thenReturn(codeUrl);
 		when(codeUrl.setRedirectUri(anyString())).thenReturn(codeUrl);
+		when(codeUrl.setState(anyString())).thenReturn(codeUrl);
 		when(codeUrl.build()).thenReturn(url);
 
-		assertNotEquals(manager.getAuthorizationUrl(),"bukan_url");
+		assertNotEquals(manager.getAuthorizationUrl("123"),"bukan_url");
 	}
 
 	@Test

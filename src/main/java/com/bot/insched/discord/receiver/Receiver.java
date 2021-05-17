@@ -36,7 +36,7 @@ public class Receiver {
         addCommand(new MyAppointmentListCommand(appointmentService));
         addCommand(new ShowCalendarCommand(showCalendarService));
         addCommand(new EditSlotCommand(appointmentService));
-
+        addCommand(new DeleteSlotCommand(appointmentService));
     }
 
     private void addCommand(Command command) {

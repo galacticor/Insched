@@ -8,13 +8,17 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-import jdk.vm.ci.meta.Local;
+import com.bot.insched.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 
 @Service
+@Transactional
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
@@ -25,6 +29,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     EventService eventService;
+
+    @Autowired
+    EventRepository eventRepository;
 
     @Override
     public Appointment save(Appointment app) {
@@ -108,25 +115,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public String deleteSlot(String tanggal, String jamMulai, String idDiscord) throws Exception {
+    public String deleteSlot(String token, String idDiscord) throws Exception {
         DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
             throw new NotLoggedInException();
         }
 
-        Appointment app = appointmentRepository.findAppointmentByOwner(user);
-        LocalDateTime startTime = LocalDateTime.parse(tanggal + "T" + jamMulai + ":00");
-        List<Event> eventList = app.getListEvent();
-
-        if (eventList != null) {
-            for (Event event: eventList) {
-                if (event.getStartTime().equals(startTime)) {
-                    eventList.remove(event);
-                    return "Slot berhasil dihapus!";
-                }
-            }
+        Event event = eventRepository.findByIdEvent(UUID.fromString(token));
+        if (event == null) {
+            throw new SlotUnavailableException("Tidak ada slot pada keterangan waktu seperti itu!");
+        } else if (event.getListAttendee().size() == 0){
+            eventRepository.deleteByIdEvent(UUID.fromString(token));
+            return "Slot berhasil dihapus!";
         }
 
-        return "Tidak ada slot yang bersangkutan!";
+        return "Slot sudah dibooking!";
     }
 }
