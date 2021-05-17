@@ -1,6 +1,6 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.oauth2.model.Userinfoplus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GoogleServiceImpl implements GoogleService {
     @Autowired
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
 
     public String getAuthorizationUrl() {
         return manager.getAuthorizationUrl();

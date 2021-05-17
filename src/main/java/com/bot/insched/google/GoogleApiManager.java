@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class GoogleAPIManager {
+public class GoogleApiManager {
     private static final String APPLICATION_NAME = "Insched (Instant Scheduler)";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES =
@@ -37,8 +37,6 @@ public class GoogleAPIManager {
     private static String CLIENT_ID;
     private static String REDIRECT_URI;
 
-
-
     private DiscordUserRepository userRepo;
     private Builder builder;
 
@@ -46,14 +44,18 @@ public class GoogleAPIManager {
     private HttpTransport httpTransport;
 
     @Autowired
-    public GoogleAPIManager(
+    public GoogleApiManager(
         DiscordUserRepository repository,
         Builder builder,
         @Value("${client_id}") String clientId,
         @Value("${client_secret}") String clientSecret,
-        @Value("${redirect_uri}") String redirectUri) {
+        @Value("${redirect_uri}") String redirectUri) 
+    {
         this.userRepo = repository;
         this.builder = builder;
+        CLIENT_ID = clientId;
+        CLIENT_SECRET = clientSecret;
+        REDIRECT_URI = redirectUri;
         init();
     }
 
@@ -86,9 +88,9 @@ public class GoogleAPIManager {
             GoogleTokenResponse googleResponse = flow.newTokenRequest(code)
                 .setRedirectUri(REDIRECT_URI)
                 .execute();
-
+            log.warn("------ Nyampe sini googleResponse");
             Credential cred = flow.createAndStoreCredential(googleResponse, userId);
-
+            log.warn("------ Nyampe sini createAndStoreCredential");
             return true;
         } catch (Exception e) {
             log.warn("------ Error when save credential for user {} : {}", userId, e);

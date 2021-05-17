@@ -1,11 +1,13 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.service.GoogleService;
+import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,26 +18,27 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Array;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class HelloCommandTest {
+public class AuthCommandTest {
     @InjectMocks
-    HelloCommand command;
+    AuthCommand command;
 
     @Mock
     PrivateMessageReceivedEvent event;
 
     @Mock
     GoogleService googleService;
-    @Mock
-    private Message message;
-    @Mock
-    private User jdaUser;
+
     @Mock
     private MessageSender sender;
+
+    @Mock
+    private User jdaUser;
 
     @BeforeEach
     public void setUp(){
@@ -44,24 +47,28 @@ public class HelloCommandTest {
 
     @Test
     public void testExecute() {
-        String[] args = {"hello"};
+        String[] args = {"token"};
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Authentication Status");
+        embed.setDescription("success");
 
         when(event.getAuthor()).thenReturn(jdaUser);
         when(jdaUser.getId()).thenReturn("123");
-        when(googleService.getUserInfo(anyString())).thenReturn("User");
-        doNothing().when(sender).sendPrivateMessage("Hello User!!", event);
+        when(googleService.authToken("123", "token")).thenReturn("success");
+        doNothing().when(sender).sendPrivateMessage(embed.build(), event);
 
         command.execute(args, event);
     }
 
     @Test
     public void testGetHelp() {
-        String res = command.getHelp();
-        assertEquals(res, null);
+        String expected = "Masukkan dengan format seperti berikut \n" +
+            "!auth <token>";
+        assertEquals(command.getHelp(), expected);
     }
 
     @Test
     public void testGetCommand(){
-        assertEquals(command.getCommand(),"hello");
+        assertEquals(command.getCommand(),"auth");
     }
 }

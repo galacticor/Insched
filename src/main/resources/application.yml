@@ -1,13 +1,4 @@
-export SPRING_DATASOURCE_URL=jdbc:postgresql://db.widyantohd.xyz:5432/insched
-export SPRING_DATASOURCE_USER=insched
-export SPRING_DATASOURCE_PASSWORD=insched123*
-export DISCORD_TOKEN=ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI
-export CLIENT_SECRET=oksfFIk_VzNxb9G08Iup7_1U
-export CLIENT_ID=38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com
-export REDIRECT_URI=urn:ietf:wg:oauth:2.0:oob
-
-#discord_token: "ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI"
-
-#client_id: ${CLIENT_ID}
-#client_secret: ${CLIENT_SECRET}
-#redirect_uri: ${REDIRECT_URI}
+discord_token: "ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI"
+client_id: "38754712208-kv8cg40gbksnpj4kcd5fiog2bck9n20j.apps.googleusercontent.com"
+client_secret: "blnZg208ta2KrRgSA3NugBCx"
+redirect_uri: "http://localhost:8080/auth"
