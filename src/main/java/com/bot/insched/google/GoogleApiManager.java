@@ -49,8 +49,7 @@ public class GoogleApiManager {
         Builder builder,
         @Value("${client_id}") String clientId,
         @Value("${client_secret}") String clientSecret,
-        @Value("${redirect_uri}") String redirectUri) 
-    {
+        @Value("${redirect_uri}") String redirectUri) {
         this.userRepo = repository;
         this.builder = builder;
         CLIENT_ID = clientId;
@@ -58,6 +57,19 @@ public class GoogleApiManager {
         REDIRECT_URI = redirectUri;
         init();
     }
+
+    //    @Autowired
+    //    public GoogleApiManager(
+    //        DiscordUserRepository repository,
+    //        Builder builder,
+    //        @Value("${client_id}") String clientId,
+    //        @Value("${client_secret}") String clientSecret,
+    //        @Value("${redirect_uri}") String redirectUri)
+    //    {
+    //        this.userRepo = repository;
+    //        this.builder = builder;
+    //        init();
+    //    }
 
 
     public void init() {
