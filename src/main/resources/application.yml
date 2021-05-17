@@ -3,3 +3,11 @@ discord_token: "ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI"
 #client_id: ${CLIENT_ID}
 #client_secret: ${CLIENT_SECRET}
 #redirect_uri: ${REDIRECT_URI}
+
+client_id: "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com"
+client_secret: "oksfFIk_VzNxb9G08Iup7_1U"
+redirect_uri: ["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
+
+SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/postgres"
+SPRING_DATASOURCE_USER: "postgres"
+SPRING_DATASOURCE_PASSWORD: "18091827Aa"

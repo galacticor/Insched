@@ -1,5 +1,7 @@
 package com.bot.insched.service;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
+import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
@@ -46,13 +48,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime mulai = LocalDateTime.parse(waktu);
         DiscordUser user = discordUserService.findByUserId(idDiscord);
         if (user == null) {
-            throw new Exception("Kamu belum login. Silahkan login terlebih dahulu!");
+            throw new NotLoggedInException();
         }
         List<Event> userAppointment =  user.getAppointment().getListEvent();
 
         for (Event e : userAppointment) {
             if (e.getStartTime().isEqual(mulai)) {
-                throw new Exception("Jam sudah memiliki slot! Silahkan pilih jam/tanggal lain");
+                throw new SlotUnavailableException(
+                    "Jam sudah memiliki slot! Silahkan pilih jam/tanggal lain");
             }
         }
 
