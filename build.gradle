@@ -68,7 +68,10 @@ jacocoTestReport {
     }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/*Application**', 'com/bot/insched/model/**'])
+            fileTree(dir: it, exclude: ['**/*Application**', 
+            							'com/bot/insched/model/**', 
+            							'**/*Config**',
+            							'com/bot/insched/controller/**'])
         }))
     }
 }
