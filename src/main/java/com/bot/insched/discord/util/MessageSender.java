@@ -16,7 +16,7 @@ public class MessageSender {
     public static MessageSender getInstance() {
         return instance;
     }
-    
+
     public static void configure(){
         if (jda == null){
             jda = InschedApplication.getJda();
@@ -60,8 +60,8 @@ public class MessageSender {
 
     /*
         Send Private Message as Notification without event
-        and require JDA User with message as Embed or String
-        Required: @userId and @message
+        and require user as JDA User with message as Embed or String
+        Required: @user and @message
     */
     public void sendPrivateNotification(String message, User user){
         configure();
