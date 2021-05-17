@@ -2,7 +2,6 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
-import com.bot.insched.discord.util.InschedEmbed;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;

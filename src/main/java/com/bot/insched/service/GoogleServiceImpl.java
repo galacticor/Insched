@@ -1,9 +1,8 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.oauth2.model.Userinfoplus;
-import net.dv8tion.jda.api.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,8 @@ public class GoogleServiceImpl implements GoogleService {
             String userInfo = getUserInfo(userId);
             sender.sendPrivateNotificationById("Welcome " + userInfo, userId);
 
-            return "Succeed, Welcome " + userInfo + 
-                ", silakan kembali ke discord Anda.";
+            return "Succeed, Welcome " + userInfo
+                + ", silakan kembali ke discord Anda.";
         } else {
             return "Sepertinya terdapat masalah, silakan coba kembali.";
         }
