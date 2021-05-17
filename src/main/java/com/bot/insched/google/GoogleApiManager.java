@@ -33,19 +33,9 @@ public class GoogleApiManager {
     private static final List<String> SCOPES =
         Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
-    //    @Value("${client_secret}")
-    //    private static String CLIENT_SECRET;
-    //
-    //    @Value("${client_id}")
-    //    private static String CLIENT_ID;
-    //
-    //    @Value("${redirect_uri}")
-    //    private static String REDIRECT_URI;
-    private static final String CLIENT_SECRET = "oksfFIk_VzNxb9G08Iup7_1U";
-    private static final String CLIENT_ID =
-        "38754712208-el2lrejbff3mineg0sc0cbiimiqbj349.apps.googleusercontent.com";
-    private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-
+    private static String CLIENT_SECRET;
+    private static String CLIENT_ID;
+    private static String REDIRECT_URI;
 
     private DiscordUserRepository userRepo;
     private Builder builder;
@@ -71,7 +61,11 @@ public class GoogleApiManager {
     @Autowired
     public GoogleApiManager(
         DiscordUserRepository repository,
-        Builder builder) {
+        Builder builder,
+        @Value("${client_id}") String clientId,
+        @Value("${client_secret}") String clientSecret,
+        @Value("${redirect_uri}") String redirectUri) 
+    {
         this.userRepo = repository;
         this.builder = builder;
         init();
@@ -106,9 +100,9 @@ public class GoogleApiManager {
             GoogleTokenResponse googleResponse = flow.newTokenRequest(code)
                 .setRedirectUri(REDIRECT_URI)
                 .execute();
-
+            log.warn("------ Nyampe sini googleResponse");
             Credential cred = flow.createAndStoreCredential(googleResponse, userId);
-
+            log.warn("------ Nyampe sini createAndStoreCredential");
             return true;
         } catch (Exception e) {
             log.warn("------ Error when save credential for user {} : {}", userId, e);

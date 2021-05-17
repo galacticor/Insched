@@ -1,9 +1,11 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class HelloCommand implements Command {
+    private MessageSender sender = MessageSender.getInstance();
     private GoogleService googleService;
 
     public HelloCommand(GoogleService googleService) {
@@ -12,9 +14,9 @@ public class HelloCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        String userId = event.getMessage().getAuthor().getId();
+        String userId = event.getAuthor().getId();
         String reply = "Hello " + googleService.getUserInfo(userId) + "!!";
-        sendPrivateMessage(reply,event);
+        sender.sendPrivateMessage(reply, event);
     }
 
     @Override
@@ -25,11 +27,5 @@ public class HelloCommand implements Command {
     @Override
     public String getHelp() {
         return null;
-    }
-
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
     }
 }

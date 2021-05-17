@@ -1,6 +1,6 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.embed.InschedEmbed;
+import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
 import java.time.LocalDate;

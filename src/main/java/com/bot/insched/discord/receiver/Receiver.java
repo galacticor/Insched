@@ -28,8 +28,8 @@ public class Receiver {
         addCommand(new UpdateEventCommand(eventService, discordUserService));
         addCommand(new DeleteEventCommand(eventService, discordUserService));
         addCommand(new HelpCommand());
+        addCommand(new LoginCommand(googleService));
         addCommand(new AuthCommand(googleService));
-        addCommand(new AuthTokenCommand(googleService));
         addCommand(new ErrorCommand());
         addCommand(new MyTokenCommand(appointmentService, discordUserService));
         addCommand(new CreateSlotCommand(appointmentService));
