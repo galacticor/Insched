@@ -39,3 +39,4 @@ out/
 .env
 application.yml
 **/application.yml
+**/application-dev.properties
