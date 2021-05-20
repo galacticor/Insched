@@ -1,7 +1,7 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
