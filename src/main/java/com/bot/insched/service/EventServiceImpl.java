@@ -76,7 +76,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String updateEventService(String discordId, String eventId, String jenis, String newData) {
+    public String updateEventService(String discordId, String eventId,
+                                     String jenis, String newData) {
         Calendar calendar = getCalendarbyId(discordId);
         if (calendar == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
