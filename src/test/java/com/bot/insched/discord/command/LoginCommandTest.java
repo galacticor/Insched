@@ -48,8 +48,11 @@ public class LoginCommandTest {
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Login");
         embed.setDescription(String.format("Silakan login melalui link berikut [LINK](%s)", "url"));
+        User user = mock(User.class);
 
-        when(googleService.getAuthorizationUrl()).thenReturn("url");
+        when(googleService.getAuthorizationUrl("123")).thenReturn("url");
+        when(event.getAuthor()).thenReturn(user);
+        when(user.getId()).thenReturn("123");
         doNothing().when(sender).sendPrivateMessage(embed.build(), event);
 
         command.execute(args, event);

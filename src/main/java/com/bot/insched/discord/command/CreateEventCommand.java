@@ -2,8 +2,8 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.DiscordUserService;
-import com.bot.insched.service.EventService;
 import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
@@ -38,8 +38,8 @@ public class CreateEventCommand implements Command {
             } catch (IndexOutOfBoundsException e) {
                 sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sender.sendPrivateMessage("Input yang anda masukkan salah, " +
-                        "Harap mengecek kembali input anda", event);
+                sender.sendPrivateMessage("Input yang anda masukkan salah, "
+                        + "Harap mengecek kembali input anda", event);
             }
         }
     }

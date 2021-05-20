@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/")
 public class MainController {
-	@Autowired
-	private GoogleService service;
+    @Autowired
+    private GoogleService service;
 
-	@GetMapping(path = "auth")
-	@ResponseBody
-	public String authToken(@RequestParam String id, @RequestParam String code){
-		String response = service.authToken(id, code);
+    @GetMapping(path = "auth", produces = {"application/json"})
+    @ResponseBody
+    public String authToken(@RequestParam String state, @RequestParam String code) {
+        String response = service.authToken(state, code);
+        return response;
+    }
 
-		System.out.println(id);
-		System.out.println(code);
-		if (response.equals("Failed")){
-			return "Gagal, silakan coba kembali.";	
-		}
-		return "Sukses, silakan kembali ke discord Anda.";
-	}
+    @GetMapping(path = "ping", produces = {"application/json"})
+    @ResponseBody
+    public String healthCheck() {
+        return "PONG";
+    }
 }

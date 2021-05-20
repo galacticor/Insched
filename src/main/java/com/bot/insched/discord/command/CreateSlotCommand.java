@@ -1,11 +1,17 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
+import com.bot.insched.discord.exception.SlotUnavailableException;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class CreateSlotCommand implements Command {
 
     private AppointmentService appointmentService;
+
+    private MessageSender sender = MessageSender.getInstance();
 
     public CreateSlotCommand(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
@@ -13,14 +19,13 @@ public class CreateSlotCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-
         try {
             String response = creationHandler(args, event);
-            sendMessage(response, event);
+            sender.sendPrivateMessage(response, event);
         } catch (IndexOutOfBoundsException e) {
-            sendMessage("Masukan argumen yang sesuai!", event);
+            sender.sendPrivateMessage("Masukkan argumen yang sesuai!", event);
         } catch (Exception e) {
-            sendMessage(e.getMessage(), event);
+            sender.sendPrivateMessage(e.getMessage(), event);
         }
     }
 
@@ -31,8 +36,8 @@ public class CreateSlotCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi"
-                + "Contoh: !createSlot 2022-02-03 15:30 30 2 meeting_startup";
+        return "!createSlot tanggal jam_mulai durasi(menit) kapasitas deskripsi\n"
+            + "Contoh: !createSlot 2022-02-03 15:30 30 2 meeting_startup";
     }
 
     public String creationHandler(String[] args, PrivateMessageReceivedEvent event)
@@ -46,9 +51,4 @@ public class CreateSlotCommand implements Command {
         return appointmentService.createSlot(deskripsi, waktu, durasi, kapasitas, idUser);
     }
 
-    private void sendMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
-    }
 }

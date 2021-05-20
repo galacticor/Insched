@@ -1,8 +1,8 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.service.GoogleService;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class LoginCommand implements Command {
@@ -15,7 +15,8 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        String url = service.getAuthorizationUrl();
+        String userId = event.getAuthor().getId();
+        String url = service.getAuthorizationUrl(userId);
 
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Login");
