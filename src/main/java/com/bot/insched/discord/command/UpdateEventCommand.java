@@ -57,7 +57,8 @@ public class UpdateEventCommand implements Command {
     @Override
     public String getHelp() {
         return "!updateEvent <eventID> <jenis> <dataBaru> \n"
-                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai 2021-05-21T05:30:00.000+07:00 \n"
+                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai "
+                + "2021-05-21T05:30:00.000+07:00 \n"
                 + "note: jenis data data yang dapat di-update\n "
                 + "deskripsi, summary, mulai, dan selesai";
     }
