@@ -1,5 +1,7 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
@@ -12,6 +14,7 @@ public class CreateEventCommand implements Command {
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
+    private MessageSender sender = MessageSender.getInstance();
 
     public CreateEventCommand(EventService eventService,
                               DiscordUserService discordUserService) {
@@ -21,18 +24,22 @@ public class CreateEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-            + "Tunggu sebentar,Event anda sedang dibuat", event);
+        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
+                + "Tunggu sebentar,Event anda sedang dibuat", event);
         if (args[0].equalsIgnoreCase("help")) {
-            sendPrivateMessage(getHelp(), event);
+            sender.sendPrivateMessage(getHelp(), event);
         } else {
             try {
+                InschedEmbed embed = new InschedEmbed();
+                embed.setTitle("Create Event");
                 String res = handleCreation(args, event.getAuthor().getId());
-                sendPrivateMessage(res, event);
+                embed.setDescription(res);
+                sender.sendPrivateMessage(embed.build(), event);
             } catch (IndexOutOfBoundsException e) {
-                sendPrivateMessage("Masukan argumen yang sesuai!", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(), event);
+                sender.sendPrivateMessage("Input yang anda masukkan salah, "
+                        + "Harap mengecek kembali input anda", event);
             }
         }
     }
@@ -42,10 +49,10 @@ public class CreateEventCommand implements Command {
         String summary = args[1];
         DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00-07:00");
         EventDateTime eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai)
-            .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Los_Angeles");
         DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00-07:00");
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
-            .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Los_Angeles");
         String deskripsi = args[6];
 
         event = new Event();
@@ -65,13 +72,8 @@ public class CreateEventCommand implements Command {
     @Override
     public String getHelp() {
         return "!createEvent <summary> <token_event> <tanggal_mulai> <jam_mulai> "
-            + "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n"
-            + "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
+                + "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n"
+                + "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
     }
 
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
-    }
 }
