@@ -1,5 +1,7 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
@@ -11,6 +13,7 @@ public class UpdateEventCommand implements Command {
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
+    private MessageSender sender = MessageSender.getInstance();
 
     public UpdateEventCommand(EventService eventService,
                               DiscordUserService discordUserService) {
@@ -20,28 +23,30 @@ public class UpdateEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-            + "Tunggu sebentar,Event anda sedang dibuat", event);
+        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
+                + "Tunggu sebentar,Event anda sedang di-update", event);
         if (args[0].equalsIgnoreCase("help")) {
-            sendPrivateMessage(getHelp(), event);
+            sender.sendPrivateMessage(getHelp(), event);
         } else {
             try {
+                InschedEmbed embed = new InschedEmbed();
+                embed.setTitle("Update Event");
                 String res = handleCreation(args, event.getAuthor().getId());
-                sendPrivateMessage(res, event);
+                embed.setDescription(res);
+                sender.sendPrivateMessage(embed.build(), event);
             } catch (IndexOutOfBoundsException e) {
-                sendPrivateMessage("Masukan argumen yang sesuai!", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(), event);
+                sender.sendPrivateMessage(e.toString(), event);
             }
         }
     }
 
     private String handleCreation(String[] args, String idUser) throws Exception {
         String idEvent = args[0];
-        String summary = args[1];
-        event = new Event();
-        event.setSummary(summary);
-        return eventService.updateEventService(idUser, idEvent, event);
+        String jenis = args[1];
+        String newData = args[2];
+        return eventService.updateEventService(idUser, idEvent, jenis, newData);
     }
 
     @Override
@@ -51,13 +56,10 @@ public class UpdateEventCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!updateEvent <eventID> <summary> <deskripsi_event> \n"
-            + "Contoh: !createEvent fjbqeoaufbqeo KUIS Kuliah";
+        return "!updateEvent <eventID> <jenis> <dataBaru> \n"
+                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai 2021-05-21T05:30:00.000+07:00 \n"
+                + "note: jenis data data yang dapat di-update\n "
+                + "deskripsi, summary, mulai, dan selesai";
     }
 
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
-    }
 }
