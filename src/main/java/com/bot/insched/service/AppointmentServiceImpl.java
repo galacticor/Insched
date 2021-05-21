@@ -105,6 +105,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             event.setStartTime(newStartTime);
             event.setEndTime(newStartTime.plusMinutes(durasiBaru));
+            event.setDescription(judulBaru);
             return "Appointment berhasil di-update!";
         }
 
