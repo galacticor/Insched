@@ -149,8 +149,6 @@ public class EventServiceImplTest {
         lenient().when(calendar.events().insert("primary",event).execute()).thenReturn(any(Event.class));
         String res = eventService.createEventService("123456",event);
         assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
-
-
     }
 
     @Test

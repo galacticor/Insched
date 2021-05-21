@@ -128,9 +128,16 @@ public class GoogleApiManager {
     // me return service yang akan digunakan untuk mengambil calendar dari google
     public Calendar getCalendarService(String userId) {
         GoogleCredential credential = getCredential(userId);
+        System.out.println("sebelum masuk if");
+        log.warn("sebelum masuk if");
         if (credential == null) {
+            log.warn("masuk if");
+            System.out.println("masuk if");
             return null; // jika belum login, karena tidak ada di database
         }
+        log.warn("keluar if");
+        System.out.println("keluar if");
+
 
         Calendar service = builder.getCalendarBuilder(httpTransport, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
