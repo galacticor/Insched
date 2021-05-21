@@ -19,9 +19,7 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     GoogleApiManager manager;
 
     public List<Event> getListEvents(String userId) {
-//        System.out.println("masuk ke get events showcalendarservice");
         Calendar service = manager.getCalendarService(userId);
-//        System.out.println("selesaai ke get events showcalendarservice");
         List<Event> listEventAll = new ArrayList<>();
 
         String pageToken = null;
@@ -37,9 +35,7 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
 
         } while (pageToken != null);
 
-        System.out.println("Array sebelum dipilih 10 = " + Arrays.asList(listEventAll).toString());
         List<Event> listEvent = get10LatestEvent(listEventAll);
-
         return listEvent;
     }
 

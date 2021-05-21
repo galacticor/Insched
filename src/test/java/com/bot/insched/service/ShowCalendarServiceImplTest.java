@@ -39,22 +39,66 @@ public class ShowCalendarServiceImplTest {
     @Mock
     private Calendar calendar;
 
+    @Mock
     private Event event;
 
     private StoredCredential storedCredential;
 
     private DiscordUser user;
 
-    @Test
-    public void testGetEventSuccess() throws Exception {
-        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+
+    private String accessToken = "dummy_access_token";
+    private String refreshToken = "dummy_refresh_token";
+    private String desc = "ini_deskripsi";
+    private String eventId = "0123456789abcdefghijklmnopqrstuv";
+    private String start_date = "2000-04-22T15:30:00-07:00";
+
+    @BeforeEach
+    public void setUp() {
+        event = new Event().setSummary("Tes 1");
+        event.setDescription("no description");
+
+//        Event newEvent = new Event();
+//        newEvent.setStart(DateTime start) = new EventDateTime() { DateTime = start };
+//        newEvent.End = new EventDateTime() { DateTime = end };
     }
 
+//    @Test
+//    public void testGetEventSuccess() throws Exception {
+//        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+//    }
+
+//    @Test
+//    public void testGetCalSummary() throws Exception {
+////        lenient().when(event.getSummary()).thenReturn(String.class);
+////        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+////        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
+////        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
+//        String res = event.getSummary();
+//        assertEquals(res, anyString());
+//    }
+
     @Test
-    public void testGetCalSUmmary() throws Exception {
-        lenient().when(event.getSummary()).thenReturn(any(String.class));
+    public void testGetCalDescription() throws Exception {
+        lenient().when(event.getDescription()).thenReturn("no description");
+//        when(event.getDescription()).thenReturn("no description");
+//        when(event.getDescription()).thenReturn(mock(String.class));
+//        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+//        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
+//        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
+        String res = event.getDescription();
+        assertEquals(res, "no description");
     }
 
+//    @Test
+//    public void testGetCalSummaryNull() throws Exception {
+////        lenient().when(event.getSummary()).thenReturn(String.class);
+////        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+////        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
+////        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
+//        String res = event.getSummary();
+//        assertEquals(res, null);
+//    }
 
 
 }
