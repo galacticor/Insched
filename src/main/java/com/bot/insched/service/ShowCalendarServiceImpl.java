@@ -3,12 +3,9 @@ package com.bot.insched.service;
 import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-//import com.google.api.services.calendar.Calendar.Events.List;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import java.io.IOException;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
