@@ -86,8 +86,7 @@ public class EditSlotCommandTest {
         String res = "Digunakan untuk update judul dan jam appointment.\n" +
             "Hanya dapat mengupdate appointment yang belum dibooking.\n\n" +
             "Penggunaan: !editSlot token_slot jam_baru durasi_baru judul_baru\n\n" +
-            "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n" +
-            "Jika kamu tidak ingin mengupdate field tertentu, isikan dengan -";;
+            "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n";
 
 
         lenient().when(event.getAuthor()).thenReturn(user);
@@ -101,8 +100,7 @@ public class EditSlotCommandTest {
         String expected = "Digunakan untuk update judul dan jam appointment.\n" +
             "Hanya dapat mengupdate appointment yang belum dibooking.\n\n" +
             "Penggunaan: !editSlot token_slot jam_baru durasi_baru judul_baru\n\n" +
-            "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n" +
-            "Jika kamu tidak ingin mengupdate field tertentu, isikan dengan -";
+            "Contoh: !editSlot 94a56007-cbe4-47a0-aa54-2c0689c7e19c 17:00 30 Sprint_report\n\n";
 
         assertEquals(expected, command.getHelp());
     }
