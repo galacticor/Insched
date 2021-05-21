@@ -69,16 +69,8 @@ class ShowCalendarCommandTest {
     @BeforeEach
     public void setUp() throws Exception{
         Thread.sleep(1000);
-//        init();
         lenient().when(privateMessageReceivedEvent.getAuthor()).thenReturn(jdaUser);
         lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
-    }
-
-
-    @Test
-     void testOpening() {
-        String[] args = {"Selamat Datang di fitur showCalendar"};
-        showCalendarCommand.execute(args, privateMessageReceivedEvent);
     }
 
     @Test
@@ -91,10 +83,4 @@ class ShowCalendarCommandTest {
         assertEquals("showCalendar", showCalendarCommand.getCommand());
     }
 
-//    @Test
-//    void testgetCal(){
-//        String userId = privateMessageReceivedEvent.getMessage().getAuthor().getId();
-//        String[] args = {showCalendarService.getCalService(userId)};
-//        showCalendarCommand.execute(args,privateMessageReceivedEvent);
-//    }
 }
