@@ -35,7 +35,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
             throw new NotLoggedInException();
         }
 
-        Event event = findEventByToken(token);
+        UUID uuid = UUID.fromString(token);
+        Event event = eventRepository.findByIdEvent(uuid);
         if (event == null) {
             return "Event tidak ditemukan!";
         }
@@ -71,7 +72,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
             throw new NotLoggedInException();
         }
 
-        Event event = findEventByToken(token);
+        UUID uuid = UUID.fromString(token);
+        Event event = eventRepository.findByIdEvent(uuid);
         if (event == null) {
             return "Event tidak ditemukan";
         }
@@ -96,11 +98,5 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         attendee.setListEvent(listEvent);
 
         return "Booking slot event telah dihapus!";
-    }
-
-    // FIXME: Probably should be in EventRepository.java instead
-    public Event findEventByToken(String token) {
-        UUID uuid = UUID.fromString(token);
-        return eventRepository.findByIdEvent(uuid);
     }
 }
