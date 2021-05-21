@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -8,20 +9,19 @@ import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.annotation.Order;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Array;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ErrorCommandTest {
@@ -32,35 +32,20 @@ public class ErrorCommandTest {
     PrivateMessageReceivedEvent event;
 
     @Mock
-    PrivateChannel privateChannel;
-    // Basic test setup
-    private static JDA jda;
-    private static String userId = "461191404341821455";
-    private static Message message;
-    private static User jdaUser;
+    private MessageSender sender;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
-        jda.retrieveUserById(userId).queue(user -> {
-            jdaUser = user;
-        });
-        message = new MessageBuilder().append("dummy").build();
-        Thread.sleep(2000);
-    }
-
-    @AfterAll
-    public static void teardown() throws Exception {
-        jda.shutdownNow();
-        Thread.sleep(2000);
+    @BeforeEach
+    public void setUp(){
+        ReflectionTestUtils.setField(command, "sender", sender);
     }
 
     @Test
     public void testErrorExecute() {
         String[] args = {"error"};
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
-        command.execute(args,event);
+        // setiap sendPrivateMessage, kalian cman perlu mock ini aja sebaris, dia bisa nerima MessageEmbed atau String class
+        doNothing().when(sender).sendPrivateMessage(command.getHelp(), event);
+
+        command.execute(args, event);
     }
 
     @Test

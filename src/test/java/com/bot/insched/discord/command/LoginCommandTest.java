@@ -1,11 +1,13 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.service.GoogleService;
+import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,24 +18,22 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Array;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class HelloCommandTest {
+public class LoginCommandTest {
     @InjectMocks
-    HelloCommand command;
+    LoginCommand command;
 
     @Mock
     PrivateMessageReceivedEvent event;
 
     @Mock
     GoogleService googleService;
-    @Mock
-    private Message message;
-    @Mock
-    private User jdaUser;
+
     @Mock
     private MessageSender sender;
 
@@ -44,12 +44,16 @@ public class HelloCommandTest {
 
     @Test
     public void testExecute() {
-        String[] args = {"hello"};
+        String[] args = {"login"};
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Login");
+        embed.setDescription(String.format("Silakan login melalui link berikut [LINK](%s)", "url"));
+        User user = mock(User.class);
 
-        when(event.getAuthor()).thenReturn(jdaUser);
-        when(jdaUser.getId()).thenReturn("123");
-        when(googleService.getUserInfo(anyString())).thenReturn("User");
-        doNothing().when(sender).sendPrivateMessage("Hello User!!", event);
+        when(googleService.getAuthorizationUrl("123")).thenReturn("url");
+        when(event.getAuthor()).thenReturn(user);
+        when(user.getId()).thenReturn("123");
+        doNothing().when(sender).sendPrivateMessage(embed.build(), event);
 
         command.execute(args, event);
     }
@@ -62,6 +66,6 @@ public class HelloCommandTest {
 
     @Test
     public void testGetCommand(){
-        assertEquals(command.getCommand(),"hello");
+        assertEquals(command.getCommand(),"login");
     }
 }

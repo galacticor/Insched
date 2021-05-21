@@ -1,17 +1,15 @@
 package com.bot.insched;
 
 import com.bot.insched.discord.invoker.Invoker;
-
+import javax.annotation.PostConstruct;
+import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
-import javax.annotation.PostConstruct;
-import javax.security.auth.login.LoginException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class InschedApplication {
@@ -35,6 +33,10 @@ public class InschedApplication {
         jda = JDABuilder.createDefault(TOKEN).build();
         jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
         jda.addEventListener(botListener);
+    }
+
+    public static JDA getJda() {
+        return jda;
     }
 
 }

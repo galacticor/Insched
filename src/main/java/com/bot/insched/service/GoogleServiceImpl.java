@@ -1,28 +1,31 @@
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.oauth2.model.Userinfoplus;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GoogleServiceImpl implements GoogleService {
     @Autowired
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
+    private MessageSender sender = MessageSender.getInstance();
 
-    public String getAuthorizationUrl() {
-        return manager.getAuthorizationUrl();
+    public String getAuthorizationUrl(String userId) {
+        return manager.getAuthorizationUrl(userId);
     }
 
     public String authToken(String userId, String code) {
         boolean response = manager.authToken(userId, code);
         if (response) {
-            return "Succed, Welcome " + getUserInfo(userId);
+            String userInfo = getUserInfo(userId);
+            sender.sendPrivateNotificationById("Welcome " + userInfo, userId);
+
+            return "Succeed, Welcome " + userInfo
+                + ", silakan kembali ke discord Anda.";
         } else {
-            return "Failed";
+            return "Sepertinya terdapat masalah, silakan coba kembali.";
         }
     }
 

@@ -1,5 +1,10 @@
 package com.bot.insched.discord.command;
 
+<<<<<<< HEAD
+=======
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
+>>>>>>> 7916ba4cc5b5a25d5a5e66db9ba524eb06fa5fef
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
@@ -7,54 +12,59 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-public class CreateEventCommand implements Command{
+public class CreateEventCommand implements Command {
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
+    private MessageSender sender = MessageSender.getInstance();
 
     public CreateEventCommand(EventService eventService,
-                              DiscordUserService discordUserService){
+                              DiscordUserService discordUserService) {
         this.eventService = eventService;
         this.discordUserService = discordUserService;
     }
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sendPrivateMessage("Selamat Datang di fitur Create Event \n" +
-                "Tunggu sebentar,Event anda sedang dibuat",event);
+        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
+                + "Tunggu sebentar,Event anda sedang dibuat", event);
         if (args[0].equalsIgnoreCase("help")) {
-            sendPrivateMessage(getHelp(), event);
+            sender.sendPrivateMessage(getHelp(), event);
         } else {
-            try{
-                String res = handleCreation(args,event.getAuthor().getId());
-                sendPrivateMessage(res, event);
+            try {
+                InschedEmbed embed = new InschedEmbed();
+                embed.setTitle("Create Event");
+                String res = handleCreation(args, event.getAuthor().getId());
+                embed.setDescription(res);
+                sender.sendPrivateMessage(embed.build(), event);
             } catch (IndexOutOfBoundsException e) {
-                sendPrivateMessage("Masukan argumen yang sesuai!", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(),event);
+                sender.sendPrivateMessage("Input yang anda masukkan salah, "
+                        + "Harap mengecek kembali input anda", event);
             }
         }
     }
 
-    private String handleCreation(String[] args,String idUser) throws Exception {
+    private String handleCreation(String[] args, String idUser) throws Exception {
         String id = args[0];
         String summary = args[1];
         DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00-07:00");
         EventDateTime eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai)
                 .setTimeZone("America/Los_Angeles");
-        DateTime dateTimeSelesai = new DateTime(args[4]+"T" + args[5] + ":00-07:00");
+        DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00-07:00");
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
                 .setTimeZone("America/Los_Angeles");
         String deskripsi = args[6];
+
         event = new Event();
         event.setId(id);
         event.setSummary(summary);
         event.setStart(eventDateTimeMulai);
         event.setEnd(eventDateTimeSelesai);
         event.setDescription(deskripsi);
-        return eventService.createEventService(idUser,event);
+        return eventService.createEventService(idUser, event);
     }
 
     @Override
@@ -69,9 +79,4 @@ public class CreateEventCommand implements Command{
                 + "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
     }
 
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
-    }
 }

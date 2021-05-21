@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
-public class GoogleAPIManagerTest{
+public class GoogleApiManagerTest{
 
 	@Mock
 	private DiscordUserRepository userRepo;
@@ -45,7 +45,7 @@ public class GoogleAPIManagerTest{
 	@Mock
 	private HttpTransport httpTransport;
 	@InjectMocks
-	private GoogleAPIManager manager;
+	private GoogleApiManager manager;
 
     private static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     private String url = "auth url";
@@ -88,9 +88,10 @@ public class GoogleAPIManagerTest{
 
 		when(flow.newAuthorizationUrl()).thenReturn(codeUrl);
 		when(codeUrl.setRedirectUri(anyString())).thenReturn(codeUrl);
+		when(codeUrl.setState(anyString())).thenReturn(codeUrl);
 		when(codeUrl.build()).thenReturn(url);
 
-		assertNotEquals(manager.getAuthorizationUrl(),"bukan_url");
+		assertNotEquals(manager.getAuthorizationUrl("123"),"bukan_url");
 	}
 
 	@Test

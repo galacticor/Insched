@@ -1,12 +1,10 @@
 package com.bot.insched.google.credentials;
 
-import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.model.DiscordUser;
-
+import com.bot.insched.repository.DiscordUserRepository;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.util.store.AbstractDataStore;
 import com.google.api.client.util.store.DataStore;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
@@ -20,7 +18,8 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
      * @param dataStoreFactory data store factory
      * @param id               data store ID
      */
-    protected JPADataStore(JPADataStoreFactory dataStoreFactory, String id, DiscordUserRepository repository) {
+    protected JPADataStore(JPADataStoreFactory dataStoreFactory, String id,
+                           DiscordUserRepository repository) {
         super(dataStoreFactory, id);
         this.repository = repository;
     }
@@ -55,6 +54,7 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
     @Override
     public Set<String> keySet() throws IOException {
         return repository.findAllKeys();
+        // return null;
     }
 
     @Override

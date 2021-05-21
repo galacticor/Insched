@@ -15,30 +15,28 @@ public class Receiver {
 
     @Autowired
     public Receiver(
-            GoogleService googleService,
-            AppointmentService appointmentService,
-            DiscordUserService discordUserService,
-            EventService eventService,
-            BookingAppointmentService bookingAppointmentService,
-            ShowCalendarService showCalendarService
-        ) {
+        GoogleService googleService,
+        AppointmentService appointmentService,
+        DiscordUserService discordUserService,
+        EventService eventService,
+        BookingAppointmentService bookingAppointmentService,
+        ShowCalendarService showCalendarService
+    ) {
         addCommand(new HelloCommand(googleService));
-        addCommand(new BookAppointmentCommand(bookingAppointmentService));
-        addCommand(new CreateEventCommand(eventService,discordUserService));
-        addCommand(new UpdateEventCommand(eventService,discordUserService));
-        addCommand(new DeleteEventCommand(eventService,discordUserService));
-        //addCommand(new CreateAppointmentCommand(appointmentService, discordUserService));
+        addCommand(new BookAppointmentCommand());
+        addCommand(new CreateEventCommand(eventService, discordUserService));
+        addCommand(new UpdateEventCommand(eventService, discordUserService));
+        addCommand(new DeleteEventCommand(eventService, discordUserService));
         addCommand(new HelpCommand());
+        addCommand(new LoginCommand(googleService));
         addCommand(new AuthCommand(googleService));
-        addCommand(new AuthTokenCommand(googleService));
         addCommand(new ErrorCommand());
-        addCommand(new MyTokenCommand(appointmentService,discordUserService));
+        addCommand(new MyTokenCommand(appointmentService, discordUserService));
         addCommand(new CreateSlotCommand(appointmentService));
         addCommand(new MyAppointmentListCommand(appointmentService));
         addCommand(new ShowCalendarCommand(showCalendarService));
-//        addCommand(new ShowMyAppointment(appointmentService, discordUserService));
-//        addCommand(new CreateAppointmentSlot(appointmentService, discordUserService));
-
+        addCommand(new EditSlotCommand(appointmentService));
+        addCommand(new DeleteSlotCommand(appointmentService));
     }
 
     private void addCommand(Command command) {

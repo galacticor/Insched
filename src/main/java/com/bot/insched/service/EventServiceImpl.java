@@ -1,33 +1,33 @@
 
 package com.bot.insched.service;
 
-import com.bot.insched.google.GoogleAPIManager;
+import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.repository.EventRepository;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventServiceImpl implements EventService{
+
+public class EventServiceImpl implements EventService {
     @Autowired
-    private GoogleAPIManager manager;
+    private GoogleApiManager manager;
 
     @Autowired
     EventRepository eventRepository;
 
     @Override
-    public String getEventService(String discordId, String eventId){
+    public Event getEventService(String discordId, String eventId) {
         Calendar calendar = manager.getCalendarService(discordId);
-        if(calendar == null){
-            return "Silahkan login terlebih dahulu menggunakan !login";
-        }
         try {
-            Event event = calendar.events().get("primary",eventId).execute();
-            return "Event link anda adalah " + event.getHtmlLink();
-        }catch (Exception e){
+            Event event = calendar.events().get("primary", eventId).execute();
+            return event;
+        } catch (Exception e) {
             e.printStackTrace();
-            return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
+            return null;
         }
     }
 
@@ -37,49 +37,81 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public String createEventService(String discordId,Event event) {
+    public String createEventService(String discordId, Event event) {
         Calendar calendar = getCalendarbyId(discordId);
-        if(calendar == null){
+        if (calendar == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }
         try {
-            Event newEvent = calendar.events().insert("primary",event).execute();
+            Event newEvent = calendar.events().insert("primary", event).execute();
             String link = newEvent.getHtmlLink();
             String id = newEvent.getId();
-            return "Event Berhasil dibuat \n" + link +"\n"+
-                    "Event id anda adalah " + id;
-        }catch (Exception e){
+            String tglAwal = newEvent.getStart().getDateTime().toString();
+            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String deskripsi = newEvent.getDescription();
+            String ret = String.format("Event Berhasil dibuat \n"
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + "Event id anda adalah %s \n"
+                    + "Mulai Event pada %s \n"
+                    + "Selesai Event pada %s \n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            return ret;
+        } catch (Exception e) {
             e.printStackTrace();
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
 
     @Override
-    public String deleteEventService(String discordId,String eventId) {
+    public String deleteEventService(String discordId, String eventId) {
         Calendar calendar = getCalendarbyId(discordId);
-        if(calendar == null){
+        if (calendar == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }
         try {
-            calendar.events().delete("primary",eventId).execute();
+            calendar.events().delete("primary", eventId).execute();
             return "Event berhasil terhapus!";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
 
     @Override
-    public String updateEventService(String discordId,String eventId,Event event) {
+    public String updateEventService(String discordId, String eventId,
+                                     String jenis, String newData) {
         Calendar calendar = getCalendarbyId(discordId);
-        if(calendar == null){
+        if (calendar == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }
         try {
-            Event newEvent = calendar.events().update("primary",eventId,event).execute();
-            return "Event berhasil di-Update \n"+
-                    "link event anda: \n"+ newEvent.getHtmlLink();
-        }catch (Exception e){
+            Event event = getEventService(discordId, eventId);
+            if (jenis.equalsIgnoreCase("deskripsi")) {
+                event.setDescription(newData);
+            } else if (jenis.equalsIgnoreCase("mulai")) {
+                DateTime dateTime = new DateTime(newData);
+                event.setStart(new EventDateTime().setDateTime(dateTime));
+            } else if (jenis.equalsIgnoreCase("selesai")) {
+                DateTime dateTime = new DateTime(newData);
+                event.setEnd(new EventDateTime().setDateTime(dateTime));
+            } else if (jenis.equalsIgnoreCase("summary")) {
+                event.setSummary(newData);
+            }
+            Event newEvent = calendar.events().update("primary", eventId, event).execute();
+            String link = newEvent.getHtmlLink();
+            String id = newEvent.getId();
+            String tglAwal = newEvent.getStart().getDateTime().toString();
+            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String deskripsi = newEvent.getDescription();
+            String ret = String.format("Event Berhasil di-update \n"
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + "Event id anda adalah %s \n"
+                    + "Mulai Event pada %s \n"
+                    + "Selesai Event pada %s \n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            return ret;
+
+        } catch (Exception e) {
             e.printStackTrace();
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
