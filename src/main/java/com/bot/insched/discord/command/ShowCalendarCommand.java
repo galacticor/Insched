@@ -4,11 +4,8 @@ import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.ShowCalendarService;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShowCalendarCommand implements Command {
     private ShowCalendarService service;
