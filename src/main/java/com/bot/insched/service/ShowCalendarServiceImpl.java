@@ -42,36 +42,34 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
 
     public String getCalDescription(Event event) {
         String description = event.getDescription();
-        if(description == null){
+        if (description == null) {
             description = "no description";
-        }else if(description.length() >= 1000){
+        } else if (description.length() >= 1000) {
             description = description.substring(0,90) + "...";
         }
         return description;
     }
 
-    public String getCalStart(Event event){
+    public String getCalStart(Event event) {
         return event.getStart().getDateTime().toString();
     }
 
-    public String getCalEnd(Event event){
+    public String getCalEnd(Event event) {
         return event.getEnd().getDateTime().toString();
     }
 
-    public List<Event> get10LatestEvent(List<Event> listEvent) throws IndexOutOfBoundsException{
+    public List<Event> get10LatestEvent(List<Event> listEvent) throws IndexOutOfBoundsException {
         List<Event> list10Event = new ArrayList<>();
-        if(listEvent.size()<10){
-//            System.out.println("masuk get10LatestEvent dengan length kurang dari 10");
-            for (int i = listEvent.size()-1 ; i >= 0 ; i--) {
+        if (listEvent.size() < 10) {
+
+            for (int i = listEvent.size() - 1; i >= 0; i--) {
                 list10Event.add(listEvent.get(i));
             }
-        }else{
-//            System.out.println("masuk get10LatestEvent dengan length lebih dari 10");
-            for (int i = listEvent.size()-1 ; i >= listEvent.size()-9 ; i--) {
+        } else {
+            for (int i = listEvent.size() - 1; i >= listEvent.size() - 9; i--) {
                 list10Event.add(listEvent.get(i));
             }
         }
-//        System.out.println("Array setelah dipilih 10 = " + Arrays.asList(list10Event).toString());
         return list10Event;
     }
 

@@ -17,14 +17,15 @@ public class ShowCalendarCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sender.sendPrivateMessage("Selamat datang di fitur ShowCalendar! Di bawah ini adalah kalender kamu", event);
+        sender.sendPrivateMessage("Selamat datang di fitur ShowCalendar! "
+                + "Di bawah ini adalah kalender kamu", event);
 
         String userId = event.getMessage().getAuthor().getId();
 
         createEmbed(userId, event);
     }
 
-    public void createEmbed(String userId, PrivateMessageReceivedEvent event ){
+    public void createEmbed(String userId, PrivateMessageReceivedEvent event) {
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("CalendarMu");
         for (Event events: service.getListEvents(userId)) {
@@ -32,8 +33,9 @@ public class ShowCalendarCommand implements Command {
             String description = service.getCalDescription(events);
             String startTime = service.getCalStart(events);
             String endTime = service.getCalEnd(events);
-            embed.addField("📅  " + summary,String.format("Date : %s  \n Time : %s  -  %s ",startTime.substring(0,10),
-                    startTime.substring(11,16),endTime.substring(11,16)) ,false);
+            embed.addField("📅  " + summary,String.format("Date : %s  \n Time : %s  -  %s ",
+                    startTime.substring(0,10), startTime.substring(11,16),
+                    endTime.substring(11,16)),false);
         }
         sender.sendPrivateMessage(embed.build(), event);
     }
