@@ -3,8 +3,10 @@ package com.bot.insched.service;
 
 import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.repository.EventRepository;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +18,14 @@ public class EventServiceImpl implements EventService {
     EventRepository eventRepository;
 
     @Override
-    public String getEventService(String discordId, String eventId) {
+    public Event getEventService(String discordId, String eventId) {
         Calendar calendar = manager.getCalendarService(discordId);
-        if (calendar == null) {
-            return "Silahkan login terlebih dahulu menggunakan !login";
-        }
         try {
             Event event = calendar.events().get("primary", eventId).execute();
-            return "Event link anda adalah " + event.getHtmlLink();
+            return event;
         } catch (Exception e) {
             e.printStackTrace();
-            return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
+            return null;
         }
     }
 
@@ -45,9 +44,16 @@ public class EventServiceImpl implements EventService {
             Event newEvent = calendar.events().insert("primary", event).execute();
             String link = newEvent.getHtmlLink();
             String id = newEvent.getId();
-            return "Event Berhasil dibuat \n"
-                + link + "\n"
-                + "Event id anda adalah " + id;
+            String tglAwal = newEvent.getStart().getDateTime().toString();
+            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String deskripsi = newEvent.getDescription();
+            String ret = String.format("Event Berhasil dibuat \n"
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + "Event id anda adalah %s \n"
+                    + "Mulai Event pada %s \n"
+                    + "Selesai Event pada %s \n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
@@ -70,15 +76,39 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String updateEventService(String discordId, String eventId, Event event) {
+    public String updateEventService(String discordId, String eventId,
+                                     String jenis, String newData) {
         Calendar calendar = getCalendarbyId(discordId);
         if (calendar == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }
         try {
+            Event event = getEventService(discordId, eventId);
+            if (jenis.equalsIgnoreCase("deskripsi")) {
+                event.setDescription(newData);
+            } else if (jenis.equalsIgnoreCase("mulai")) {
+                DateTime dateTime = new DateTime(newData);
+                event.setStart(new EventDateTime().setDateTime(dateTime));
+            } else if (jenis.equalsIgnoreCase("selesai")) {
+                DateTime dateTime = new DateTime(newData);
+                event.setEnd(new EventDateTime().setDateTime(dateTime));
+            } else if (jenis.equalsIgnoreCase("summary")) {
+                event.setSummary(newData);
+            }
             Event newEvent = calendar.events().update("primary", eventId, event).execute();
-            return "Event berhasil di-Update \n"
-                + "link event anda: \n" + newEvent.getHtmlLink();
+            String link = newEvent.getHtmlLink();
+            String id = newEvent.getId();
+            String tglAwal = newEvent.getStart().getDateTime().toString();
+            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String deskripsi = newEvent.getDescription();
+            String ret = String.format("Event Berhasil di-update \n"
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + "Event id anda adalah %s \n"
+                    + "Mulai Event pada %s \n"
+                    + "Selesai Event pada %s \n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            return ret;
+
         } catch (Exception e) {
             e.printStackTrace();
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";

@@ -86,41 +86,51 @@ public class DeleteEventCommandTest {
 
     @Test
     public void testCorrectArgument() throws Exception {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"!deleteEvent","0123456789abcdefghijklmnopqrstuv"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.deleteEventService(any(), any()))
                 .thenReturn("Event Berhasil dihapus");
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
     }
 
     @Test
     public void testErrorArgument() throws Exception {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"!deleteEvent"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.deleteEventService(any(), any()))
                 .thenReturn("error");
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
     }
 
 
     @Test
     public void testFalseArgument() {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"dummy"};
-        command.execute(args, event);
-    }
-
-    @Test
-    public void testHelpArgument() {
-        String[] args = {"help"};
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
     }
 
     @Test
     public void testGetHelp() {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String expected = "!deleteEvent <idEvent>\n" +
                 "Contoh: !deleteEvent absfuoqebfojdbvqe";
         lenient().when(privateChannel.sendMessage(expected)).thenReturn(mock(MessageAction.class));
         lenient().when(privateChannel.sendMessage(expected).toString()).thenReturn("cek");
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         assertEquals(command.getHelp(), expected);
     }
 
