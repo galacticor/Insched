@@ -51,7 +51,7 @@ public class BookAppointmentCommandTest {
         String[] args = {"!BookAppointment"};
         lenient().when(event.getAuthor()).thenReturn(jdaUser);
         lenient().when(event.getMessage()).thenReturn(message);
-        command.execute(args,event);
+        command.execute(args, event);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class BookAppointmentCommandTest {
     }
 
     @Test
-    public void testGetCommand(){
-        assertEquals(command.getCommand(),"bookAppointment");
+    public void testGetCommand() {
+        assertEquals(command.getCommand(), "bookAppointment");
     }
 }
