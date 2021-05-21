@@ -7,8 +7,15 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.UUID;
+
+/*
+
+
+    Deprecated. Do not use
+
+
+ */
 
 @Entity
 @Table(name = "booking")

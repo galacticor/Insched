@@ -9,6 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/*
+
+    Deprecated. Do not use
+
+*/
+
+
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Booking findByBookingId(UUID id);

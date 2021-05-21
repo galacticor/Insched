@@ -1,29 +1,22 @@
 package com.bot.insched.service;
 
-import com.bot.insched.model.Appointment;
-import com.bot.insched.model.Booking;
+import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
-import com.bot.insched.repository.AppointmentRepository;
-import com.bot.insched.repository.BookingRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
+    // TODO: Implement integration with Google API
     @Autowired
-    AppointmentRepository appointmentRepository;
-
-    @Autowired
-    BookingRepository bookingRepository;
+    private GoogleApiManager manager;
 
     @Autowired
     DiscordUserRepository discordUserRepository;
@@ -32,113 +25,79 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     EventRepository eventRepository;
 
     @Override
-    public String createBooking(String requesterId, String token, String datetime) {
+    public String createBooking(String requesterId, String token) {
 
-        // Flow:
-        // Searches host for appointment, searches correct event from appointment list of events,
-        // register self and create booking object
-        LocalDateTime start = LocalDateTime.parse(datetime);
-
-        DiscordUser user = findUserById(requesterId);
-        if (user == null) {
+        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
+        if (attendee == null) {
             return "Silahkan login terlebih dahulu menggunakan !login";
         }
 
-        Appointment appointment = findAppointmentById(token);
-        if (appointment == null) {
-            return "Token appointment tidak ditemukan";
+        Event event = findEventByToken(token);
+        if (event == null) {
+            return "Event tidak ditemukan!";
         }
 
-        List<Event> listEvent = appointment.getListEvent();
-        List<DiscordUser> attendees;
+        boolean isFull = event.getIsAvailable();
+        if (isFull) {
+            return "Slot event sudah penuh!";
+        }
 
-        int i = 0;
-        int limit = listEvent.size();
-        boolean flag = true;
-        Event event;
+        List<DiscordUser> listAttendee = event.getListAttendee();
+        if (listAttendee.contains(attendee)) {
+            return "Sudah melakukan booking slot event!";
+        }
+        listAttendee.add(attendee);
+        event.setListAttendee(listAttendee);
+        event.updateAvailability();
+
+        List<Event> listEvent = attendee.getListEvent();
+        if (listEvent.contains(event)) {
+            return "Sudah melakukan booking slot event!";
+        }
+        listEvent.add(event);
+        attendee.setListEvent(listEvent);
+
+        return "Booking slot event telah dibuat!";
+    }
+
+    @Override
+    public String deleteBooking(String requesterId, String token) {
+
+        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
+        if (attendee == null) {
+            return "Silahkan login terlebih dahulu menggunakan !login";
+        }
+
+        Event event = findEventByToken(token);
+        if (event == null) {
+            return "Event tidak ditemukan";
+        }
+
+        List<DiscordUser> listAttendee = event.getListAttendee();
+        if (!listAttendee.contains(attendee)) {
+            return "Tidak ada booking untuk slot event ini!";
+        }
         do {
-            event = listEvent.get(i);
-            flag = event.getStartTime().isEqual(start);
-            ++i;
-        } while (!flag && i<limit);
+            listAttendee.remove(attendee);
+        } while (listAttendee.contains(attendee));
+        event.setListAttendee(listAttendee);
+        event.updateAvailability();
 
-        if (flag) {
-            attendees = event.getListAttendee();
-
-            if (attendees.contains(user)) {
-                return "User sudah terdaftar";
-            }
-
-            attendees.add(user);
-            event.setListAttendee(attendees);
-        } else return "Slot tidak ditemukan";
-
-        Booking booking = new Booking();
-        booking.setEvent(event);
-        booking.setRequester(user);
-        save(booking);
-        return "Booking telah dibuat!";
-    }
-
-    @Override
-    public List<Booking> getAllUserBooking(String discordId) {
-        DiscordUser user = discordUserRepository.findByIdDiscord(discordId);
-        List<Booking> bookingList = new ArrayList<>();
-
-        for (Booking booking : bookingRepository.findAllByUser(user)) {
-            bookingList.add(booking);
+        List<Event> listEvent = attendee.getListEvent();
+        if (!listEvent.contains(event)) {
+            return "Tidak ada booking untuk slot event ini!";
         }
-        return bookingList;
-    }
-
-    @Override
-    public DiscordUser findUserById(String discordId) {
-        return discordUserRepository.findByIdDiscord(discordId);
-    }
-
-    @Override
-    public Appointment findAppointmentById(String appointmentId) {
-        UUID uuid = UUID.fromString(appointmentId);
-        return appointmentRepository.findByIdAppointment(uuid);
-    }
-
-    @Override
-    public Booking findBookingById(String bookingId) {
-        UUID uuid = UUID.fromString(bookingId);
-        return bookingRepository.findByBookingId(uuid);
-    }
-
-    @Override
-    public Booking save(Booking booking) {
-        return bookingRepository.save(booking);
-    }
-
-    @Override
-    public String delete(String bookingId) {
-        UUID uuid = UUID.fromString(bookingId);
-        Booking booking = bookingRepository.findByBookingId(uuid);
-        if (booking == null) {
-            return "Booking tidak ditemukan";
-        }
-
-        DiscordUser user = booking.getRequester();
-        List<DiscordUser> attendees = booking.getEvent().getListAttendee();
-        DiscordUser attendee;
-        int i = 0;
-        int limit = attendees.size();
-        boolean flag;
         do {
-            attendee = attendees.get(i);
-            flag = attendee.equals(user);
-            ++i;
-        } while (!flag && i<limit);
+            listEvent.remove(event);
+        } while (listEvent.contains(event));
+        attendee.setListEvent(listEvent);
 
-        if (flag) {
-            attendees.remove(user);
-        } else return "User tidak terdaftar";
+        return "Booking slot event telah dihapus!";
+    }
 
-        bookingRepository.deleteByBookingId(bookingId);
-
-        return "Booking telah dihapus!";
+    // FIXME: Probably should be in EventRepository.java instead
+    public Event findEventByToken(String token) {
+        UUID uuid = UUID.fromString(token);
+        return eventRepository.findByIdEvent(uuid);
     }
 }
