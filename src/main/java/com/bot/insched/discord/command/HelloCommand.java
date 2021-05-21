@@ -12,6 +12,7 @@ public class HelloCommand implements Command {
         this.googleService = googleService;
     }
 
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         String userId = event.getAuthor().getId();
