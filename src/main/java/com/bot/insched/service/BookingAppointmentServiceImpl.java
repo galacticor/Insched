@@ -1,5 +1,8 @@
 package com.bot.insched.service;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
+import com.bot.insched.discord.exception.ObjectAlreadyExistsException;
+import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
@@ -25,11 +28,11 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     EventRepository eventRepository;
 
     @Override
-    public String createBooking(String requesterId, String token) {
+    public String createBooking(String requesterId, String token) throws Exception{
 
         DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
         if (attendee == null) {
-            return "Silahkan login terlebih dahulu menggunakan !login";
+            throw new NotLoggedInException();
         }
 
         Event event = findEventByToken(token);
@@ -39,12 +42,12 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
         boolean isFull = event.getIsAvailable();
         if (isFull) {
-            return "Slot event sudah penuh!";
+            throw new SlotUnavailableException("Slot event sudah penuh!");
         }
 
         List<DiscordUser> listAttendee = event.getListAttendee();
         if (listAttendee.contains(attendee)) {
-            return "Sudah melakukan booking slot event!";
+            throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
         }
         listAttendee.add(attendee);
         event.setListAttendee(listAttendee);
@@ -52,7 +55,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
         List<Event> listEvent = attendee.getListEvent();
         if (listEvent.contains(event)) {
-            return "Sudah melakukan booking slot event!";
+            throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
         }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
@@ -61,11 +64,11 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     }
 
     @Override
-    public String deleteBooking(String requesterId, String token) {
+    public String deleteBooking(String requesterId, String token) throws Exception {
 
         DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
         if (attendee == null) {
-            return "Silahkan login terlebih dahulu menggunakan !login";
+            throw new NotLoggedInException();
         }
 
         Event event = findEventByToken(token);
