@@ -1,15 +1,20 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.service.EventService;
+import com.bot.insched.service.GoogleService;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.services.calendar.Calendar;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UpdateEventCommandTest {
@@ -34,6 +39,12 @@ public class UpdateEventCommandTest {
 
     @InjectMocks
     private UpdateEventCommand command;
+
+    @Mock
+    private MessageSender sender;
+
+    @Mock
+    GoogleService googleService;
 
 
     // Basic test setup
@@ -80,19 +91,29 @@ public class UpdateEventCommandTest {
 
     @Test
     public void testCorrectArgument() throws Exception {
-        String[] args = {"!updateEvent","fjbqeoaufbqeo", "KUIS", "Kuliah"};
+        String[] args = {"!updateEvent", "fjbqeoaufbqeo", "summary", "Kuliah"};
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
-        lenient().when(eventService.updateEventService(anyString(),anyString(),any()))
+        lenient().when(eventService.updateEventService(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn("Event Berhasil diperbaharui");
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
     @Test
     public void testErrorArgument() throws Exception {
-        String[] args = {"!updateEvent","a"};
+        String[] args = {"!updateEvent", "selesai"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
-        lenient().when(eventService.updateEventService(anyString(),anyString(),any()))
+        lenient().when(eventService.updateEventService(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn("error");
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
@@ -100,19 +121,36 @@ public class UpdateEventCommandTest {
     @Test
     public void testFalseArgument() {
         String[] args = {"dummy", "dummy"};
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
     @Test
     public void testHelpArgument() {
         String[] args = {"help"};
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
     @Test
     public void testGetHelp() {
-        String expected = "!updateEvent <eventID> <summary> <deskripsi_event> \n" +
-                "Contoh: !createEvent fjbqeoaufbqeo KUIS Kuliah";
+        String expected = "!updateEvent <eventID> <jenis> <dataBaru> \n"
+                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai 2021-05-21T05:30:00.000+07:00 \n"
+                + "note: jenis data data yang dapat di-update\n"
+                + " deskripsi, summary, mulai, dan selesai";
         assertEquals(command.getHelp(), expected);
+    }
+
+    @Test
+    public void testGetCommand() {
+        assertEquals(command.getCommand(), "updateEvent");
     }
 }

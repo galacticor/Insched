@@ -1,5 +1,7 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.service.AppointmentService;
@@ -11,8 +13,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +30,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateEventCommandTest {
@@ -84,34 +89,43 @@ public class CreateEventCommandTest {
 
     @Test
     public void testCorrectArgument() throws Exception {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"!createEvent","KUIS","2021-05-20", "15:30", "2021-05-21" ,"15:30","Kuliah"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
                 .thenReturn("Event Berhasil dibuat");
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
     }
 
     @Test
     public void testErrorArgument() throws Exception {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"!createEvent","a","a","a","a"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
                 .thenReturn("error");
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
 
     @Test
     public void testFalseArgument() {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
         String[] args = {"dummy", "dummy", "dummy"};
+        when(event.getChannel()).thenReturn(channel);
+        when(channel.sendMessage(anyString())).thenReturn(action);
+        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
-    @Test
-    public void testHelpArgument() {
-        String[] args = {"help"};
-        command.execute(args, event);
-    }
 
     @Test
     public void testGetHelp() {
@@ -119,5 +133,10 @@ public class CreateEventCommandTest {
                 "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n" +
                 "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
         assertEquals(command.getHelp(), expected);
+    }
+
+    @Test
+    public void testGetCommand() {
+        assertEquals(command.getCommand(), "createEvent");
     }
 }

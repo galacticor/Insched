@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -67,90 +68,233 @@ public class EventServiceImplTest {
         event.setStart(eventDateTimeMulai).setEnd(eventDateTimeSelesai);
 
     }
+
     // Create Event Test
     @Test
-    public void testCreateEventSuccess() throws Exception{
+    public void testCreateEventSuccess() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().insert("primary",event)).thenReturn(mock(Calendar.Events.Insert.class));
-        lenient().when(calendar.events().insert("primary",event).execute()).thenReturn(mock(Event.class));
-        lenient().when(calendar.events().insert("primary",event).execute().getHtmlLink()).thenReturn("HTML");
-        lenient().when(calendar.events().insert("primary",event).execute().getId()).thenReturn("Id");
-        String res = eventService.createEventService("123456",event);
+        lenient().when(calendar.events().insert("primary", event)).thenReturn(mock(Calendar.Events.Insert.class));
+        lenient().when(calendar.events().insert("primary", event).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().insert("primary", event).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().insert("primary", event).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().insert("primary", event).execute().getStart().getDateTime().toString()).thenReturn("1356648092");
+        lenient().when(calendar.events().insert("primary", event).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().insert("primary", event).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().insert("primary", event).execute().getEnd().getDateTime().toString()).thenReturn("1393195067");
+        lenient().when(calendar.events().insert("primary", event).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().insert("primary", event).execute().getId()).thenReturn("Id");
+        String res = eventService.createEventService("123456", event);
         assertEquals(res, "Event Berhasil dibuat \n" +
-                "HTML\n" +
-                "Event id anda adalah Id");
-
-
+                "Berikut link event baru anda: [LINK](HTML) \n" +
+                "Event id anda adalah Id \n" +
+                "Mulai Event pada 1356648092 \n" +
+                "Selesai Event pada 1393195067 \n" +
+                "Deskripsi Event anda adalah null");
     }
 
     // Update Event Test
     @Test
-    public void testUpdateEventSuccess() throws Exception{
+    public void testUpdateEventDescriptionSuccess() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().update("primary","qefewfwef",event)).thenReturn(mock(Calendar.Events.Update.class));
-        lenient().when(calendar.events().update("primary","qefewfwef",event).execute()).thenReturn(mock(Event.class));
-        lenient().when(calendar.events().update("primary","qefewfwef",event).execute().getHtmlLink()).thenReturn("HTML");
-        String res = eventService.updateEventService("123456","qefewfwef",event);
-        assertEquals(res, "Event berhasil di-Update \n" +
-                "link event anda: \n" +
-                "HTML");
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        String res = eventService.updateEventService("123456", "qefewfwef", "deskripsi", "tes");
+        assertEquals(res, "Event Berhasil di-update \n"
+                + "Berikut link event baru anda: [LINK](HTML) \n"
+                + "Event id anda adalah null \n"
+                + "Mulai Event pada 8844488 \n"
+                + "Selesai Event pada 629775688 \n"
+                + "Deskripsi Event anda adalah tes");
 
     }
+
+    @Test
+    public void testUpdateEventSuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        String res = eventService.updateEventService("123456", "qefewfwef", "deskripsi", "tes");
+        assertEquals(res, "Event Berhasil di-update \n"
+                + "Berikut link event baru anda: [LINK](HTML) \n"
+                + "Event id anda adalah null \n"
+                + "Mulai Event pada 8844488 \n"
+                + "Selesai Event pada 629775688 \n"
+                + "Deskripsi Event anda adalah tes");
+    }
+
+    @Test
+    public void testUpdateEventStartSuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()
+                .getDateTime().toString()).thenReturn("1999-05-21T05:30:00.000+07:00");
+        String ret = eventService.updateEventService("123456", "qefewfwef",
+                "mulai", "1999-05-21T05:30:00.000+07:00");
+        assertEquals(ret, "Event Berhasil di-update \n"
+                + "Berikut link event baru anda: [LINK](HTML) \n"
+                + "Event id anda adalah null \n"
+                + "Mulai Event pada 1999-05-21T05:30:00.000+07:00 \n"
+                + "Selesai Event pada 629775688 \n"
+                + "Deskripsi Event anda adalah tes");
+    }
+
+    @Test
+    public void testUpdateEventEndSuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()
+                .getDateTime().toString()).thenReturn("1999-05-21T05:31:00.000+07:00");
+        String ret = eventService.updateEventService("123456", "qefewfwef",
+                "selesai", "1999-05-21T05:31:00.000+07:00");
+        assertEquals(ret, "Event Berhasil di-update \n"
+                + "Berikut link event baru anda: [LINK](HTML) \n"
+                + "Event id anda adalah null \n"
+                + "Mulai Event pada 8844488 \n"
+                + "Selesai Event pada 1999-05-21T05:31:00.000+07:00 \n"
+                + "Deskripsi Event anda adalah tes");
+    }
+
+    @Test
+    public void testUpdateEventSummarySuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()
+                .getSummary()).thenReturn("tes");
+        String ret = eventService.updateEventService("123456", "qefewfwef",
+                "summary", "tes");
+        assertEquals(ret, "Event Berhasil di-update \n"
+                + "Berikut link event baru anda: [LINK](HTML) \n"
+                + "Event id anda adalah null \n"
+                + "Mulai Event pada 8844488 \n"
+                + "Selesai Event pada 629775688 \n"
+                + "Deskripsi Event anda adalah tes");
+    }
+
     // save event Test
     @Test
-    public void testSaveEventSuccess() throws Exception{
-        com.bot.insched.model.Event event =  eventService.save(mock(com.bot.insched.model.Event.class));
+    public void testSaveEventSuccess() throws Exception {
+        com.bot.insched.model.Event event = eventService.save(mock(com.bot.insched.model.Event.class));
         assertEquals(eventRepository.save(mock(com.bot.insched.model.Event.class))
                 , event);
 
     }
+
     // Get Event Test
     @Test
-    public void testGetEventSuccess() throws Exception{
+    public void testGetEventSuccess() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().get("primary","qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
-        lenient().when(calendar.events().get("primary","qefewfwef").execute()).thenReturn(mock(Event.class));
-        lenient().when(calendar.events().get("primary","qefewfwef").execute().getHtmlLink()).thenReturn("HTML");
-        String res = eventService.getEventService("123456","qefewfwef");
-        assertEquals(res, "Event link anda adalah HTML");
-
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute().getHtmlLink()).thenReturn("HTML");
+        Event res = eventService.getEventService("123456", "qefewfwef");
+        assertNotNull(res);
     }
 
+    //    @Test
+//    public void testDeleteEventSuccess() throws Exception{
+//        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+//        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+//        lenient().when(calendar.events().delete("primary","tes")).thenReturn(mock(Calendar.Events.Delete.class));
+//        lenient().when(calendar.events().delete("primary","tes").execute()).thenReturn(mock(Void.class));
+//        String res = eventService.deleteEventService("123456",event.getId());
+//        assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
+//    }
     // Delete Event Test
     @Test
-    public void testDeleteEventException() throws Exception{
+    public void testDeleteEventException() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().delete("primary","tes")).thenReturn(mock(Calendar.Events.Delete.class));
+        lenient().when(calendar.events().delete("primary", "tes")).thenReturn(mock(Calendar.Events.Delete.class));
 //        lenient().doNothing().when(calendar.events().delete("primary","tes").execute());
-        lenient().when(calendar.events().delete("primary","tes").execute()).thenThrow(NullPointerException.class);
-        String res = eventService.deleteEventService("123456",event.getId());
+        lenient().when(calendar.events().delete("primary", "tes").execute()).thenThrow(NullPointerException.class);
+        String res = eventService.deleteEventService("123456", event.getId());
         assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
-
     }
+
     @Test
-    public void testGetEventException() throws Exception{
+    public void testGetEventException() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().get("primary","qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
-        lenient().when(calendar.events().get("primary","qefewfwef").execute()).thenReturn(any(Event.class));
-        String res = eventService.getEventService("123456","qefewfwef");
-        assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(any(Event.class));
+        Event res = eventService.getEventService("123456", "qefewfwef");
+        assertEquals(res, null);
 
     }
+
     @Test
-    public void testCreateEventException() throws Exception{
+    public void testCreateEventException() throws Exception {
         lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        lenient().when(calendar.events().insert("primary",event)).thenReturn(mock(Calendar.Events.Insert.class));
-        lenient().when(calendar.events().insert("primary",event).execute()).thenReturn(any(Event.class));
-        String res = eventService.createEventService("123456",event);
+        lenient().when(calendar.events().insert("primary", event)).thenReturn(mock(Calendar.Events.Insert.class));
+        lenient().when(calendar.events().insert("primary", event).execute()).thenReturn(any(Event.class));
+        String res = eventService.createEventService("123456", event);
         assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
-
-
     }
 
     @Test
@@ -159,39 +303,35 @@ public class EventServiceImplTest {
         lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
         lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
         lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
-        String res = eventService.updateEventService("123456", "qefewfwef", event);
+        String res = eventService.updateEventService("123456", "qefewfwef", "mulai", "tes");
         assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
     }
+
     // user not logged in
     @Test
-    public void testCreateEventNotLoggedIn() throws Exception{
+    public void testCreateEventNotLoggedIn() throws Exception {
         when(manager.getCalendarService(any(String.class))).thenReturn(null);
-        String res = eventService.createEventService("123456",event);
+        String res = eventService.createEventService("123456", event);
         assertEquals(res, "Silahkan login terlebih dahulu menggunakan !login");
     }
+
     @Test
-    public void testUpdateEventNotLoggedIn() throws Exception{
+    public void testUpdateEventNotLoggedIn() throws Exception {
         when(manager.getCalendarService(any(String.class))).thenReturn(null);
-        String res = eventService.updateEventService("123456","safefweg",event);
+        String res = eventService.updateEventService("123456", "safefweg", "mulai", "12412415");
         assertEquals(res, "Silahkan login terlebih dahulu menggunakan !login");
     }
+
     @Test
-    public void testDeleteEventNotLoggedIn() throws Exception{
+    public void testDeleteEventNotLoggedIn() throws Exception {
         when(manager.getCalendarService(any(String.class))).thenReturn(null);
-        String res = eventService.deleteEventService("123456","wwegfwegwegf");
-        assertEquals(res, "Silahkan login terlebih dahulu menggunakan !login");
-    }
-    @Test
-    public void testGetEventNotLoggedIn() throws Exception{
-        when(manager.getCalendarService(any(String.class))).thenReturn(null);
-        String res = eventService.getEventService("123456","dfwefwvf");
+        String res = eventService.deleteEventService("123456", "wwegfwegwegf");
         assertEquals(res, "Silahkan login terlebih dahulu menggunakan !login");
     }
 
     // Get calendar by Id test
     @Test
-    public void testGetCalendarbyId() throws Exception{
-        System.out.println(calendar);
+    public void testGetCalendarbyId() throws Exception {
         when(manager.getCalendarService(any())).thenReturn(calendar);
         assertEquals(eventService.getCalendarbyId(any()), calendar);
     }

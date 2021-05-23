@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.DiscordUserService;
 import com.bot.insched.service.EventService;
 import com.google.api.client.util.DateTime;
@@ -11,6 +12,7 @@ public class DeleteEventCommand implements Command {
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
+    private MessageSender sender = MessageSender.getInstance();
 
     public DeleteEventCommand(EventService eventService,
                               DiscordUserService discordUserService) {
@@ -20,16 +22,16 @@ public class DeleteEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-            + "Tunggu sebentar,Event anda sedang dibuat", event);
+        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
+                + "Tunggu sebentar,Event anda sedang dihapus", event);
         if (args[0].equalsIgnoreCase("help")) {
-            sendPrivateMessage(getHelp(), event);
+            sender.sendPrivateMessage(getHelp(), event);
         } else {
             try {
                 String res = handleCreation(args, event.getAuthor().getId());
-                sendPrivateMessage(res, event);
+                sender.sendPrivateMessage(res, event);
             } catch (Exception e) {
-                sendPrivateMessage(e.toString(), event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             }
         }
     }
@@ -47,12 +49,7 @@ public class DeleteEventCommand implements Command {
     @Override
     public String getHelp() {
         return "!deleteEvent <idEvent>\n"
-            + "Contoh: !deleteEvent absfuoqebfojdbvqe";
+                + "Contoh: !deleteEvent absfuoqebfojdbvqe";
     }
 
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
-    }
 }
