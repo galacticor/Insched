@@ -38,7 +38,6 @@ public class MyAppointmentListCommandTest {
     @Mock
     PrivateMessageReceivedEvent event;
 
-
     @Mock
     AppointmentService appointmentService;
 
