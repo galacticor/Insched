@@ -10,6 +10,8 @@ import com.google.api.services.calendar.model.EventDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class EventServiceImpl implements EventService {
     @Autowired
@@ -118,5 +120,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public com.bot.insched.model.Event save(com.bot.insched.model.Event event) {
         return eventRepository.save(event);
+    }
+
+    public com.bot.insched.model.Event findById(String id) {
+        return eventRepository.findByIdEvent(UUID.fromString(id));
     }
 }
