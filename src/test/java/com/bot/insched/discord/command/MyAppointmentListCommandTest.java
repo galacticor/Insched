@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.annotation.Order;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -57,10 +56,10 @@ public class MyAppointmentListCommandTest {
 
     @Test
     public void testExecuteSuccess() throws Exception {
-        String[] args = { "2021-05-08" };
+        String[] args = { "2022-08-08" };
         List<Event> eventList = new ArrayList<>();
 
-        String start = "2021-05-08T17:00:00";
+        String start = "2022-08-08T17:00:00";
         int duration = 30;
         int capacity = 2;
         String desc = "testing";
@@ -68,7 +67,7 @@ public class MyAppointmentListCommandTest {
         Event e = new Event(start, duration, capacity, desc);
         eventList.add(e);
 
-        when(appointmentService.getAllAppointment(anyString())).thenReturn(eventList);
+        when(appointmentService.getAllAppointment("123")).thenReturn(eventList);
         InschedEmbed embed = new InschedEmbed();
         embed.setDescription("dummy embed");
 
