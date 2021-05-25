@@ -1,16 +1,14 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class MyAppointmentCommand implements Command {
 
@@ -48,19 +46,20 @@ public class MyAppointmentCommand implements Command {
         List<Event> eventList = appointmentService.getAllAppointment(discordId);
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Your Appointment Date List");
-        Set<LocalDate> date =  new HashSet<>();
+        Set<LocalDate> date = new HashSet<>();
 
-        for (Event event: eventList) {
+        for (Event event : eventList) {
             if (!event.getTanggal().isBefore(LocalDate.now())) {
                 date.add(event.getTanggal());
             }
         }
 
         String listTanggal = "";
-        for (LocalDate localDate: date) {
+        for (LocalDate localDate : date) {
             listTanggal += "- " + localDate.toString() + "\n";
         }
-        embed.addField("Berikut adalah list tanggal yang terdapat appointment:", listTanggal, false);
+        embed.addField("Berikut adalah list tanggal yang terdapat appointment:",
+            listTanggal, false);
         return embed;
     }
 }

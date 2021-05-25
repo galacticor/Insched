@@ -30,7 +30,8 @@ public class AppointmentDetailsCommand implements Command {
                 }
             } catch (IllegalArgumentException e) {
                 // Catching invalid UUID format
-                sender.sendPrivateMessage("Tidak ada slot appointment dengan token tersebut!", event);
+                sender.sendPrivateMessage("Tidak ada slot appointment dengan token tersebut!",
+                    event);
             } catch (Exception e) {
                 sender.sendPrivateMessage(e.toString(), event);
             }
@@ -45,8 +46,8 @@ public class AppointmentDetailsCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "Penggunaan: !appointmentDetails token_event\n" +
-            "Contoh: !appointmentDetails 6f99e80c-e8c6-48ee-b0c1-e349a9ba9ddb";
+        return "Penggunaan: !appointmentDetails token_event\n"
+            + "Contoh: !appointmentDetails 6f99e80c-e8c6-48ee-b0c1-e349a9ba9ddb";
     }
 
     public InschedEmbed findAppointment(String token) throws Exception {

@@ -4,7 +4,6 @@ import com.bot.insched.discord.invoker.Invoker;
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -43,15 +42,15 @@ public class InschedApplication {
         jda.addEventListener(botListener);
     }
 
-//    @Bean
-//    public DataSource dataSource(){
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-////        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//        dataSource.setUrl("mysql:jdbc://localhost:3306/listavip");
-//        dataSource.setUsername("root");
-//        dataSource.setPassword("");
-//        return dataSource;
-//    }
+    //    @Bean
+    //    public DataSource dataSource(){
+    //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    ////        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+    //        dataSource.setUrl("mysql:jdbc://localhost:3306/listavip");
+    //        dataSource.setUsername("root");
+    //        dataSource.setPassword("");
+    //        return dataSource;
+    //    }
 
     public static JDA getJda() {
         return jda;
