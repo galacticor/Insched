@@ -1,12 +1,14 @@
 package com.bot.insched.service;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ShowCalendarService {
-    public List<Event> getListEvents(String userId);
+    public List<Event> getListEvents(String userId) throws NotLoggedInException, IOException;
     public String getCalSummary(Event event);
     public String getCalDescription(Event event);
     public String getCalStart(Event event);
