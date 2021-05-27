@@ -5,7 +5,6 @@ import com.bot.insched.google.GoogleApiManager;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-import java.io.IOException;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,22 +15,20 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     @Autowired
     GoogleApiManager manager;
 
-
+    List<Event> listEvent = null;
 
     public List<Event> getListEvents(String userId) throws Exception {
-        Events events = new Events();
-        List<Event> listEventAll = new ArrayList<>();
-
         Calendar calendar = manager.getCalendarService(userId);
 
         if (calendar == null) {
             throw new NotLoggedInException();
         }
 
-        events = calendar.events().list("primary")
-                .setPageToken(events.getNextPageToken()).execute();
-        listEventAll = events.getItems();
-        List<Event> listEvent = get10LatestEvent(listEventAll);
+        Events events;
+        events = calendar.events().list("primary").execute();
+        List<Event> items = events.getItems();
+        listEvent = get10LatestEvent(items);
+
         return listEvent;
     }
 

@@ -83,21 +83,30 @@ public class ShowCalendarServiceImplTest {
     @Test
     public void testGetListEventSuccess() throws Exception {
         String userId = "userId";
-        String nextPageToken = "1234";
-        Calendar calendar = mock(Calendar.class);
         Calendar.Events calendarEvents = mock(Calendar.Events.class);
         Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
 
         lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(calendarEvents);
-        lenient().when(events.getNextPageToken()).thenReturn(nextPageToken);
         lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
-        lenient().when(calendarEventsList.setPageToken(nextPageToken)).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.execute()).thenReturn(events);
         lenient().when(events.getItems()).thenReturn(listEvent);
         List<Event> res3 = showCalendarService.get10LatestEvent(listEvent);
-//        assertNotNull(showCalendarService.getListEvents(userId));
+        assertNotNull(showCalendarService.getListEvents(userId));
     }
+
+    @Test
+    public void testGetListEventNull() throws Exception {
+        String userId = "userId";
+        Calendar.Events calendarEvents = mock(Calendar.Events.class);
+        Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
+
+        lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(calendarEvents);
+        lenient().when(calendarEvents.list("primary")).thenReturn(null);
+        assertNull(showCalendarService.getListEvents(userId));
+    }
+
 
 
     @Test
