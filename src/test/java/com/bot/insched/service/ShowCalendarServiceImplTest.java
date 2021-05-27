@@ -1,105 +1,149 @@
 package com.bot.insched.service;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.google.GoogleApiManager;
-import com.bot.insched.model.Appointment;
-import com.bot.insched.model.DiscordUser;
-import com.bot.insched.repository.EventRepository;
-import com.google.api.client.auth.oauth2.StoredCredential;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.oauth2.model.Userinfoplus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ShowCalendarServiceImplTest {
-    @Mock
-    private EventRepository eventRepository;
-
-    @Mock
-    private GoogleApiManager manager;
 
     @InjectMocks
     ShowCalendarServiceImpl showCalendarService;
 
     @Mock
-    private Calendar calendar;
-
-    @Mock
     private Event event;
 
-    private StoredCredential storedCredential;
+    @Mock
+    private Events events;
 
-    private DiscordUser user;
+    @Mock
+    private GoogleApiManager manager;
+
+    @Mock
+    Calendar calendar;
 
 
-    private String accessToken = "dummy_access_token";
-    private String refreshToken = "dummy_refresh_token";
-    private String desc = "ini_deskripsi";
-    private String eventId = "0123456789abcdefghijklmnopqrstuv";
-    private String start_date = "2000-04-22T15:30:00-07:00";
+    private List<Event> listEvent = new ArrayList<>();
+
+    private String start_date = "2000-04-22T15:30:00.000-07:00";
+    private String end_date = "2000-04-23T15:30:00.000-07:00";
+
+    @Mock
+    private EventDateTime eventDateTimeMulai;
+
+    @Mock
+    private EventDateTime eventDateTimeSelesai;
+
+    @Mock
+    private DateTime dateTimeMulai;
+
+    @Mock
+    private DateTime dateTimeSelesai;
 
     @BeforeEach
     public void setUp() {
-        event = new Event().setSummary("Tes 1");
-        event.setDescription("no description");
+        event = new Event();
+        event.setSummary("Tes 1").setDescription("description");
+        listEvent.add(event);
 
-//        Event newEvent = new Event();
-//        newEvent.setStart(DateTime start) = new EventDateTime() { DateTime = start };
-//        newEvent.End = new EventDateTime() { DateTime = end };
+        dateTimeMulai = new DateTime(start_date);
+        eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai);
+        dateTimeSelesai = new DateTime(end_date);
+        eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai);
+        event.setStart(eventDateTimeMulai).setEnd(eventDateTimeSelesai);
     }
 
+
     @Test
-    public void testGetEventSuccess() throws Exception {
-        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+    public void testGetCalDescription() throws Exception {
+        String res = showCalendarService.getCalDescription(event);
+        assertEquals(res, "description");
     }
 
     @Test
     public void testGetCalSummary() throws Exception {
-//        lenient().when(event.getSummary()).thenReturn(String.class);
-//        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-//        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
-//        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
-
         String res = showCalendarService.getCalSummary(event);
         assertEquals(res, "Tes 1");
     }
 
+
     @Test
-    public void testGetCalDescription() throws Exception {
-//        lenient().when(event.getDescription()).thenReturn("no description");
-//        when(event.getDescription()).thenReturn("no description");
-//        when(event.getDescription()).thenReturn(mock(String.class));
-//        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-//        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
-//        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
-        String res = event.getDescription();
-        assertEquals(res, "no description");
+    public void testGetListEventSuccess() throws Exception {
+        String userId = "userId";
+        Calendar.Events calendarEvents = mock(Calendar.Events.class);
+        Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
+
+        lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(calendarEvents);
+        lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.execute()).thenReturn(events);
+        lenient().when(events.getItems()).thenReturn(listEvent);
+        List<Event> res3 = showCalendarService.get10LatestEvent(listEvent);
+        assertNotNull(showCalendarService.getListEvents(userId));
     }
 
-//    @Test
-//    public void testGetCalSummaryNull() throws Exception {
-////        lenient().when(event.getSummary()).thenReturn(String.class);
-////        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-////        lenient().when(calendar.events().update("primary", "qefewfwef", event)).thenReturn(mock(Calendar.Events.Update.class));
-////        lenient().when(calendar.events().update("primary", "qefewfwef", event).execute()).thenReturn(any(Event.class));
-//        String res = event.getSummary();
-//        assertEquals(res, null);
-//    }
+    @Test
+    public void testGetListEventNotSuccess() throws Exception {
+        lenient().when(manager.getCalendarService("userId")).thenReturn(null);
+        assertThrows(NotLoggedInException.class, () -> {
+            showCalendarService.getListEvents("userId");
+        });
+    }
+
+
+    @Test
+    public void testGetCalStart(){
+        String res = showCalendarService.getCalStart(event);
+        assertEquals(res,start_date);
+    }
+
+    @Test
+    public void testGetCalEnd(){
+        String res = showCalendarService.getCalEnd(event);
+        assertEquals(res,end_date);
+    }
+
+    @Test
+    public void testGetCalDescriptionNull(){
+        event.setDescription(null);
+        String res = showCalendarService.getCalDescription(event);
+        assertEquals(res, "no description");
+
+    }
+
+
+    @Test
+    public void testGetCalDescriptionMoreThan1000char(){
+        String regex = new String(new char[1000]).replace('\0', '*');
+        event.setDescription(regex);
+        String res = showCalendarService.getCalDescription(event);
+        assertEquals(res, regex.substring(0,90) + "...");
+
+    }
+
+    @Test
+    public void testGet10LatestEventSuccess(){
+        for (int i = 0; i < 12; i++) {
+            listEvent.add(event);
+        }
+        List<Event> res = showCalendarService.get10LatestEvent(listEvent);
+        assertNotNull(res);
+    }
+
 
 
 }

@@ -1,12 +1,18 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.ShowCalendarService;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.Events;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,9 +23,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.lenient;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -32,46 +42,95 @@ class ShowCalendarCommandTest {
     ShowCalendarCommand showCalendarCommand;
 
     @Mock
-    PrivateMessageReceivedEvent privateMessageReceivedEvent;
+    PrivateMessageReceivedEvent privateMessageevent;
+
+    @Mock
+    MessageSender sender;
 
     @Mock
     Event event;
 
-    private static JDA jda;
-    private static String messageId = "838918902233956383";
-    private static String userId = "461191404341821455";
-    private static long responseNumber = 8;
-    private static String channelId = "836884748667846718";
-    private static Message message;
-    private static User jdaUser;
+    @Mock
+    Events events;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
-        jda.retrieveUserById(userId).queue(user -> {
-            user.openPrivateChannel().queue(privateChannel -> {
-                jdaUser = privateChannel.getUser();
-                privateChannel.retrieveMessageById(messageId).queue(message1 -> {
-                    message = message1;
-                });
-            });
-        });
-    }
 
-    // Thread.sleep to delay execution and prevent error
-    @AfterAll
-    public static void teardown() throws Exception {
-        jda.shutdownNow();
-        Thread.sleep(2000);
-    }
+    private String start_date = "2000-04-22T15:30:00.000-07:00";
+    private String end_date = "2000-04-23T15:30:00.000-07:00";
+
+    @Mock
+    private EventDateTime eventDateTimeMulai;
+
+    @Mock
+    private EventDateTime eventDateTimeSelesai;
+
+    @Mock
+    private DateTime dateTimeMulai;
+
+    @Mock
+    private DateTime dateTimeSelesai;
+
+    @Mock
+    private EmbedBuilder embedBuilder;
+
+    private  List<Event> listEvent;
 
 
     @BeforeEach
-    public void setUp() throws Exception{
-        Thread.sleep(1000);
-        lenient().when(privateMessageReceivedEvent.getAuthor()).thenReturn(jdaUser);
-        lenient().when(privateMessageReceivedEvent.getMessage()).thenReturn(message);
+    public void setUp() {
+        User user = mock(User.class);
+        ReflectionTestUtils.setField(showCalendarCommand, "sender", sender);
+        lenient().when(privateMessageevent.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
+
+        listEvent = new ArrayList<>();
+        event = new Event();
+        event.setSummary("Tes 1").setDescription("description");
+        dateTimeMulai = new DateTime(start_date);
+        eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai);
+        dateTimeSelesai = new DateTime(end_date);
+        eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai);
+        event.setStart(eventDateTimeMulai).setEnd(eventDateTimeSelesai);
+        listEvent.add(event);
+
+        events = new Events();
+        events.setNextPageToken("1234").setItems(listEvent);
+
     }
+
+
+    @Test
+    public void testExecute(){
+        String[] args = {};
+        lenient().doNothing().when(sender).sendPrivateMessage("Selamat datang di fitur ShowCalendar! "
+                + "Di bawah ini adalah kalender kamu", privateMessageevent);
+        lenient().when(privateMessageevent.getMessage()).thenReturn(mock(Message.class));
+        lenient().when(privateMessageevent.getMessage().getAuthor()).thenReturn(mock(User.class));
+        showCalendarCommand.execute(args, privateMessageevent);
+    }
+
+    @Test
+    void testCreateEmbed(){
+        String [] args = {};;
+        InschedEmbed embed = new InschedEmbed();
+        try {
+            lenient().when(showCalendarService.getListEvents("userId")).thenReturn(listEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        lenient().when(showCalendarService.getCalSummary(listEvent.get(0))).thenReturn("Tes 1");
+        lenient().when(showCalendarService.getCalDescription(listEvent.get(0))).thenReturn("description");
+//        lenient().when(embed.addField("lala", "lili", false)).thenReturn(embedBuilder);
+        assertNotNull(showCalendarCommand.createEmbed("userId",privateMessageevent));
+
+    }
+
+    @Test
+    public void getCalSummarySuccess(){
+        lenient().when(showCalendarService.getCalSummary(event)).thenReturn("123");
+        String res = showCalendarService.getCalSummary(event);
+        assertNotNull(res);
+    }
+
 
     @Test
     void testGetHelp() {
@@ -79,7 +138,7 @@ class ShowCalendarCommandTest {
     }
 
     @Test
-     void testGetCommand() {
+    void testGetCommand() {
         assertEquals("showCalendar", showCalendarCommand.getCommand());
     }
 
