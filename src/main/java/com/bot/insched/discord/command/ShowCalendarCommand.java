@@ -1,14 +1,10 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.ShowCalendarService;
 import com.google.api.services.calendar.model.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-
-import java.io.IOException;
-
 
 public class ShowCalendarCommand implements Command {
     private ShowCalendarService service;
@@ -24,26 +20,27 @@ public class ShowCalendarCommand implements Command {
                 + "Di bawah ini adalah kalender kamu", event);
 
         String userId = event.getMessage().getAuthor().getId();
-        try {
-            createEmbed(userId, event);
-        } catch (NotLoggedInException | IOException e) {
-            e.printStackTrace();
-        }
+        sender.sendPrivateMessage(createEmbed(userId, event).build(), event);
     }
 
-    public void createEmbed(String userId, PrivateMessageReceivedEvent event) throws NotLoggedInException, IOException {
+    public InschedEmbed createEmbed(String userId, PrivateMessageReceivedEvent event) {
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("CalendarMu");
-        for (Event events: service.getListEvents(userId)) {
-            String summary = service.getCalSummary(events);
-            String description = service.getCalDescription(events);
-            String startTime = service.getCalStart(events);
-            String endTime = service.getCalEnd(events);
-            embed.addField("📅  " + summary,String.format("Date : %s  \n Time : %s  -  %s ",
-                    startTime.substring(0,10), startTime.substring(11,16),
-                    endTime.substring(11,16)),false);
+        try {
+            for (Event events: service.getListEvents(userId)) {
+                String summary = service.getCalSummary(events);
+                String description = service.getCalDescription(events);
+                String startTime = service.getCalStart(events);
+                String endTime = service.getCalEnd(events);
+                embed.addField("📅  " + summary,String.format("Date : %s  \n Time : %s  -  %s ",
+                        startTime.substring(0,10), startTime.substring(11,16),
+                        endTime.substring(11,16)),false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        sender.sendPrivateMessage(embed.build(), event);
+        return embed;
+
     }
 
     @Override

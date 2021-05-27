@@ -69,6 +69,9 @@ class ShowCalendarCommandTest {
     @Mock
     private DateTime dateTimeSelesai;
 
+    @Mock
+    private EmbedBuilder embedBuilder;
+
     private  List<Event> listEvent;
 
 
@@ -82,15 +85,15 @@ class ShowCalendarCommandTest {
         listEvent = new ArrayList<>();
         event = new Event();
         event.setSummary("Tes 1").setDescription("description");
-        listEvent.add(event);
-
-        events = new Events();
-        events.setNextPageToken("1234").setItems(listEvent);
         dateTimeMulai = new DateTime(start_date);
         eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai);
         dateTimeSelesai = new DateTime(end_date);
         eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai);
         event.setStart(eventDateTimeMulai).setEnd(eventDateTimeSelesai);
+        listEvent.add(event);
+
+        events = new Events();
+        events.setNextPageToken("1234").setItems(listEvent);
 
     }
 
@@ -108,9 +111,17 @@ class ShowCalendarCommandTest {
     @Test
     void testCreateEmbed(){
         String [] args = {};;
-        lenient().when(privateMessageevent.getMessage()).thenReturn(mock(Message.class));
-        lenient().when(privateMessageevent.getMessage().getAuthor()).thenReturn(mock(User.class));
-        showCalendarCommand.execute(args, privateMessageevent);
+        InschedEmbed embed = new InschedEmbed();
+        try {
+            lenient().when(showCalendarService.getListEvents("userId")).thenReturn(listEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        lenient().when(showCalendarService.getCalSummary(listEvent.get(0))).thenReturn("Tes 1");
+        lenient().when(showCalendarService.getCalDescription(listEvent.get(0))).thenReturn("description");
+//        lenient().when(embed.addField("lala", "lili", false)).thenReturn(embedBuilder);
+        assertNotNull(showCalendarCommand.createEmbed("userId",privateMessageevent));
+
     }
 
     @Test
@@ -127,7 +138,7 @@ class ShowCalendarCommandTest {
     }
 
     @Test
-     void testGetCommand() {
+    void testGetCommand() {
         assertEquals("showCalendar", showCalendarCommand.getCommand());
     }
 

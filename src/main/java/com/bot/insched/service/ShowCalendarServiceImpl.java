@@ -18,17 +18,19 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
 
 
 
-    public List<Event> getListEvents(String userId) throws NotLoggedInException, IOException {
+    public List<Event> getListEvents(String userId) throws Exception {
         Events events = new Events();
+        List<Event> listEventAll = new ArrayList<>();
 
         Calendar calendar = manager.getCalendarService(userId);
-        if(calendar == null){
+
+        if (calendar == null) {
             throw new NotLoggedInException();
         }
-        List<Event> listEventAll = new ArrayList<>();
-        listEventAll = calendar.events().list("primary").setPageToken(events.getNextPageToken()).execute().getItems();
-//            listEventAll = events.getItems();
 
+        events = calendar.events().list("primary")
+                .setPageToken(events.getNextPageToken()).execute();
+        listEventAll = events.getItems();
         List<Event> listEvent = get10LatestEvent(listEventAll);
         return listEvent;
     }
@@ -69,7 +71,3 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
         return list10Event;
     }
 }
-
-
-
-

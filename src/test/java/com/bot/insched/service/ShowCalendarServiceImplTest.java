@@ -2,24 +2,19 @@ package com.bot.insched.service;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.google.GoogleApiManager;
-import com.bot.insched.model.DiscordUser;
-import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import com.google.api.services.calendar.model.EventDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,11 +33,8 @@ public class ShowCalendarServiceImplTest {
     private GoogleApiManager manager;
 
     @Mock
-    private Calendar calendar;
+    Calendar calendar;
 
-    private StoredCredential storedCredential;
-
-    private DiscordUser user;
 
     private List<Event> listEvent = new ArrayList<>();
 
@@ -67,8 +59,6 @@ public class ShowCalendarServiceImplTest {
         event.setSummary("Tes 1").setDescription("description");
         listEvent.add(event);
 
-        events = new Events();
-        events.setNextPageToken("1234").setItems(listEvent);
         dateTimeMulai = new DateTime(start_date);
         eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai);
         dateTimeSelesai = new DateTime(end_date);
@@ -76,17 +66,6 @@ public class ShowCalendarServiceImplTest {
         event.setStart(eventDateTimeMulai).setEnd(eventDateTimeSelesai);
     }
 
-//    @Test
-//    public void testGetEventSuccess(){
-//        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(mock(Calendar.class));
-//        Calendar res = manager.getCalendarService(any());
-//        assertEquals(res, manager.getCalendarService(any()));
-//    }
-//
-//    @Test
-//    public void testGetEventNotSuccess() throws Exception {
-//        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(null);
-//    }
 
     @Test
     public void testGetCalDescription() throws Exception {
@@ -100,28 +79,26 @@ public class ShowCalendarServiceImplTest {
         assertEquals(res, "Tes 1");
     }
 
+
     @Test
     public void testGetListEventSuccess() throws Exception {
-        lenient().when(manager.getCalendarService("userId")).thenReturn(calendar);
-        Calendar res = manager.getCalendarService("userId");
-        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-        Calendar.Events evt = calendar.events();
-        lenient().when(calendar.events().list("primary")).thenReturn(mock(Calendar.Events.List.class));
-        Calendar.Events.List a = calendar.events().list("primary");
-        lenient().when(calendar.events().list("primary").setPageToken("1234")).thenReturn(mock(Calendar.Events.List.class));
-        Calendar.Events.List b = calendar.events().list("primary").setPageToken("1234");
-        lenient().when(calendar.events().list("primary").setPageToken("1234").execute()).thenReturn(mock(Events.class));
-        Events c = calendar.events().list("primary").setPageToken("1234").execute();
-        lenient().when(calendar.events().list("primary").setPageToken("1234").execute().getItems()).thenReturn(listEvent);
-        List<Event> le = calendar.events().list("primary").setPageToken("1234").execute().getItems();
+        String userId = "userId";
+        String nextPageToken = "1234";
+        Calendar calendar = mock(Calendar.class);
+        Calendar.Events calendarEvents = mock(Calendar.Events.class);
+        Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
 
-
-
-//        System.out.println("GET LIST EVENT NYA ADALAH : " + calendar.events().list("primary").setPageToken("1234").execute().getSummary());
-        List<Event> resu = showCalendarService.getListEvents("userId");
-
-        assertNull(le);
+        lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(calendarEvents);
+        lenient().when(events.getNextPageToken()).thenReturn(nextPageToken);
+        lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setPageToken(nextPageToken)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.execute()).thenReturn(events);
+        lenient().when(events.getItems()).thenReturn(listEvent);
+        List<Event> res3 = showCalendarService.get10LatestEvent(listEvent);
+        assertNotNull(showCalendarService.getListEvents(userId));
     }
+
 
     @Test
     public void testGetListEventNotSuccess() throws Exception {
@@ -130,6 +107,7 @@ public class ShowCalendarServiceImplTest {
             showCalendarService.getListEvents("userId");
         });
     }
+
 
     @Test
     public void testGetCalStart(){
