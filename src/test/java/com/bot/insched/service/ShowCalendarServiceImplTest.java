@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,20 +95,6 @@ public class ShowCalendarServiceImplTest {
         List<Event> res3 = showCalendarService.get10LatestEvent(listEvent);
         assertNotNull(showCalendarService.getListEvents(userId));
     }
-
-    @Test
-    public void testGetListEventNull() throws Exception {
-        String userId = "userId";
-        Calendar.Events calendarEvents = mock(Calendar.Events.class);
-        Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
-
-        lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
-        lenient().when(calendar.events()).thenReturn(calendarEvents);
-        lenient().when(calendarEvents.list("primary")).thenReturn(null);
-        assertNull(showCalendarService.getListEvents(userId));
-    }
-
-
 
     @Test
     public void testGetListEventNotSuccess() throws Exception {
