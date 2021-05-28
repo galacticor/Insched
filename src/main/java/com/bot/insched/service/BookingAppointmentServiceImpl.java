@@ -100,14 +100,14 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         UUID uuid = UUID.fromString(token);
         Appointment appointment = appointmentRepository.findByIdAppointment(uuid);
         if (appointment == null) {
-            throw new ObjectNotFoundException("Appointment tidak ditemukan");
+            throw new ObjectNotFoundException("Appointment tidak ditemukan!");
         }
 
         List<Event> eventList = appointment.getListEvent();
         return eventList;
     }
 
-    private DiscordUser checkUserLoggedIn(String requesterId) throws Exception {
+    public DiscordUser checkUserLoggedIn(String requesterId) throws Exception {
         DiscordUser user = discordUserRepository.findByIdDiscord(requesterId);
         if (user == null) {
             throw new NotLoggedInException();
@@ -115,7 +115,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         return user;
     }
 
-    private Event checkEventValidUUID(String token) throws Exception {
+    public Event checkEventValidUUID(String token) throws Exception {
         UUID uuid = UUID.fromString(token);
         Event event = eventRepository.findByIdEvent(uuid);
         if (event == null) {
