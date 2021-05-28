@@ -7,8 +7,11 @@ import com.bot.insched.model.DiscordUser;
 import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.EventService;
 import com.bot.insched.service.EventServiceImpl;
+import com.bot.insched.service.GoogleService;
 import com.google.api.client.auth.oauth2.StoredCredential;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.EventDateTime;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +44,12 @@ public class CreateEventCommandTest {
 
     @Mock
     private PrivateMessageReceivedEvent event;
+
+    @Mock
+    private MessageSender sender;
+
+    @Mock
+    GoogleService googleService;
 
     @InjectMocks
     private CreateEventCommand command;
@@ -73,12 +83,10 @@ public class CreateEventCommandTest {
     // Thread.sleep to delay and prevent error
     @BeforeEach
     public void setUp() throws Exception {
-        Thread.sleep(1000);
-        storedCredential = new StoredCredential();
-        storedCredential.setAccessToken("dummy");
-        storedCredential.setRefreshToken("dummy");
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
+        User user = mock(User.class);
+        ReflectionTestUtils.setField(command, "sender", sender);
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
     }
 
     @AfterAll
@@ -87,14 +95,33 @@ public class CreateEventCommandTest {
         Thread.sleep(2000);
     }
 
+
     @Test
     public void testCorrectArgument() throws Exception {
+        InschedEmbed embed = mock(InschedEmbed.class);
         PrivateChannel channel = mock(PrivateChannel.class);
         MessageAction action = mock(MessageAction.class);
+        User user = mock(User.class);
+        String ret = "Event Berhasil dibuat";
+        embed.setTitle("Create Event");
+        embed.setDescription(ret);
         String[] args = {"!createEvent","KUIS","2021-05-20", "15:30", "2021-05-21" ,"15:30","Kuliah"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
-                .thenReturn("Event Berhasil dibuat");
+                .thenReturn(ret);
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
+        lenient().doNothing().when(sender).sendPrivateMessage(ret, event);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testHelpArgument() {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        String[] args = {"help"};
         lenient().when(event.getChannel()).thenReturn(channel);
         lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
@@ -102,27 +129,17 @@ public class CreateEventCommandTest {
 
     @Test
     public void testErrorArgument() throws Exception {
-        PrivateChannel channel = mock(PrivateChannel.class);
-        MessageAction action = mock(MessageAction.class);
         String[] args = {"!createEvent","a","a","a","a"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
                 .thenReturn("error");
-        when(event.getChannel()).thenReturn(channel);
-        when(channel.sendMessage(anyString())).thenReturn(action);
-        doNothing().when(action).queue();
         command.execute(args, event);
     }
 
 
     @Test
     public void testFalseArgument() {
-        PrivateChannel channel = mock(PrivateChannel.class);
-        MessageAction action = mock(MessageAction.class);
         String[] args = {"dummy", "dummy", "dummy"};
-        when(event.getChannel()).thenReturn(channel);
-        when(channel.sendMessage(anyString())).thenReturn(action);
-        doNothing().when(action).queue();
         command.execute(args, event);
     }
 

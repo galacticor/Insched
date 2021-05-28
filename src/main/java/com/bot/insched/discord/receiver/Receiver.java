@@ -27,6 +27,7 @@ public class Receiver {
         addCommand(new CreateEventCommand(eventService, discordUserService));
         addCommand(new UpdateEventCommand(eventService, discordUserService));
         addCommand(new DeleteEventCommand(eventService, discordUserService));
+        addCommand(new GetEventCommand(eventService, discordUserService));
         addCommand(new HelpCommand());
         addCommand(new LoginCommand(googleService));
         addCommand(new LogoutCommand(googleService, discordUserService));

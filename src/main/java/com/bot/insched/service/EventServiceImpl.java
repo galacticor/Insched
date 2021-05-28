@@ -19,7 +19,6 @@ public class EventServiceImpl implements EventService {
     @Autowired
     EventRepository eventRepository;
 
-    @Override
     public Event getEventService(String discordId, String eventId) {
         Calendar calendar = manager.getCalendarService(discordId);
         try {
@@ -28,6 +27,31 @@ public class EventServiceImpl implements EventService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public String getEventIdService(String discordId, String eventId) {
+        Calendar calendar = manager.getCalendarService(discordId);
+        try {
+            Event event = getEventService(discordId, eventId);
+            String link = event.getHtmlLink();
+            String id = event.getId();
+            String tglAwal = event.getStart().getDateTime().toString();
+            String tglSelesai = event.getEnd().getDateTime().toString();
+            String deskripsi = event.getDescription();
+            String ret = String.format("Event yang anda cari berhasil ditemukan \n"
+                    + "Berikut link event yang anda cari: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            return ret;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
 
@@ -49,12 +73,14 @@ public class EventServiceImpl implements EventService {
             String tglAwal = newEvent.getStart().getDateTime().toString();
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
-            String ret = String.format("Event Berhasil dibuat \n"
-                + "Berikut link event baru anda: [LINK](%s) \n"
-                + "Event id anda adalah %s \n"
-                + "Mulai Event pada %s \n"
-                + "Selesai Event pada %s \n"
-                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            String ret = String.format("Event yang anda cari berhasil ditemukan \n"
+                    + "Berikut link event yang anda cari: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,11 +130,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event Berhasil di-update \n"
-                + "Berikut link event baru anda: [LINK](%s) \n"
-                + "Event id anda adalah %s \n"
-                + "Mulai Event pada %s \n"
-                + "Selesai Event pada %s \n"
-                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
 
         } catch (Exception e) {
