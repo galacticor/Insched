@@ -47,7 +47,7 @@ public class MyAppointmentListCommand implements Command {
         return "!myAppointmentList tanggal\n" + "Contoh: !myAppointmentList 2021-05-03";
     }
 
-    private InschedEmbed handleEmbed(String idDiscord, String tanggal) throws Exception {
+    public InschedEmbed handleEmbed(String idDiscord, String tanggal) throws Exception {
         List<Event> eventList = appointmentService.getAllAppointment(idDiscord);
         LocalDate date = LocalDate.parse(tanggal);
 

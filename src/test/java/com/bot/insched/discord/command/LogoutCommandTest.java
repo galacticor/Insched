@@ -3,6 +3,7 @@ package com.bot.insched.discord.command;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.GoogleService;
+import com.bot.insched.service.DiscordUserService;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -21,15 +22,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class LoginCommandTest {
+public class LogoutCommandTest {
     @InjectMocks
-    LoginCommand command;
+    LogoutCommand command;
 
     @Mock
     PrivateMessageReceivedEvent event;
 
     @Mock
     GoogleService googleService;
+
+    @Mock
+    DiscordUserService discordService;
 
     @Mock
     private MessageSender sender;
@@ -41,15 +45,16 @@ public class LoginCommandTest {
 
     @Test
     public void testExecute() {
-        String[] args = {"login"};
+        String[] args = {"logout"};
         InschedEmbed embed = new InschedEmbed();
-        embed.setTitle("Login");
-        embed.setDescription(String.format("Silakan login melalui link berikut [LINK](%s)", "url"));
+        embed.setTitle("Good Bye");
+        embed.setDescription(String.format("Terimakasih sudah menggunakan bot Insched, selamat tinggal %s", "userInfo"));
         User user = mock(User.class);
 
-        when(googleService.getAuthorizationUrl("123")).thenReturn("url");
+        when(googleService.getUserInfo("123")).thenReturn("userInfo");
         when(event.getAuthor()).thenReturn(user);
         when(user.getId()).thenReturn("123");
+        doNothing().when(discordService).logout("123");
         doNothing().when(sender).sendPrivateMessage(embed.build(), event);
 
         command.execute(args, event);
@@ -63,6 +68,6 @@ public class LoginCommandTest {
 
     @Test
     public void testGetCommand(){
-        assertEquals(command.getCommand(),"login");
+        assertEquals(command.getCommand(),"logout");
     }
 }

@@ -45,7 +45,7 @@ public class MessageSenderTest {
     @AfterAll
     public static void teardown() throws Exception {
         jda.shutdownNow();
-        Thread.sleep(2000);
+        Thread.sleep(1000);
     }
 
 	@BeforeEach
@@ -89,12 +89,14 @@ public class MessageSenderTest {
 	}
 
 	@Test
-	public void testSendPrivateNotificationById() {
+	public void testSendPrivateNotificationById() throws Exception {
 		String message1 = "dummy message";
 		sender.sendPrivateNotificationById(message1, userId);
+		Thread.sleep(1000);
 
 		MessageEmbed message2 = mock(MessageEmbed.class);
 		sender.sendPrivateNotificationById(message2, userId);
+		Thread.sleep(2000);
 	}
 
 	@Test

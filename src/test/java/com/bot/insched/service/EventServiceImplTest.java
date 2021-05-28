@@ -1,5 +1,6 @@
 package com.bot.insched.service;
 
+import com.bot.insched.discord.command.DeleteEventCommand;
 import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
@@ -85,12 +86,39 @@ public class EventServiceImplTest {
         lenient().when(calendar.events().insert("primary", event).execute().getHtmlLink()).thenReturn("HTML");
         lenient().when(calendar.events().insert("primary", event).execute().getId()).thenReturn("Id");
         String res = eventService.createEventService("123456", event);
-        assertEquals(res, "Event Berhasil dibuat \n" +
-                "Berikut link event baru anda: [LINK](HTML) \n" +
-                "Event id anda adalah Id \n" +
-                "Mulai Event pada 1356648092 \n" +
-                "Selesai Event pada 1393195067 \n" +
-                "Deskripsi Event anda adalah null");
+        assertEquals(res, "Event yang anda cari berhasil ditemukan \n"
+                + "Berikut link event yang anda cari: [LINK](HTML) \n"
+                + ":id: Id \n"
+                + "\n"
+                + ":clock: Mulai pada  : 1356648092 \n"
+                + ":clock: Selesai pada: 1393195067 \n"
+                + "\n"
+                + "Deskripsi Event anda adalah null");
+    }
+
+    @Test
+    public void testGetEventIdSuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", event.getId())).thenReturn(mock(Calendar.Events.Get.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getStart().getDateTime().toString()).thenReturn("1356648092");
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getEnd().getDateTime().toString()).thenReturn("1393195067");
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().get("primary", event.getId()).execute().getId()).thenReturn("Id");
+        String res = eventService.getEventIdService("123456", event.getId());
+        assertEquals(res, "Event yang anda cari berhasil ditemukan \n"
+                + "Berikut link event yang anda cari: [LINK](HTML) \n"
+                + ":id: Id \n"
+                + "\n"
+                + ":clock: Mulai pada  : 1356648092 \n"
+                + ":clock: Selesai pada: 1393195067 \n"
+                + "\n"
+                + "Deskripsi Event anda adalah null");
     }
 
     // Update Event Test
@@ -114,9 +142,11 @@ public class EventServiceImplTest {
         String res = eventService.updateEventService("123456", "qefewfwef", "deskripsi", "tes");
         assertEquals(res, "Event Berhasil di-update \n"
                 + "Berikut link event baru anda: [LINK](HTML) \n"
-                + "Event id anda adalah null \n"
-                + "Mulai Event pada 8844488 \n"
-                + "Selesai Event pada 629775688 \n"
+                + ":id: null \n"
+                + "\n"
+                + ":clock: Mulai pada  : 8844488 \n"
+                + ":clock: Selesai pada: 629775688 \n"
+                + "\n"
                 + "Deskripsi Event anda adalah tes");
 
     }
@@ -141,9 +171,11 @@ public class EventServiceImplTest {
         String res = eventService.updateEventService("123456", "qefewfwef", "deskripsi", "tes");
         assertEquals(res, "Event Berhasil di-update \n"
                 + "Berikut link event baru anda: [LINK](HTML) \n"
-                + "Event id anda adalah null \n"
-                + "Mulai Event pada 8844488 \n"
-                + "Selesai Event pada 629775688 \n"
+                + ":id: null \n"
+                + "\n"
+                + ":clock: Mulai pada  : 8844488 \n"
+                + ":clock: Selesai pada: 629775688 \n"
+                + "\n"
                 + "Deskripsi Event anda adalah tes");
     }
 
@@ -170,9 +202,11 @@ public class EventServiceImplTest {
                 "mulai", "1999-05-21T05:30:00.000+07:00");
         assertEquals(ret, "Event Berhasil di-update \n"
                 + "Berikut link event baru anda: [LINK](HTML) \n"
-                + "Event id anda adalah null \n"
-                + "Mulai Event pada 1999-05-21T05:30:00.000+07:00 \n"
-                + "Selesai Event pada 629775688 \n"
+                + ":id: null \n"
+                + "\n"
+                + ":clock: Mulai pada  : 1999-05-21T05:30:00.000+07:00 \n"
+                + ":clock: Selesai pada: 629775688 \n"
+                + "\n"
                 + "Deskripsi Event anda adalah tes");
     }
 
@@ -199,9 +233,11 @@ public class EventServiceImplTest {
                 "selesai", "1999-05-21T05:31:00.000+07:00");
         assertEquals(ret, "Event Berhasil di-update \n"
                 + "Berikut link event baru anda: [LINK](HTML) \n"
-                + "Event id anda adalah null \n"
-                + "Mulai Event pada 8844488 \n"
-                + "Selesai Event pada 1999-05-21T05:31:00.000+07:00 \n"
+                + ":id: null \n"
+                + "\n"
+                + ":clock: Mulai pada  : 8844488 \n"
+                + ":clock: Selesai pada: 1999-05-21T05:31:00.000+07:00 \n"
+                + "\n"
                 + "Deskripsi Event anda adalah tes");
     }
 
@@ -228,9 +264,11 @@ public class EventServiceImplTest {
                 "summary", "tes");
         assertEquals(ret, "Event Berhasil di-update \n"
                 + "Berikut link event baru anda: [LINK](HTML) \n"
-                + "Event id anda adalah null \n"
-                + "Mulai Event pada 8844488 \n"
-                + "Selesai Event pada 629775688 \n"
+                + ":id: null \n"
+                + "\n"
+                + ":clock: Mulai pada  : 8844488 \n"
+                + ":clock: Selesai pada: 629775688 \n"
+                + "\n"
                 + "Deskripsi Event anda adalah tes");
     }
 
@@ -255,7 +293,7 @@ public class EventServiceImplTest {
         assertNotNull(res);
     }
 
-    //    @Test
+//    @Test
 //    public void testDeleteEventSuccess() throws Exception{
 //        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
 //        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
@@ -285,6 +323,15 @@ public class EventServiceImplTest {
         Event res = eventService.getEventService("123456", "qefewfwef");
         assertEquals(res, null);
 
+    }
+    @Test
+    public void testGetEventIdException() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", event.getId())).thenReturn(mock(Calendar.Events.Get.class));
+        lenient().when(calendar.events().get("primary", event.getId()).execute()).thenReturn(null);
+        String res = eventService.getEventIdService("123456", event.getId());
+        assertEquals(res, "Terjadi kesalahan pastikan anda memasukkan input dengan benar");
     }
 
     @Test

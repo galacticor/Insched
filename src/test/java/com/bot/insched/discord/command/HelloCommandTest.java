@@ -2,8 +2,6 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.service.GoogleService;
 import com.bot.insched.discord.util.MessageSender;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
