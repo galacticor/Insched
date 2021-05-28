@@ -35,4 +35,12 @@ public class ViewSlotCommand implements Command{
                 "Contoh: !viewSlot f2da393a-7ef2-4fe9-979e-ea3d76adc7ea";
     }
 
+    public List<Event> viewHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
+
+        String userId = event.getAuthor().getId();
+        String token = args[0];
+
+        return bookingAppointmentService.viewHostBookingSlots(userId, token);
+    }
+
 }

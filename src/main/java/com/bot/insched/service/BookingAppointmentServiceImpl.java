@@ -4,10 +4,13 @@ import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.exception.ObjectAlreadyExistsException;
 import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.google.GoogleApiManager;
+import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
+import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.repository.EventRepository;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,9 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    AppointmentRepository appointmentRepository;
 
     @Override
     public String createBooking(String requesterId, String token) throws Exception{
@@ -99,4 +105,22 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
         return "Booking slot event telah dihapus!";
     }
+
+    @Override
+    public List<Event> viewHostBookingSlots(String requesterId, String token) throws Exception {
+        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
+        if (attendee == null) {
+            throw new NotLoggedInException();
+        }
+
+        UUID uuid = UUID.fromString(token);
+        Appointment appointment = appointmentRepository.findByIdAppointment(uuid);
+        if (appointment == null) {
+            throw new ObjectNotFoundException("Appointment tidak ditemukan");
+        }
+
+        List<Event> eventList = appointment.getListEvent();
+        return eventList;
+    }
+
 }
