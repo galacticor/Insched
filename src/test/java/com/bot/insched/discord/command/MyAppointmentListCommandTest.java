@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
@@ -17,6 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,7 +52,6 @@ public class MyAppointmentListCommandTest {
         String[] args = { "help" };
         String res = "!myAppointmentList tanggal\n" +
             "Contoh: !myAppointmentList 2021-05-03";
-//        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
         command.execute(args, event);
     }
 
@@ -65,13 +66,13 @@ public class MyAppointmentListCommandTest {
         String desc = "testing";
 
         Event e = new Event(start, duration, capacity, desc);
+        e.setIdEvent(UUID.randomUUID());
         eventList.add(e);
 
         when(appointmentService.getAllAppointment("123")).thenReturn(eventList);
         InschedEmbed embed = new InschedEmbed();
         embed.setDescription("dummy embed");
 
-//        lenient().doNothing().when(sender).sendPrivateMessage(any(MessageEmbed.class), any(PrivateMessageReceivedEvent.class));
         command.execute(args, event);
     }
 
@@ -80,7 +81,44 @@ public class MyAppointmentListCommandTest {
         String res = command.getCommand();
         String expected = "myAppointmentList";
         assertEquals(res, expected);
-
     }
+
+    @Test
+    public void testThrowException() throws Exception {
+        String[] args = { "2022-08-08" };
+        when(appointmentService.getAllAppointment("123"))
+            .thenThrow(new NotLoggedInException());
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testNoArgs() throws Exception {
+        String[] args = {};
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testEventExistedBeforeNow() throws Exception {
+        String[] args = { "2020-08-08" };
+        List<Event> eventList = new ArrayList<>();
+
+        String start = "2021-08-08T17:00:00";
+        int duration = 30;
+        int capacity = 2;
+        String desc = "testing";
+
+        Event e = new Event(start, duration, capacity, desc);
+        e.setIdEvent(UUID.randomUUID());
+        eventList.add(e);
+
+        when(appointmentService.getAllAppointment("123")).thenReturn(eventList);
+        InschedEmbed embed = new InschedEmbed();
+        embed.setDescription("dummy embed");
+
+        command.execute(args, event);
+    }
+
+
+
 
 }
