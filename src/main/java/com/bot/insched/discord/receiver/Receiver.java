@@ -40,6 +40,7 @@ public class Receiver {
         addCommand(new DeleteSlotCommand(appointmentService));
         addCommand(new MyAppointmentCommand(appointmentService));
         addCommand(new AppointmentDetailsCommand(eventService));
+        addCommand(new ViewSlotCommand(bookingAppointmentService));
     }
 
     private void addCommand(Command command) {
