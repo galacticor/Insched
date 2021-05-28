@@ -1,7 +1,6 @@
 package com.bot.insched.discord.command;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
-import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.AppointmentService;
@@ -56,6 +55,26 @@ public class MyAppointmentCommandTest {
             .thenReturn(eventList);
         command.execute(args, event);
     }
+
+    @Test
+    public void testEventExistedBeforeNow() throws Exception{
+        String[] args = {};
+        Event e = new Event();
+        e.setStartTime(LocalDateTime.parse("2020-09-09T15:00:00"));
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(e);
+        when(appointmentService.getAllAppointment(anyString()))
+            .thenReturn(eventList);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testDoNothingWhenHaveArgs() {
+        String[] args = {"test"};
+        command.execute(args, event);
+    }
+
+
 
     @Test
     public void testThrowException() throws Exception {
