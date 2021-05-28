@@ -6,4 +6,6 @@ public interface DiscordUserService {
     DiscordUser findByUserId(String idDiscord);
 
     DiscordUser save(DiscordUser user);
+
+    void logout(String idDiscord);
 }

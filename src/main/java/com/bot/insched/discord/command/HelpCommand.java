@@ -1,12 +1,15 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class HelpCommand implements Command {
+    private MessageSender sender = MessageSender.getInstance();
+
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         String res = getHelp();
-        sendPrivateMessage(res,event);
+        sender.sendPrivateMessage(res, event);
     }
 
     @Override
@@ -23,14 +26,8 @@ public class HelpCommand implements Command {
                 + "mengubah, dan menghapus appointment pada Google Calendar anda \n"
                 + "3. Book Appointment (!bookAppointment): dapat digunakan untuk book "
                 + "appointment \n"
-                + "4. Show Calendar (!showCalendar): dapat menunjukkan jadwal pada Calendar anda"
-                + "5. Authentication (!auth): untuk melakukan login pada Google Calendar";
+                + "4. Show Calendar (!showCalendar): dapat menunjukkan jadwal pada Calendar anda \n"
+                + "5. Authentication / Login (!login): untuk melakukan login pada Google Calendar";
         return help;
-    }
-
-    private void sendPrivateMessage(String response, PrivateMessageReceivedEvent event) {
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(response).queue();
-        });
     }
 }
