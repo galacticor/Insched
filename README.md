@@ -9,7 +9,7 @@
 
 ## Anggota A12
 1. 1806205275 - Darian Texanditama
-2. 1906285485 - Widyanto Hadi Nugroho [![coverage report](https://gitlab.com/fikri.akmal/testing-insched/badges/master/coverage.svg)](https://gitlab.com/fikri.akmal/testing-insched/-/commits/dev/widy)
+2. 1906285485 - Widyanto Hadi Nugroho [![coverage report](https://gitlab.com/fikri.akmal/testing-insched/badges/dev/widy/coverage.svg)](https://gitlab.com/fikri.akmal/testing-insched/-/commits/dev/widy)
 3. 1906293146 - Marcia Nadin Pramasiwi
 4. 1906307132 - Fikri Akmal
 5. 1906398774 - Mu'adz
