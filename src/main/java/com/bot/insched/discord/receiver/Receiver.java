@@ -29,6 +29,7 @@ public class Receiver {
         addCommand(new DeleteEventCommand(eventService, discordUserService));
         addCommand(new HelpCommand());
         addCommand(new LoginCommand(googleService));
+        addCommand(new LogoutCommand(googleService, discordUserService));
         addCommand(new AuthCommand(googleService));
         addCommand(new ErrorCommand());
         addCommand(new MyTokenCommand(appointmentService, discordUserService));
