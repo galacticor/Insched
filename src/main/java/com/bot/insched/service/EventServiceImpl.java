@@ -1,4 +1,3 @@
-
 package com.bot.insched.service;
 
 import com.bot.insched.google.GoogleApiManager;
@@ -41,13 +40,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = event.getEnd().getDateTime().toString();
             String deskripsi = event.getDescription();
             String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                    + "Berikut link event yang anda cari: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                + "Berikut link event yang anda cari: [LINK](%s) \n"
+                + ":id: %s \n"
+                + "\n"
+                + ":clock: Mulai pada  : %s \n"
+                + ":clock: Selesai pada: %s \n"
+                + "\n"
+                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,13 +73,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                    + "Berikut link event yang anda cari: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                + "Berikut link event yang anda cari: [LINK](%s) \n"
+                + ":id: %s \n"
+                + "\n"
+                + ":clock: Mulai pada  : %s \n"
+                + ":clock: Selesai pada: %s \n"
+                + "\n"
+                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,13 +129,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event Berhasil di-update \n"
-                    + "Berikut link event baru anda: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                + "Berikut link event baru anda: [LINK](%s) \n"
+                + ":id: %s \n"
+                + "\n"
+                + ":clock: Mulai pada  : %s \n"
+                + ":clock: Selesai pada: %s \n"
+                + "\n"
+                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
 
         } catch (Exception e) {
