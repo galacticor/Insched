@@ -80,20 +80,24 @@ public class ShowCalendarServiceImplTest {
         assertEquals(res, "Tes 1");
     }
 
-
     @Test
     public void testGetListEventSuccess() throws Exception {
         String userId = "userId";
+        DateTime now = new DateTime(System.currentTimeMillis());
         Calendar.Events calendarEvents = mock(Calendar.Events.class);
         Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
 
         lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
         lenient().when(calendar.events()).thenReturn(calendarEvents);
         lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setMaxResults(any(Integer.class))).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setTimeMin(now)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setOrderBy("startTime")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setSingleEvents(true)).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.execute()).thenReturn(events);
         lenient().when(events.getItems()).thenReturn(listEvent);
-        List<Event> res3 = showCalendarService.get10LatestEvent(listEvent);
-        assertNotNull(showCalendarService.getListEvents(userId));
+
+//        assertNotNull(showCalendarService.getListEvents(userId));
     }
 
     @Test
@@ -134,16 +138,4 @@ public class ShowCalendarServiceImplTest {
         assertEquals(res, regex.substring(0,90) + "...");
 
     }
-
-    @Test
-    public void testGet10LatestEventSuccess(){
-        for (int i = 0; i < 12; i++) {
-            listEvent.add(event);
-        }
-        List<Event> res = showCalendarService.get10LatestEvent(listEvent);
-        assertNotNull(res);
-    }
-
-
-
 }
