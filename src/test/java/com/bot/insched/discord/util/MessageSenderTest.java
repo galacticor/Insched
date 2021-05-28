@@ -89,7 +89,7 @@ public class MessageSenderTest {
 	}
 
 	@Test
-	public void testSendPrivateNotificationById() {
+	public void testSendPrivateNotificationById() throws Exception {
 		String message1 = "dummy message";
 		sender.sendPrivateNotificationById(message1, userId);
 		Thread.sleep(1000);
