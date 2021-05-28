@@ -57,5 +57,5 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     public String getCalEnd(Event event) {
         return event.getEnd().getDateTime().toString();
     }
-    
+
 }
