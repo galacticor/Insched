@@ -2,8 +2,8 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
-import com.bot.insched.service.GoogleService;
 import com.bot.insched.service.DiscordUserService;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class LogoutCommand implements Command {
@@ -12,7 +12,7 @@ public class LogoutCommand implements Command {
     private DiscordUserService discordService;
 
     public LogoutCommand(GoogleService service,
-                        DiscordUserService discordService) {
+                         DiscordUserService discordService) {
         this.service = service;
         this.discordService = discordService;
     }
@@ -24,7 +24,9 @@ public class LogoutCommand implements Command {
 
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Good Bye");
-        embed.setDescription(String.format("Terimakasih sudah menggunakan bot Insched, selamat tinggal %s", userInfo));
+        embed.setDescription(
+            String.format("Terimakasih sudah menggunakan bot Insched, selamat tinggal %s",
+                userInfo));
 
         discordService.logout(userId);
         sender.sendPrivateMessage(embed.build(), event);
