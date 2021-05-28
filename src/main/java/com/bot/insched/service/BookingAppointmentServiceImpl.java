@@ -44,7 +44,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         UUID uuid = UUID.fromString(token);
         Event event = eventRepository.findByIdEvent(uuid);
         if (event == null) {
-            return "Event tidak ditemukan!";
+            throw new ObjectNotFoundException("Event tidak ditemukan!");
         }
 
         boolean isFull = event.getIsAvailable();
@@ -81,12 +81,12 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         UUID uuid = UUID.fromString(token);
         Event event = eventRepository.findByIdEvent(uuid);
         if (event == null) {
-            return "Event tidak ditemukan";
+            throw new ObjectNotFoundException("Event tidak ditemukan");
         }
 
         List<DiscordUser> listAttendee = event.getListAttendee();
         if (!listAttendee.contains(attendee)) {
-            return "Tidak ada booking untuk slot event ini!";
+            throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
         }
         do {
             listAttendee.remove(attendee);
@@ -96,7 +96,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
         List<Event> listEvent = attendee.getListEvent();
         if (!listEvent.contains(event)) {
-            return "Tidak ada booking untuk slot event ini!";
+            throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
         }
         do {
             listEvent.remove(event);
