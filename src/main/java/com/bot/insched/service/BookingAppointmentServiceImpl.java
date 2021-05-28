@@ -36,16 +36,9 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     @Override
     public String createBooking(String requesterId, String token) throws Exception{
 
-        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
-        if (attendee == null) {
-            throw new NotLoggedInException();
-        }
+        DiscordUser attendee = checkUserLoggedIn(requesterId);
 
-        UUID uuid = UUID.fromString(token);
-        Event event = eventRepository.findByIdEvent(uuid);
-        if (event == null) {
-            throw new ObjectNotFoundException("Event tidak ditemukan!");
-        }
+        Event event = checkEventValidUUID(token);
 
         boolean isFull = event.getIsAvailable();
         if (isFull) {
@@ -73,16 +66,9 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     @Override
     public String deleteBooking(String requesterId, String token) throws Exception {
 
-        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
-        if (attendee == null) {
-            throw new NotLoggedInException();
-        }
+        DiscordUser attendee = checkUserLoggedIn(requesterId);
 
-        UUID uuid = UUID.fromString(token);
-        Event event = eventRepository.findByIdEvent(uuid);
-        if (event == null) {
-            throw new ObjectNotFoundException("Event tidak ditemukan");
-        }
+        Event event = checkEventValidUUID(token);
 
         List<DiscordUser> listAttendee = event.getListAttendee();
         if (!listAttendee.contains(attendee)) {
@@ -108,10 +94,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
     @Override
     public List<Event> viewHostBookingSlots(String requesterId, String token) throws Exception {
-        DiscordUser attendee = discordUserRepository.findByIdDiscord(requesterId);
-        if (attendee == null) {
-            throw new NotLoggedInException();
-        }
+
+        checkUserLoggedIn(requesterId);
 
         UUID uuid = UUID.fromString(token);
         Appointment appointment = appointmentRepository.findByIdAppointment(uuid);
@@ -121,6 +105,23 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
 
         List<Event> eventList = appointment.getListEvent();
         return eventList;
+    }
+
+    private DiscordUser checkUserLoggedIn(String requesterId) throws Exception {
+        DiscordUser user = discordUserRepository.findByIdDiscord(requesterId);
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
+        return user;
+    }
+
+    private Event checkEventValidUUID(String token) throws Exception {
+        UUID uuid = UUID.fromString(token);
+        Event event = eventRepository.findByIdEvent(uuid);
+        if (event == null) {
+            throw new ObjectNotFoundException("Event tidak ditemukan!");
+        }
+        return event;
     }
 
 }
