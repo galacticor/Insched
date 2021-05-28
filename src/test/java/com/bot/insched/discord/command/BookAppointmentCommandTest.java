@@ -1,5 +1,7 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
+import com.bot.insched.service.BookingAppointmentService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -8,59 +10,53 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class BookAppointmentCommandTest {
+
     @InjectMocks
     BookAppointmentCommand command;
 
     @Mock
+    BookingAppointmentService service;
+
+    @Mock
     PrivateMessageReceivedEvent event;
-    // Basic test setup
-    private static JDA jda;
-    private static String userId = "461191404341821455";
-    private static Message message;
-    private static User jdaUser;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        jda = JDABuilder.createDefault("ODM2NjkzNzYxNjkwMDQyNDA4.YIhtyQ.QlTguqpvUEntyJD0LaQieeQdKvI").build();
-        jda.retrieveUserById(userId).queue(user -> {
-            jdaUser = user;
-        });
-        message = new MessageBuilder().append("dummy").build();
-        Thread.sleep(2000);
-    }
+    @Mock
+    private MessageSender sender;
 
-    @AfterAll
-    public static void teardown() throws Exception {
-        jda.shutdownNow();
-        Thread.sleep(2000);
+    private String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+    private String dummyId = "0";
+
+    @BeforeEach
+    public void setup() {
+        ReflectionTestUtils.setField(command, "sender", sender);
+        User user = mock(User.class);
+
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn(dummyId);
     }
 
     @Test
-    public void testErrorExecute() {
-        String[] args = {"!BookAppointment"};
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
+    public void testExecuteSuccess() throws Exception {;
+        String args[] = {dummyToken};
+        String res = "Booking slot event telah dibuat!";
+        lenient().when(service.createBooking(dummyId, dummyToken)).thenReturn(res);
         command.execute(args, event);
     }
 
-    @Test
-    public void testSuccessExecute() {
-        String[] args = {"!bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2"};
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
-        command.execute(args, event);
-    }
 
     @Test
     public void testGetHelp() {
