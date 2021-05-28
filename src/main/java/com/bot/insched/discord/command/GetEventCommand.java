@@ -7,14 +7,14 @@ import com.bot.insched.service.EventService;
 import com.google.api.services.calendar.model.Event;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class GetEventCommand implements Command{
+public class GetEventCommand implements Command {
     private Event event;
     private EventService eventService;
     private DiscordUserService discordUserService;
     private MessageSender sender = MessageSender.getInstance();
 
     public GetEventCommand(EventService eventService,
-                              DiscordUserService discordUserService) {
+                           DiscordUserService discordUserService) {
         this.eventService = eventService;
         this.discordUserService = discordUserService;
     }

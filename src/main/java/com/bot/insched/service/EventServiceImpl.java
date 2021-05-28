@@ -27,11 +27,12 @@ public class EventServiceImpl implements EventService {
             return null;
         }
     }
+
     @Override
     public String getEventIdService(String discordId, String eventId) {
         Calendar calendar = manager.getCalendarService(discordId);
         try {
-            Event event = getEventService(discordId,eventId);
+            Event event = getEventService(discordId, eventId);
             String link = event.getHtmlLink();
             String id = event.getId();
             String tglAwal = event.getStart().getDateTime().toString();
