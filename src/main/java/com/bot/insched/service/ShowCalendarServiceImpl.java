@@ -20,7 +20,6 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
 
     public List<Event> getListEvents(String userId) throws Exception {
         Calendar calendar = manager.getCalendarService(userId);
-
         if (calendar == null) {
             throw new NotLoggedInException();
         }
@@ -58,5 +57,5 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     public String getCalEnd(Event event) {
         return event.getEnd().getDateTime().toString();
     }
-
+    
 }

@@ -140,6 +140,18 @@ public class ShowCalendarServiceImplTest {
 
     }
 
+<<<<<<< HEAD
+=======
+    @Test
+    public void testGet10LatestEventSuccess(){
+        for (int i = 0; i < 12; i++) {
+            listEvent.add(event);
+        }
+        List<Event> res = showCalendarService.get10LatestEvent(listEvent);
+        assertNotNull(res);
+    }
+
+>>>>>>> d50104155d19592f4f8dfa6854588628cabcc2e5
 
 
 }
