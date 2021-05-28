@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.service.EventService;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteEventCommandTest {
+public class GetEventCommandTest {
     @Mock
     private EventService eventService;
 
@@ -36,10 +38,13 @@ public class DeleteEventCommandTest {
     private PrivateMessageReceivedEvent event;
 
     @InjectMocks
-    private DeleteEventCommand command;
+    private GetEventCommand command;
 
     @Mock
     PrivateChannel privateChannel;
+
+    @Mock
+    private MessageSender sender;
 
 
     // Basic test setup
@@ -70,12 +75,10 @@ public class DeleteEventCommandTest {
     // Thread.sleep to delay and prevent error
     @BeforeEach
     public void setUp() throws Exception {
-        Thread.sleep(1000);
-        storedCredential = new StoredCredential();
-        storedCredential.setAccessToken("dummy");
-        storedCredential.setRefreshToken("dummy");
-        lenient().when(event.getAuthor()).thenReturn(jdaUser);
-        lenient().when(event.getMessage()).thenReturn(message);
+        User user = mock(User.class);
+        ReflectionTestUtils.setField(command, "sender", sender);
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
     }
 
     @AfterAll
@@ -88,34 +91,10 @@ public class DeleteEventCommandTest {
     public void testCorrectArgument() throws Exception {
         PrivateChannel channel = mock(PrivateChannel.class);
         MessageAction action = mock(MessageAction.class);
-        String[] args = {"!deleteEvent","0123456789abcdefghijklmnopqrstuv"};
+        String[] args = {"!getEvent","0123456789abcdefghijklmnopqrstuv"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.deleteEventService(any(), any()))
                 .thenReturn("Event Berhasil dihapus");
-        lenient().when(event.getChannel()).thenReturn(channel);
-        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
-        command.execute(args, event);
-    }
-
-    @Test
-    public void testErrorArgument() throws Exception {
-        PrivateChannel channel = mock(PrivateChannel.class);
-        MessageAction action = mock(MessageAction.class);
-        String[] args = {"!deleteEvent"};
-        lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
-        lenient().when(eventService.deleteEventService(any(), any()))
-                .thenReturn("error");
-        lenient().when(event.getChannel()).thenReturn(channel);
-        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
-        command.execute(args, event);
-    }
-
-
-    @Test
-    public void testFalseArgument() {
-        PrivateChannel channel = mock(PrivateChannel.class);
-        MessageAction action = mock(MessageAction.class);
-        String[] args = {"dummy"};
         lenient().when(event.getChannel()).thenReturn(channel);
         lenient().when(channel.sendMessage(anyString())).thenReturn(action);
         command.execute(args, event);
@@ -132,11 +111,29 @@ public class DeleteEventCommandTest {
     }
 
     @Test
+    public void testErrorArgument() throws Exception {
+        String[] args = {"cek"};
+        lenient().when(event.getAuthor()).thenReturn(null);
+        command.execute(args, event);
+    }
+
+
+    @Test
+    public void testFalseArgument() {
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        String[] args = {"dummy"};
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
+        command.execute(args, event);
+    }
+
+    @Test
     public void testGetHelp() {
         PrivateChannel channel = mock(PrivateChannel.class);
         MessageAction action = mock(MessageAction.class);
-        String expected = "!deleteEvent <idEvent>\n" +
-                "Contoh: !deleteEvent absfuoqebfojdbvqe";
+        String expected = "!getEvent <idEvent>\n" +
+                "Contoh: !getEvent absfuoqebfojdbvqe";
         lenient().when(privateChannel.sendMessage(expected)).thenReturn(mock(MessageAction.class));
         lenient().when(privateChannel.sendMessage(expected).toString()).thenReturn("cek");
         lenient().when(event.getChannel()).thenReturn(channel);
@@ -146,6 +143,6 @@ public class DeleteEventCommandTest {
 
     @Test
     public void testGetCommand(){
-        assertEquals(command.getCommand(),"deleteEvent");
+        assertEquals(command.getCommand(),"getEvent");
     }
 }
