@@ -80,7 +80,6 @@ public class ShowCalendarServiceImplTest {
         assertEquals(res, "Tes 1");
     }
 
-
     @Test
     public void testGetListEventSuccess() throws Exception {
         String userId = "userId";
