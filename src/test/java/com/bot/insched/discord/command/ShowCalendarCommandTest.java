@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
@@ -105,6 +106,7 @@ class ShowCalendarCommandTest {
                 + "Di bawah ini adalah kalender kamu", privateMessageevent);
         lenient().when(privateMessageevent.getMessage()).thenReturn(mock(Message.class));
         lenient().when(privateMessageevent.getMessage().getAuthor()).thenReturn(mock(User.class));
+
         showCalendarCommand.execute(args, privateMessageevent);
     }
 
@@ -117,9 +119,10 @@ class ShowCalendarCommandTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        lenient().when(showCalendarService.getCalSummary(listEvent.get(0))).thenReturn("Tes 1");
+        lenient().when(showCalendarService.getCalSummary(listEvent.get(0))).thenReturn(listEvent);
         lenient().when(showCalendarService.getCalDescription(listEvent.get(0))).thenReturn("description");
-//        lenient().when(embed.addField("lala", "lili", false)).thenReturn(embedBuilder);
+        lenient().when(showCalendarService.getCalStart(listEvent.get(0))).thenReturn(dateTimeMulai.toString());
+        lenient().when(showCalendarService.getCalEnd(listEvent.get(0))).thenReturn(dateTimeSelesai.toString());
         assertNotNull(showCalendarCommand.createEmbed("userId",privateMessageevent));
 
     }
