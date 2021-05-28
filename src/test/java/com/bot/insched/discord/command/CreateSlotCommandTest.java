@@ -1,19 +1,9 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.AppointmentService;
-import com.bot.insched.service.DiscordUserService;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +38,6 @@ public class CreateSlotCommandTest {
     public void setUp() throws Exception {
         ReflectionTestUtils.setField(command, "sender", sender);
         User user = mock(User.class);
-        String res = "Slot berhasil dihapus!";
 
         lenient().when(event.getAuthor()).thenReturn(user);
         lenient().when(user.getId()).thenReturn("123");
@@ -76,7 +65,21 @@ public class CreateSlotCommandTest {
         String res = "Masukkan argumen yang sesuai!";
         lenient().doNothing().when(sender).sendPrivateMessage(res, event);
         command.execute(args, event);
+    }
 
+    @Test
+    public void testGeneralException() throws Exception {
+        String[] args = { "2021-05-08", "15:30", "30", "2", "DEMO_TP" };
+        String tanggal = args[0];
+        String jamMulai = args[1];
+        int durasi = Integer.parseInt(args[2]);
+        int kapasitas = Integer.parseInt(args[3]);
+        String deskripsi = args[4];
+        String res = "dummy exception";
+
+        when(appointmentService.createSlot(tanggal, jamMulai, durasi, kapasitas, deskripsi))
+            .thenThrow(new Exception("dummy exception"));
+        command.execute(args, event);
     }
 
     @Test

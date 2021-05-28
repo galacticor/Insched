@@ -7,8 +7,10 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 
@@ -50,11 +52,11 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event Berhasil dibuat \n"
-                    + "Berikut link event baru anda: [LINK](%s) \n"
-                    + "Event id anda adalah %s \n"
-                    + "Mulai Event pada %s \n"
-                    + "Selesai Event pada %s \n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                + "Berikut link event baru anda: [LINK](%s) \n"
+                + "Event id anda adalah %s \n"
+                + "Mulai Event pada %s \n"
+                + "Selesai Event pada %s \n"
+                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,11 +106,11 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event Berhasil di-update \n"
-                    + "Berikut link event baru anda: [LINK](%s) \n"
-                    + "Event id anda adalah %s \n"
-                    + "Mulai Event pada %s \n"
-                    + "Selesai Event pada %s \n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                + "Berikut link event baru anda: [LINK](%s) \n"
+                + "Event id anda adalah %s \n"
+                + "Mulai Event pada %s \n"
+                + "Selesai Event pada %s \n"
+                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
 
         } catch (Exception e) {
@@ -120,5 +122,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public com.bot.insched.model.Event save(com.bot.insched.model.Event event) {
         return eventRepository.save(event);
+    }
+
+    public com.bot.insched.model.Event findById(String id) {
+        return eventRepository.findByIdEvent(UUID.fromString(id));
     }
 }

@@ -15,4 +15,6 @@ public interface EventService {
     String updateEventService(String discordId, String eventId, String jenis, String newData);
 
     com.bot.insched.model.Event save(com.bot.insched.model.Event event);
+
+    com.bot.insched.model.Event findById(String id);
 }
