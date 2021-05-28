@@ -4,7 +4,8 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 
 public interface EventService {
-    Event getEventService(String discordId, String eventId);
+
+    String getEventIdService(String discordId, String eventId);
 
     Calendar getCalendarbyId(String eventId);
 

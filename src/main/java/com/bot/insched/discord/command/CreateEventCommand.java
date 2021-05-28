@@ -35,8 +35,6 @@ public class CreateEventCommand implements Command {
                 String res = handleCreation(args, event.getAuthor().getId());
                 embed.setDescription(res);
                 sender.sendPrivateMessage(embed.build(), event);
-            } catch (IndexOutOfBoundsException e) {
-                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
             } catch (Exception e) {
                 sender.sendPrivateMessage("Input yang anda masukkan salah, "
                         + "Harap mengecek kembali input anda", event);
