@@ -2,7 +2,6 @@ package com.bot.insched.service;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
 import com.google.api.services.calendar.model.Event;
-
 import java.io.IOException;
 import java.util.List;
 
