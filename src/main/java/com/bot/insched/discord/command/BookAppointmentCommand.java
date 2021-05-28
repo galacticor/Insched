@@ -17,20 +17,14 @@ public class BookAppointmentCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        InschedEmbed embed = new InschedEmbed();
-        embed.setTitle("Book Appointment");
-        embed.setDescription("Selamat Datang di fitur Book Appointment");
-
-        event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-            privateChannel.sendMessage(embed.build()).queue();
-        });
 
         try {
             if (args[0].equalsIgnoreCase("help")) {
                 sender.sendPrivateMessage(getHelp(), event);
             } else {
-                String response = creationHandler(args, event);
-                sender.sendPrivateMessage(response, event);
+                String result = creationHandler(args, event);
+                InschedEmbed response = embedHandler(result);
+                sender.sendPrivateMessage(response.build(), event);
             }
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
@@ -40,6 +34,7 @@ public class BookAppointmentCommand implements Command {
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
+
     }
 
     @Override
@@ -60,5 +55,14 @@ public class BookAppointmentCommand implements Command {
         String token = args[0];
 
         return bookingAppointmentService.createBooking(userId, token);
+    }
+
+    public InschedEmbed embedHandler(String result) {
+
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Book Appointment");
+        embed.setDescription(result);
+
+        return embed;
     }
 }
