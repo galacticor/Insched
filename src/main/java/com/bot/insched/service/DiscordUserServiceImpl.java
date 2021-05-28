@@ -20,4 +20,13 @@ public class DiscordUserServiceImpl implements DiscordUserService {
         return discordUserRepository.save(user);
     }
 
+    public void logout(String idDiscord) {
+    	DiscordUser user = findByUserId(idDiscord);
+    	if (user != null) {
+    		user.setAccessToken("");
+            user.setRefreshToken("");
+            discordUserRepository.save(user);
+    	}
+    }
+
 }
