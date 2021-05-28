@@ -62,6 +62,28 @@ public class AppointmentDetailsCommandTest {
     }
 
     @Test
+    public void testExecuteSlotFull() throws Exception {
+        String mulai = LocalDateTime.now().toString();
+        int duration = 30;
+        int capacity = 2;
+        String desc = "testing";
+        Event e = new Event(mulai, duration, capacity, desc);
+        e.setIdEvent(UUID.fromString("6f99e80c-e8c6-48ee-b0c1-e349a9ba9ddb"));
+        e.setAvailable(false);
+
+        when(eventService.findById("6f99e80c-e8c6-48ee-b0c1-e349a9ba9ddb"))
+            .thenReturn(e);
+        String[] args = {"6f99e80c-e8c6-48ee-b0c1-e349a9ba9ddb"};
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testZeroArgs() {
+        String[] args = {};
+        command.execute(args, event);
+    }
+
+    @Test
     public void testExecuteNull() {
         when(eventService.findById(anyString()))
             .thenReturn(null);

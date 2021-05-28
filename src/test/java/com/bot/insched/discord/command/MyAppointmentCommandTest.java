@@ -58,6 +58,26 @@ public class MyAppointmentCommandTest {
     }
 
     @Test
+    public void testEventExistedBeforeNow() throws Exception{
+        String[] args = {};
+        Event e = new Event();
+        e.setStartTime(LocalDateTime.parse("2020-09-09T15:00:00"));
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(e);
+        when(appointmentService.getAllAppointment(anyString()))
+            .thenReturn(eventList);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testDoNothingWhenHaveArgs() {
+        String[] args = {"test"};
+        command.execute(args, event);
+    }
+
+
+
+    @Test
     public void testThrowException() throws Exception {
         when(appointmentService.getAllAppointment(anyString()))
             .thenThrow(new NotLoggedInException());
