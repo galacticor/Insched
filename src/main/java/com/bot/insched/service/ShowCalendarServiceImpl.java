@@ -2,6 +2,7 @@ package com.bot.insched.service;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.google.GoogleApiManager;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
@@ -19,17 +20,20 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
 
     public List<Event> getListEvents(String userId) throws Exception {
         Calendar calendar = manager.getCalendarService(userId);
-
         if (calendar == null) {
             throw new NotLoggedInException();
         }
 
-        Events events;
-        events = calendar.events().list("primary").execute();
+        DateTime now = new DateTime(System.currentTimeMillis());
+        Events events = calendar.events().list("primary")
+                .setMaxResults(7)
+                .setTimeMin(now)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
         List<Event> items = events.getItems();
-        listEvent = get10LatestEvent(items);
 
-        return listEvent;
+        return items;
     }
 
     public String getCalSummary(Event event) {
@@ -54,17 +58,4 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
         return event.getEnd().getDateTime().toString();
     }
 
-    public List<Event> get10LatestEvent(List<Event> listEvent) throws IndexOutOfBoundsException {
-        List<Event> list10Event = new ArrayList<>();
-        if (listEvent.size() < 10) {
-            for (int i = listEvent.size() - 1; i >= 0; i--) {
-                list10Event.add(listEvent.get(i));
-            }
-        } else {
-            for (int i = listEvent.size() - 1; i >= listEvent.size() - 9; i--) {
-                list10Event.add(listEvent.get(i));
-            }
-        }
-        return list10Event;
-    }
 }

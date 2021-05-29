@@ -31,7 +31,7 @@ public class GoogleApiManager {
     private static final String APPLICATION_NAME = "Insched (Instant Scheduler)";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES =
-        Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
+            Arrays.asList(CalendarScopes.CALENDAR, Oauth2Scopes.USERINFO_EMAIL);
 
     private static String CLIENT_SECRET;
     private static String CLIENT_ID;
@@ -45,11 +45,11 @@ public class GoogleApiManager {
 
     @Autowired
     public GoogleApiManager(
-        DiscordUserRepository repository,
-        Builder builder,
-        @Value("${client_id}") String clientId,
-        @Value("${client_secret}") String clientSecret,
-        @Value("${redirect_uri}") String redirectUri) {
+            DiscordUserRepository repository,
+            Builder builder,
+            @Value("${client_id}") String clientId,
+            @Value("${client_secret}") String clientSecret,
+            @Value("${redirect_uri}") String redirectUri) {
         this.userRepo = repository;
         this.builder = builder;
         CLIENT_ID = clientId;
@@ -63,11 +63,11 @@ public class GoogleApiManager {
             httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             DataStoreFactory dataStore = new JPADataStoreFactory(userRepo);
             flow = builder.getCodeFlowBuilder(httpTransport, JSON_FACTORY, CLIENT_ID,
-                CLIENT_SECRET, SCOPES)
-                .setDataStoreFactory(dataStore)
-                .setApprovalPrompt("force")
-                .setAccessType("offline")
-                .build();
+                    CLIENT_SECRET, SCOPES)
+                    .setDataStoreFactory(dataStore)
+                    .setApprovalPrompt("force")
+                    .setAccessType("offline")
+                    .build();
         } catch (Exception e) {
             log.error("------ Error when configurate: {}", e);
         }
@@ -76,17 +76,17 @@ public class GoogleApiManager {
 
     public String getAuthorizationUrl(String userId) {
         String redirectTo = flow.newAuthorizationUrl()
-            .setRedirectUri(REDIRECT_URI)
-            .setState(userId)
-            .build();
+                .setRedirectUri(REDIRECT_URI)
+                .setState(userId)
+                .build();
         return redirectTo;
     }
 
     public boolean authToken(String userId, String code) {
         try {
             GoogleTokenResponse googleResponse = flow.newTokenRequest(code)
-                .setRedirectUri(REDIRECT_URI)
-                .execute();
+                    .setRedirectUri(REDIRECT_URI)
+                    .execute();
 
             Credential cred = flow.createAndStoreCredential(googleResponse, userId);
 
@@ -105,19 +105,19 @@ public class GoogleApiManager {
                 return null;
             }
             GoogleCredential credential = builder.getCredentialBuilder()
-                .setTransport(httpTransport)
-                .setJsonFactory(JSON_FACTORY)
-                .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
-                .addRefreshListener(new DataStoreCredentialRefreshListener(userId,
-                    flow.getCredentialDataStore()))
-                .build();
+                    .setTransport(httpTransport)
+                    .setJsonFactory(JSON_FACTORY)
+                    .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
+                    .addRefreshListener(new DataStoreCredentialRefreshListener(userId,
+                            flow.getCredentialDataStore()))
+                    .build();
 
             credential.setRefreshToken(storedCredential.getRefreshToken());
             credential.setAccessToken(storedCredential.getAccessToken());
             return credential;
         } catch (Exception e) {
             log.warn("Credential: Error while refreshing or saving the token for user {} : {}",
-                userId, e.getMessage());
+                    userId, e.getMessage());
         }
 
         return null;
@@ -131,8 +131,8 @@ public class GoogleApiManager {
         }
 
         Calendar service = builder.getCalendarBuilder(httpTransport, JSON_FACTORY, credential)
-            .setApplicationName(APPLICATION_NAME)
-            .build();
+                .setApplicationName(APPLICATION_NAME)
+                .build();
 
         return service;
     }
@@ -142,10 +142,10 @@ public class GoogleApiManager {
         if (credential == null) {
             return null; // belom login (gada di database)
         }
-        
+
         Oauth2 service = builder.getOauth2Builder(httpTransport, JSON_FACTORY, credential)
-            .setApplicationName(APPLICATION_NAME)
-            .build();
+                .setApplicationName(APPLICATION_NAME)
+                .build();
 
         return service;
     }
