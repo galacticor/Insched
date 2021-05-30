@@ -19,20 +19,23 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     List<Event> listEvent = null;
 
     public List<Event> getListEvents(String userId) throws Exception {
+        List<Event> items = new ArrayList<>();
+
         Calendar calendar = manager.getCalendarService(userId);
         if (calendar == null) {
             throw new NotLoggedInException();
         }
 
         DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = calendar.events().list("primary")
+        Calendar.Events.List events = calendar.events()
+                .list("primary")
                 .setMaxResults(7)
                 .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        List<Event> items = events.getItems();
+                .setOrderBy("startTime");
+        if(events != null) {
+            items = events.setSingleEvents(true).execute().getItems();
 
+        }
         return items;
     }
 

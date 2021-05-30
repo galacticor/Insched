@@ -91,13 +91,13 @@ public class ShowCalendarServiceImplTest {
         lenient().when(calendar.events()).thenReturn(calendarEvents);
         lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setMaxResults(any(Integer.class))).thenReturn(calendarEventsList);
-        lenient().when(calendarEventsList.setTimeMin(now)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setTimeMin(any(DateTime.class))).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setOrderBy("startTime")).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setSingleEvents(true)).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.execute()).thenReturn(events);
         lenient().when(events.getItems()).thenReturn(listEvent);
 
-//        assertNotNull(showCalendarService.getListEvents(userId));
+        assertNotNull(showCalendarService.getListEvents(userId));
     }
 
     @Test
@@ -107,7 +107,6 @@ public class ShowCalendarServiceImplTest {
             showCalendarService.getListEvents("userId");
         });
     }
-
 
     @Test
     public void testGetCalStart(){
@@ -126,9 +125,7 @@ public class ShowCalendarServiceImplTest {
         event.setDescription(null);
         String res = showCalendarService.getCalDescription(event);
         assertEquals(res, "no description");
-
     }
-
 
     @Test
     public void testGetCalDescriptionMoreThan1000char(){
@@ -136,6 +133,5 @@ public class ShowCalendarServiceImplTest {
         event.setDescription(regex);
         String res = showCalendarService.getCalDescription(event);
         assertEquals(res, regex.substring(0,90) + "...");
-
     }
 }
