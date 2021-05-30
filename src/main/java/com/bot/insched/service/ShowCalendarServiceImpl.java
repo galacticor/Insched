@@ -32,7 +32,7 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
                 .setMaxResults(7)
                 .setTimeMin(now)
                 .setOrderBy("startTime");
-        if(events != null) {
+        if (events != null) {
             items = events.setSingleEvents(true).execute().getItems();
 
         }
