@@ -1,9 +1,7 @@
 package com.bot.insched.discord.command;
 
-import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
-import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.EventService;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;

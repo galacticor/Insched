@@ -50,4 +50,11 @@ public class DiscordUserServiceImplTest {
         service.logout(idDiscord);
     }
 
+    @Test
+    public void testLogoutUserNull() {
+        when(repository.findByIdDiscord(anyString()))
+            .thenReturn(null);
+        service.logout(idDiscord);
+    }
+
 }

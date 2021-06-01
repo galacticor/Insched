@@ -45,6 +45,9 @@ public class AppointmentServiceImplTest {
     @Mock
     EventService eventService;
 
+    @Mock
+    DiscordUser dummyUser;
+
     private DiscordUser user;
     private StoredCredential storedCredential;
     private Appointment appointment;
@@ -73,16 +76,28 @@ public class AppointmentServiceImplTest {
         assertEquals(response, "70bab1b3-7e8e-4b3e-84b5-e95901e1925d");
     }
 
-//    @Test
-//    public void testGetUserTokenNull() {
-//        user.setAppointment(null);
-//        ReflectionTestUtils.setField(appointmentService, "discordUserService",
-//            discordUserService);
-//        ReflectionTestUtils.setField(appointmentService, "appointmentRepository",
-//            appointmentRepository);
-//        String response = appointmentService.getUserToken(user);
-//        assertEquals(response, anyString());
-//    }
+    @Test
+    public void testGetUserTokenNull() {
+        dummyUser.setAppointment(null);
+        ReflectionTestUtils.setField(appointmentService, "discordUserService",
+            discordUserService);
+        ReflectionTestUtils.setField(appointmentService, "appointmentRepository",
+            appointmentRepository);
+        lenient().when(discordUserService.save(any(DiscordUser.class))).thenReturn(dummyUser);
+
+        Appointment app = new Appointment();
+        UUID dummyUUID = UUID.randomUUID();
+        app.setIdAppointment(dummyUUID);
+
+        when(appointmentService.save(any(Appointment.class)))
+            .thenReturn(app);
+
+//        String response = appointmentService.getUserToken(dummyUser);
+//        assertEquals(response, dummyUser.getAppointment().getIdAppointment().toString());
+        assertThrows(NullPointerException.class, () -> {
+            appointmentService.getUserToken(dummyUser);
+        });
+    }
 
     @Test
     public void testCreateSlotNoUser() {
@@ -102,7 +117,7 @@ public class AppointmentServiceImplTest {
         user.setAppointment(appointment);
         user.getAppointment().setListEvent(userAppointment);
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(SlotUnavailableException.class, () -> {
             appointmentService.createSlot("dummy", "2021-03-05T15:30", 30, 2, "123");
         });
     }
@@ -119,6 +134,23 @@ public class AppointmentServiceImplTest {
 
         String res = appointmentService.createSlot("aa", "2021-05-03T15:30:00", 1, 1, "123");
         assertEquals(res, "Slot berhasil dibuat!");
+    }
+
+    @Test
+    public void testBranchingInCreateSlot() throws Exception {
+        lenient().when(discordUserService.findByUserId(anyString())).thenReturn(user);
+
+        List<Event> userAppointment = new ArrayList<>();
+        Event event = new Event("2021-02-05T15:30", 30, 2, "dummy");
+        Event event2 = new Event("2021-03-05T15:30", 30, 2, "dummy");
+        userAppointment.add(event);
+        userAppointment.add(event2);
+        user.setAppointment(appointment);
+        user.getAppointment().setListEvent(userAppointment);
+
+        assertThrows(SlotUnavailableException.class, () -> {
+            appointmentService.createSlot("dummy", "2021-03-05T15:30", 30, 2, "123");
+        });
     }
 
     @Test
@@ -260,22 +292,24 @@ public class AppointmentServiceImplTest {
         assertEquals(response, "Slot sudah dibooking!");
     }
 
-//    @Test
-//    public void testDeleteSlotSuccess() throws Exception {
-//        DiscordUser user = new DiscordUser();
-//        Event event = new Event();
-//        ArrayList<DiscordUser> list = new ArrayList<>();
-//        list.add(user);
-//        event.setListAttendee(list);
-//        eventRepository.save(event);
-//
-//        when(discordUserService.findByUserId(anyString())).thenReturn(user);
-//        when(eventRepository.findByIdEvent(any(UUID.class))).thenReturn(event);
-//
-//        String response =
-//            appointmentService.deleteSlot(event.getIdEvent().toString(),"dummy_id");
-//
-//        assertEquals(response, "Slot berhasil dihapus!");
-//    }
+    @Test
+    public void testDeleteSlotSuccess() throws Exception {
+        DiscordUser user = new DiscordUser();
+        Event event = new Event();
+        event.setIdEvent(UUID.randomUUID());
+        ArrayList<DiscordUser> list = new ArrayList<>();
+        event.setListAttendee(list);
+
+        ReflectionTestUtils.setField(appointmentService, "eventRepository", eventRepository);
+
+        when(discordUserService.findByUserId(anyString())).thenReturn(user);
+        when(eventRepository.findByIdEvent(any(UUID.class))).thenReturn(event);
+        doNothing().when(eventService).deleteEventFromRepo(any(UUID.class));
+
+        String response =
+            appointmentService.deleteSlot(event.getIdEvent().toString(),"dummy_id");
+
+        assertEquals(response, "Slot berhasil dihapus!");
+    }
 
 }
