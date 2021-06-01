@@ -77,4 +77,5 @@ public class ReceiverTest {
 
         receiver.execute(event);
     }
+
 }

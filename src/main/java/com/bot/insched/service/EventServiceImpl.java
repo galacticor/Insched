@@ -152,4 +152,8 @@ public class EventServiceImpl implements EventService {
     public com.bot.insched.model.Event findById(String id) {
         return eventRepository.findByIdEvent(UUID.fromString(id));
     }
+
+    public void deleteEventFromRepo(UUID token) {
+        eventRepository.deleteByIdEvent(token);
+    }
 }

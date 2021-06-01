@@ -3,6 +3,8 @@ package com.bot.insched.service;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 
+import java.util.UUID;
+
 public interface EventService {
 
     String getEventIdService(String discordId, String eventId);
@@ -18,4 +20,6 @@ public interface EventService {
     com.bot.insched.model.Event save(com.bot.insched.model.Event event);
 
     com.bot.insched.model.Event findById(String id);
+
+    void deleteEventFromRepo(UUID token);
 }
