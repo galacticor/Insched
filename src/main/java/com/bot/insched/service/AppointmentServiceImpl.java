@@ -41,7 +41,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             Appointment app = new Appointment();
             app.setOwner(discordUser);
             discordUser.setAppointment(app);
-            appointmentRepository.save(app);
+            save(app);
             discordUserService.save(discordUser);
         }
         return discordUser.getAppointment().getIdAppointment().toString();
@@ -123,7 +123,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (event == null) {
             throw new SlotUnavailableException("Tidak ada slot pada keterangan waktu seperti itu!");
         } else if (event.getListAttendee().size() == 0) {
-            eventRepository.deleteByIdEvent(UUID.fromString(token));
+            eventService.deleteEventFromRepo(UUID.fromString(token));
             return "Slot berhasil dihapus!";
         }
 

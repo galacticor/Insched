@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
@@ -381,6 +383,21 @@ public class EventServiceImplTest {
     public void testGetCalendarbyId() throws Exception {
         when(manager.getCalendarService(any())).thenReturn(calendar);
         assertEquals(eventService.getCalendarbyId(any()), calendar);
+    }
+
+    @Test
+    public void testFindEventModelById() {
+        com.bot.insched.model.Event e = new com.bot.insched.model.Event();
+        UUID random = UUID.randomUUID();
+        e.setIdEvent(random);
+        when(eventRepository.findByIdEvent(any(UUID.class)))
+            .thenReturn(e);
+        assertEquals(eventService.findById(random.toString()), e);
+    }
+
+    @Test
+    public void testDeleteEventFromRepo() {
+        eventService.deleteEventFromRepo(UUID.randomUUID());
     }
 
 
