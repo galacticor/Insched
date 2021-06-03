@@ -6,6 +6,7 @@ import com.bot.insched.model.Event;
 import com.bot.insched.service.BookingAppointmentService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ViewSlotCommand implements Command{
@@ -60,16 +61,21 @@ public class ViewSlotCommand implements Command{
     }
 
     public InschedEmbed embedHandler(List<Event> eventList, String appointmentToken) {
+
+        LocalDate date = LocalDate.now();
+
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Appointment List");
         embed.setDescription("Token: " + appointmentToken);
 
         for (Event event : eventList) {
+            if (event.getTanggal().isEqual(date)) {
                 String desc = event.getDescription();
                 String eventToken = "Token: " + event.getIdEvent().toString() + "\n";
                 String time = event.getWaktu() + "\n";
                 String bookingStatus = event.getStatusBooking();
                 embed.addField(desc, time + eventToken + bookingStatus, false);
+            }
         }
         return embed;
     }
