@@ -62,7 +62,7 @@ public class Event {
     private List<DiscordUser> listAttendee;
 
     public void updateAvailability() {
-        if (this.capacity < listAttendee.size()) {
+        if (this.capacity > listAttendee.size()) {
             isAvailable = true;
             return;
         }
