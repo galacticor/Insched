@@ -41,7 +41,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         Event event = checkEventValidUUID(token);
 
         boolean isFull = event.getIsAvailable();
-        if (isFull) {
+        if (!isFull) {
             throw new SlotUnavailableException("Slot event sudah penuh!");
         }
 
@@ -59,6 +59,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
+        eventRepository.save(event);
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dibuat!";
     }

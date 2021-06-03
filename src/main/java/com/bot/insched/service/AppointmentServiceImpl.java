@@ -122,6 +122,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Event event = eventRepository.findByIdEvent(UUID.fromString(token));
         if (event == null) {
             throw new SlotUnavailableException("Tidak ada slot pada keterangan waktu seperti itu!");
+        } else if (event.getAppointment().getOwner() != user) {
+            throw new SlotUnavailableException("Kamu tidak memiliki akses delete pada slot tersebut");
         } else if (event.getListAttendee().size() == 0) {
             eventService.deleteEventFromRepo(UUID.fromString(token));
             return "Slot berhasil dihapus!";

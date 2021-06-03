@@ -4,7 +4,6 @@ import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
-import com.bot.insched.service.AppointmentService;
 import com.bot.insched.service.EventService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
@@ -58,7 +57,7 @@ public class AppointmentDetailsCommand implements Command {
         }
 
         InschedEmbed embed = new InschedEmbed();
-        String isAvailable = event.isAvailable() ? "Masih available" : "Slot sudah penuh";
+        String isAvailable = event.getIsAvailable() ? "Masih available" : "Slot sudah penuh";
 
         embed.setTitle("Appointment Details");
         embed.addField("Deskripsi:", event.getDescription(), false);
