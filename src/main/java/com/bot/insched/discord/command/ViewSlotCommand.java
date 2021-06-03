@@ -6,7 +6,10 @@ import com.bot.insched.model.Event;
 import com.bot.insched.service.BookingAppointmentService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 23ca83ba3bc3b1886e3dd183092f8832f224b1e0
 import java.util.List;
 
 public class ViewSlotCommand implements Command{
@@ -60,12 +63,17 @@ public class ViewSlotCommand implements Command{
         return bookingAppointmentService.viewHostBookingSlots(userId, token);
     }
 
+<<<<<<< HEAD
     public InschedEmbed embedHandler(List<Event> eventList, String appointmentToken) throws Exception {
+=======
+    public InschedEmbed embedHandler(List<Event> eventList, String appointmentToken) {
+>>>>>>> 23ca83ba3bc3b1886e3dd183092f8832f224b1e0
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Appointment List");
         embed.setDescription("Token: " + appointmentToken);
 
         for (Event event : eventList) {
+<<<<<<< HEAD
             if (!event.getStartTime().isBefore(LocalDateTime.now())) {
                 String desc = event.getDescription();
                 String eventToken = "Token: " + event.getIdEvent().toString() + "\n";
@@ -74,6 +82,13 @@ public class ViewSlotCommand implements Command{
                 String bookingStatus = event.getStatusBooking();
                 embed.addField(desc, tanggal + time + eventToken + bookingStatus, false);
             }
+=======
+                String desc = event.getDescription();
+                String eventToken = "Token: " + event.getIdEvent().toString() + "\n";
+                String time = event.getWaktu() + "\n";
+                String bookingStatus = event.getStatusBooking();
+                embed.addField(desc, time + eventToken + bookingStatus, false);
+>>>>>>> 23ca83ba3bc3b1886e3dd183092f8832f224b1e0
         }
         return embed;
     }

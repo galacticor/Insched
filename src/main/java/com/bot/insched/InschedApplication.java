@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@ComponentScan
-//@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @SpringBootApplication
 public class InschedApplication {
     public static JDA jda;
@@ -20,6 +18,8 @@ public class InschedApplication {
 
     @Autowired
     private Invoker botListener;
+    @Autowired
+    private SchedulerConfig scheduler;
 
     @Autowired
     public InschedApplication(@Value("${discord_token}") String token) {
@@ -35,6 +35,8 @@ public class InschedApplication {
         jda = JDABuilder.createDefault(TOKEN).build();
         jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
         jda.addEventListener(botListener);
+
+        scheduler.doScheduler();
     }
 
     public static JDA getJda() {

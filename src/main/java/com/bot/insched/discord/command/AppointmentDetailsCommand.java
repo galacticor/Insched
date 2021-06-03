@@ -57,7 +57,7 @@ public class AppointmentDetailsCommand implements Command {
         }
 
         InschedEmbed embed = new InschedEmbed();
-        String isAvailable = event.getIsAvailable() ? "Masih available" : "Slot sudah penuh";
+        String isAvailable = event.isAvailable() ? "Masih available" : "Slot sudah penuh";
 
         embed.setTitle("Appointment Details");
         embed.addField("Deskripsi:", event.getDescription(), false);

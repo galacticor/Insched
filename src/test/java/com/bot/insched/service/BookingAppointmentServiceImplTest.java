@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -44,8 +45,8 @@ public class BookingAppointmentServiceImplTest {
     private Appointment dummyAppointment;
     private Event dummyEvent;
 
-    private String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
-    private String dummyId = "0";
+    private final String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+    private final String dummyId = "0";
 
     @BeforeEach
     public void setUp() {
@@ -61,78 +62,66 @@ public class BookingAppointmentServiceImplTest {
     @Test
     public void testNotLoggedIn() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(null);
-        assertThrows(NotLoggedInException.class, () -> {
-            service.checkUserLoggedIn(dummyId);
-        });
+        assertThrows(NotLoggedInException.class, () -> service.checkUserLoggedIn(dummyId));
     }
 
     @Test
     public void testAppointmentNotFound() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(appointmentRepository.findByIdAppointment(any())).thenReturn(null);
-        assertThrows(ObjectNotFoundException.class, () -> {
-            service.viewHostBookingSlots(dummyId, dummyToken);
-        });
+        assertThrows(ObjectNotFoundException.class, () -> service.viewHostBookingSlots(dummyId, dummyToken));
     }
 
 
     @Test
     public void testEventNotFound() {
         when(eventRepository.findByIdEvent(any())).thenReturn(null);
-        assertThrows(ObjectNotFoundException.class, () -> {
-            service.checkEventValidUUID(dummyToken);
-        });
+        assertThrows(ObjectNotFoundException.class, () -> service.checkEventValidUUID(dummyToken));
     }
     @Test
     public void testCreateBookingWhenFull() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> list = new ArrayList<DiscordUser>();
+        List<DiscordUser> list = new ArrayList<>();
         list.add(new DiscordUser());
         list.add(new DiscordUser());
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
-        assertThrows(SlotUnavailableException.class, () -> {
-            service.createBooking(dummyId, dummyToken);
-        });
+        assertThrows(SlotUnavailableException.class, () -> service.createBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testCreateBookingUserDuplicate() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> list = new ArrayList<DiscordUser>();
+        List<DiscordUser> list = new ArrayList<>();
         list.add(dummyUser);
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
-        assertThrows(ObjectAlreadyExistsException.class, () -> {
-            service.createBooking(dummyId, dummyToken);
-        });
+        assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testCreateBookingEventDuplicate() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> listUser = new ArrayList<DiscordUser>();
+        List<DiscordUser> listUser = new ArrayList<>();
         listUser.add(dummyUser);
         dummyEvent.setListAttendee(listUser);
         dummyEvent.updateAvailability();
-        List<Event> listEvent = new ArrayList<Event>();
+        List<Event> listEvent = new ArrayList<>();
         listEvent.add(dummyEvent);
         dummyUser.setListEvent(listEvent);
-        assertThrows(ObjectAlreadyExistsException.class, () -> {
-            service.createBooking(dummyId, dummyToken);
-        });
+        assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testCreateBookingSuccess() throws Exception {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> listUser = new ArrayList<DiscordUser>();
+        List<DiscordUser> listUser = new ArrayList<>();
         dummyEvent.setListAttendee(listUser);
-        List<Event> listEvent = new ArrayList<Event>();
+        List<Event> listEvent = new ArrayList<>();
         dummyUser.setListEvent(listEvent);
         String res = service.createBooking(dummyId, dummyToken);
         assertEquals(res, "Booking slot event telah dibuat!");
@@ -142,37 +131,33 @@ public class BookingAppointmentServiceImplTest {
     public void testDeleteBookingUserNotFound() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> list = new ArrayList<DiscordUser>();
+        List<DiscordUser> list = new ArrayList<>();
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
-        assertThrows(ObjectNotFoundException.class, () -> {
-            service.deleteBooking(dummyId, dummyToken);
-        });
+        assertThrows(ObjectNotFoundException.class, () -> service.deleteBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testDeleteBookingEventNotFound() {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> listUser = new ArrayList<DiscordUser>();
+        List<DiscordUser> listUser = new ArrayList<>();
         dummyEvent.setListAttendee(listUser);
         dummyEvent.updateAvailability();
-        List<Event> listEvent = new ArrayList<Event>();
+        List<Event> listEvent = new ArrayList<>();
         dummyUser.setListEvent(listEvent);
-        assertThrows(ObjectNotFoundException.class, () -> {
-            service.deleteBooking(dummyId, dummyToken);
-        });
+        assertThrows(ObjectNotFoundException.class, () -> service.deleteBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testDeleteBookingSuccess() throws Exception {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> listUser = new ArrayList<DiscordUser>();
+        List<DiscordUser> listUser = new ArrayList<>();
         dummyEvent.setListAttendee(listUser);
         listUser.add(dummyUser);
         dummyEvent.updateAvailability();
-        List<Event> listEvent = new ArrayList<Event>();
+        List<Event> listEvent = new ArrayList<>();
         listEvent.add(dummyEvent);
         dummyUser.setListEvent(listEvent);
         String res = service.deleteBooking(dummyId, dummyToken);
@@ -183,7 +168,7 @@ public class BookingAppointmentServiceImplTest {
     public void testViewHostBookingSlotsSuccess() throws Exception {
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(appointmentRepository.findByIdAppointment(any())).thenReturn(dummyAppointment);
-        List<Event> list = new ArrayList<Event>();
+        List<Event> list = new ArrayList<>();
         dummyAppointment.setListEvent(list);
         assertEquals(service.viewHostBookingSlots(dummyId, dummyToken), list);
     }

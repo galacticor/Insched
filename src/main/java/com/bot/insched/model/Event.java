@@ -62,7 +62,7 @@ public class Event {
     private List<DiscordUser> listAttendee;
 
     public void updateAvailability() {
-        if (this.capacity > listAttendee.size()) {
+        if (this.capacity < listAttendee.size()) {
             isAvailable = true;
             return;
         }
@@ -71,7 +71,7 @@ public class Event {
 
     public String getStatusBooking() {
         if (listAttendee != null && listAttendee.size() > 0) {
-            return "Telah dibooking oleh " + listAttendee.size() + " orang";
+            return "Telah dibooking";
         }
         return "Belum ada yang booking";
     }
@@ -93,7 +93,7 @@ public class Event {
     }
 
     // HACK: Lombok does not generate this for some reason
-    public boolean getIsAvailable(){
+    public boolean isAvailable(){
         return this.isAvailable;
     }
 
