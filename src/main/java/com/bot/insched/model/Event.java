@@ -92,8 +92,9 @@ public class Event {
         return startTime.toLocalDate();
     }
 
+
     // HACK: Lombok does not generate this for some reason
-    public boolean getIsAvailable(){
+    public boolean isAvailable() {
         return this.isAvailable;
     }
 

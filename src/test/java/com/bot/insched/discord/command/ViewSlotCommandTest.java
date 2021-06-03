@@ -20,7 +20,11 @@ import static org.mockito.Mockito.mock;
 public class ViewSlotCommandTest {
 
     @InjectMocks
+<<<<<<< HEAD
     BookAppointmentCommand command;
+=======
+    ViewSlotCommand command;
+>>>>>>> 732c0d5bd97def3df6fc0fded00a4f6bca3f597f
 
     @Mock
     BookingAppointmentService service;

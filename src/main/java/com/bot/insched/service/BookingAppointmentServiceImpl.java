@@ -2,6 +2,7 @@ package com.bot.insched.service;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.exception.ObjectAlreadyExistsException;
+import com.bot.insched.discord.exception.ObjectNotFoundException;
 import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.Appointment;
@@ -10,15 +11,15 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.repository.EventRepository;
-import javassist.tools.rmi.ObjectNotFoundException;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class BookingAppointmentServiceImpl implements BookingAppointmentService{
+public class BookingAppointmentServiceImpl implements BookingAppointmentService {
 
     // TODO: Implement integration with Google API
     @Autowired
@@ -34,14 +35,13 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     AppointmentRepository appointmentRepository;
 
     @Override
-    public String createBooking(String requesterId, String token) throws Exception{
-
+    public String createBooking(String requesterId, String token) throws Exception {
         DiscordUser attendee = checkUserLoggedIn(requesterId);
 
         Event event = checkEventValidUUID(token);
 
-        boolean isFull = event.getIsAvailable();
-        if (isFull) {
+        boolean isAvailable = event.isAvailable();
+        if (!isAvailable) {
             throw new SlotUnavailableException("Slot event sudah penuh!");
         }
 
@@ -53,12 +53,16 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         event.setListAttendee(listAttendee);
         event.updateAvailability();
 
+        eventRepository.save(event);
+
         List<Event> listEvent = attendee.getListEvent();
         if (listEvent.contains(event)) {
             throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
         }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
+
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dibuat!";
     }
@@ -80,6 +84,9 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         event.setListAttendee(listAttendee);
         event.updateAvailability();
 
+        eventRepository.save(event);
+
+
         List<Event> listEvent = attendee.getListEvent();
         if (!listEvent.contains(event)) {
             throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
@@ -88,6 +95,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
             listEvent.remove(event);
         } while (listEvent.contains(event));
         attendee.setListEvent(listEvent);
+
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dihapus!";
     }
