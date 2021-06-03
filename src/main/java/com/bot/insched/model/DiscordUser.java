@@ -44,7 +44,7 @@ public class DiscordUser {
     private Appointment appointment;
 
     // Event attended by user
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Event> listEvent;
 
     public DiscordUser(String idDisc, StoredCredential credential) {
