@@ -94,6 +94,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         attendee.setListEvent(listEvent);
 
         eventRepository.save(event);
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dihapus!";
     }

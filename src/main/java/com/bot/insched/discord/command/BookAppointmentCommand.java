@@ -45,13 +45,9 @@ public class BookAppointmentCommand implements Command {
     @Override
     public String getHelp() {
         return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-<<<<<<< HEAD
-               "Penggunaan: !bookAppointment <token_event>\n" +
-               "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
-=======
                 "Penggunaan: !bookAppointment <token_event>\n" +
                 "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
->>>>>>> 23ca83ba3bc3b1886e3dd183092f8832f224b1e0
+
     }
 
     public String creationHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
