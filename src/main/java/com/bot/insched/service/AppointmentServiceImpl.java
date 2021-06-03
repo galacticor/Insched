@@ -99,6 +99,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         if (event == null) {
             return "Tidak ada slot dengan kode tersebut!";
+        } else if (event.getAppointment().getOwner() != user) {
+            throw new SlotUnavailableException("Kamu tidak memiliki akses pada slot ini!");
+
         } else if (event.getListAttendee().size() == 0) {
             String tanggal = event.getStartTime().toLocalDate().toString();
             LocalDateTime newStartTime = LocalDateTime.parse(tanggal + "T" + jamBaru + ":00");
@@ -122,6 +125,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Event event = eventRepository.findByIdEvent(UUID.fromString(token));
         if (event == null) {
             throw new SlotUnavailableException("Tidak ada slot pada keterangan waktu seperti itu!");
+        } else if (event.getAppointment().getOwner() != user) {
+            throw new SlotUnavailableException("Kamu tidak memiliki akses pada slot ini!");
         } else if (event.getListAttendee().size() == 0) {
             eventService.deleteEventFromRepo(UUID.fromString(token));
             return "Slot berhasil dihapus!";
