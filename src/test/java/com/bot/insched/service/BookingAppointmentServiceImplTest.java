@@ -83,7 +83,6 @@ public class BookingAppointmentServiceImplTest {
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
         List<DiscordUser> list = new ArrayList<>();
         list.add(new DiscordUser());
-        list.add(new DiscordUser());
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
         assertThrows(SlotUnavailableException.class, () -> service.createBooking(dummyId, dummyToken));
@@ -97,6 +96,7 @@ public class BookingAppointmentServiceImplTest {
         list.add(dummyUser);
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
+        dummyEvent.setAvailable(true);
         assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken));
     }
 
@@ -111,17 +111,20 @@ public class BookingAppointmentServiceImplTest {
         List<Event> listEvent = new ArrayList<>();
         listEvent.add(dummyEvent);
         dummyUser.setListEvent(listEvent);
+        dummyEvent.setAvailable(true);
         assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken));
     }
 
     @Test
     public void testCreateBookingSuccess() throws Exception {
-        when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
-        when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        List<DiscordUser> listUser = new ArrayList<>();
-        dummyEvent.setListAttendee(listUser);
         List<Event> listEvent = new ArrayList<>();
         dummyUser.setListEvent(listEvent);
+        List<DiscordUser> listUser = new ArrayList<>();
+        dummyEvent.setListAttendee(listUser);
+        dummyEvent.updateAvailability();
+        dummyEvent.setAvailable(true);
+        when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
+        when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
         String res = service.createBooking(dummyId, dummyToken);
         assertEquals(res, "Booking slot event telah dibuat!");
     }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 public class DeleteBookAppointmentCommandTest {
     @InjectMocks
-    BookAppointmentCommand command;
+    DeleteBookAppointmentCommand command;
 
     @Mock
     BookingAppointmentService service;
