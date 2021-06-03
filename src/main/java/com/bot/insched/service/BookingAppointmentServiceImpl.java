@@ -2,8 +2,8 @@ package com.bot.insched.service;
 
 import com.bot.insched.discord.exception.NotLoggedInException;
 import com.bot.insched.discord.exception.ObjectAlreadyExistsException;
-import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.discord.exception.ObjectNotFoundException;
+import com.bot.insched.discord.exception.SlotUnavailableException;
 import com.bot.insched.google.GoogleApiManager;
 import com.bot.insched.model.Appointment;
 import com.bot.insched.model.DiscordUser;
@@ -11,14 +11,13 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.repository.EventRepository;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
-
 @Service
-public class BookingAppointmentServiceImpl implements BookingAppointmentService{
+public class BookingAppointmentServiceImpl implements BookingAppointmentService {
 
     // TODO: Implement integration with Google API
     @Autowired
@@ -34,7 +33,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
     AppointmentRepository appointmentRepository;
 
     @Override
-    public String createBooking(String requesterId, String token) throws Exception{
+    public String createBooking(String requesterId, String token) throws Exception {
 
         DiscordUser attendee = checkUserLoggedIn(requesterId);
 

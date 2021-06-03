@@ -5,6 +5,12 @@ import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.repository.EventRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
@@ -13,19 +19,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Executors;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Configuration
 @EnableAsync
 @EnableScheduling
 public class SchedulerConfig {
-	private EventRepository eventRepository;
+    private EventRepository eventRepository;
     private TaskFactory taskFactory;
     private TaskScheduler scheduler;
 
@@ -63,16 +62,17 @@ public class SchedulerConfig {
     @Async
     public void doCheckEventNotif(int minutes, int every) {
         log.warn("running check event notif for {} minutes", minutes);
-    	List<Event> events = eventRepository.findAllByStartTimeBetween(
-                                            LocalDateTime.now().plusMinutes(minutes), 
-                                            LocalDateTime.now().plusMinutes(minutes + every));
+        List<Event> events = eventRepository.findAllByStartTimeBetween(
+                LocalDateTime.now().plusMinutes(minutes),
+                LocalDateTime.now().plusMinutes(minutes + every));
 
         log.warn("{} event found", events.size());
-        for(Event event: events) {
+        for (Event event: events) {
             log.warn("checking event [{}]", event.getIdEvent());
             List<DiscordUser> listAttendee = event.getListAttendee();
-            String message = "Kamu memiliki appointment pada " +
-                            event.getWaktu() + " , jangan lupa untuk hadir !!";
+            String message = "Kamu memiliki appointment pada "
+                    + event.getWaktu()
+                    + " , jangan lupa untuk hadir !!";
             InschedEmbed embed = new InschedEmbed();
             embed.setTitle("Notification");
             embed.setDescription(message);

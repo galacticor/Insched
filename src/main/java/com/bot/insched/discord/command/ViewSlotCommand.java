@@ -4,12 +4,12 @@ import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.BookingAppointmentService;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-
 import java.time.LocalDate;
 import java.util.List;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class ViewSlotCommand implements Command{
+
+public class ViewSlotCommand implements Command {
 
     private BookingAppointmentService bookingAppointmentService;
 
@@ -32,9 +32,9 @@ public class ViewSlotCommand implements Command{
             }
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
-                    "Masukkan argumen yang sesuai!\n" +
-                            "Penggunaan: !viewSlot <host-token>\n" +
-                            "Help: !viewSlot help", event);
+                    "Masukkan argumen yang sesuai!\n"
+                            + "Penggunaan: !viewSlot <host-token>\n"
+                            + "Help: !viewSlot help", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
@@ -47,12 +47,13 @@ public class ViewSlotCommand implements Command{
 
     @Override
     public String getHelp() {
-        return "Menampilkan semua slot milik Host\n" +
-                "Penggunaan: !viewSlot <host-token>\n" +
-                "Contoh: !viewSlot f2da393a-7ef2-4fe9-979e-ea3d76adc7ea";
+        return "Menampilkan semua slot milik Host\n"
+                + "Penggunaan: !viewSlot <host-token>\n"
+                + "Contoh: !viewSlot f2da393a-7ef2-4fe9-979e-ea3d76adc7ea";
     }
 
-    public List<Event> viewHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
+    public List<Event> viewHandler(String[] args, PrivateMessageReceivedEvent event)
+            throws Exception {
 
         String userId = event.getAuthor().getId();
         String token = args[0];

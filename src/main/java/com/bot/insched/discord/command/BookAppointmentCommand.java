@@ -28,9 +28,9 @@ public class BookAppointmentCommand implements Command {
             }
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
-                    "Masukkan argumen yang sesuai!\n" +
-                            "Penggunaan: !bookAppointment <token_event>\n" +
-                            "Help: !bookAppointment help", event);
+                    "Masukkan argumen yang sesuai!\n"
+                            + "Penggunaan: !bookAppointment <token_event>\n"
+                            + "Help: !bookAppointment help", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
@@ -44,12 +44,13 @@ public class BookAppointmentCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-                "Penggunaan: !bookAppointment <token_event>\n" +
-                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
+                + "Penggunaan: !bookAppointment <token_event>\n"
+                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
     }
 
-    public String creationHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
+    public String creationHandler(String[] args,
+                                  PrivateMessageReceivedEvent event) throws Exception {
 
         String userId = event.getAuthor().getId();
         String token = args[0];

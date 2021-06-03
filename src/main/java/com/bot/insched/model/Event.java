@@ -97,7 +97,7 @@ public class Event {
 
 
     // HACK: Lombok does not generate this for some reason
-    public boolean isAvailable(){
+    public boolean isAvailable() {
         return this.isAvailable;
     }
 
