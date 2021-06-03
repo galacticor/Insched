@@ -72,7 +72,6 @@ public class BookingAppointmentServiceImplTest {
         assertThrows(ObjectNotFoundException.class, () -> service.viewHostBookingSlots(dummyId, dummyToken));
     }
 
-
     @Test
     public void testEventNotFound() {
         when(eventRepository.findByIdEvent(any())).thenReturn(null);

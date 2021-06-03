@@ -52,6 +52,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         listAttendee.add(attendee);
         event.setListAttendee(listAttendee);
         event.updateAvailability();
+        eventRepository.save(event);
 
         List<Event> listEvent = attendee.getListEvent();
         if (listEvent.contains(event)) {
@@ -59,6 +60,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dibuat!";
     }
@@ -79,6 +81,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
         } while (listAttendee.contains(attendee));
         event.setListAttendee(listAttendee);
         event.updateAvailability();
+        eventRepository.save(event);
 
         List<Event> listEvent = attendee.getListEvent();
         if (!listEvent.contains(event)) {
@@ -88,6 +91,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService{
             listEvent.remove(event);
         } while (listEvent.contains(event));
         attendee.setListEvent(listEvent);
+        discordUserRepository.save(attendee);
 
         return "Booking slot event telah dihapus!";
     }
