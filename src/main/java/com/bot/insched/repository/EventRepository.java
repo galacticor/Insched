@@ -15,7 +15,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
     void deleteByIdEvent(UUID id);
 
     List<Event> findAllByStartTimeBetween(
-    	LocalDateTime startTime,
-		LocalDateTime endTime);
+        LocalDateTime startTime,
+        LocalDateTime endTime);
 
 }

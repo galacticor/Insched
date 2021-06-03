@@ -71,7 +71,7 @@ public class Event {
 
     public String getStatusBooking() {
         if (listAttendee != null && listAttendee.size() > 0) {
-            return "Telah dibooking";
+            return "Telah dibooking oleh " + listAttendee.size() + " orang";
         }
         return "Belum ada yang booking";
     }
