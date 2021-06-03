@@ -2,14 +2,8 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.BookingAppointmentService;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +17,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class BookAppointmentCommandTest {
+public class ViewSlotCommandTest {
 
     @InjectMocks
     BookAppointmentCommand command;
@@ -50,24 +44,15 @@ public class BookAppointmentCommandTest {
     }
 
     @Test
-    public void testExecuteSuccess() throws Exception {;
-        String args[] = {dummyToken};
-        String res = "Booking slot event telah dibuat!";
-        lenient().when(service.createBooking(dummyId, dummyToken)).thenReturn(res);
-        command.execute(args, event);
-    }
-
-
-    @Test
     public void testGetHelp() {
         String res = command.getHelp();
-        assertEquals(res, "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-                "Penggunaan: !bookAppointment <token_event>\n" +
-                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
+        assertEquals(res, "Menampilkan semua slot milik Host\n" +
+                "Penggunaan: !viewSlot <host-token>\n" +
+                "Contoh: !viewSlot f2da393a-7ef2-4fe9-979e-ea3d76adc7ea");
     }
 
     @Test
     public void testGetCommand() {
-        assertEquals(command.getCommand(), "bookAppointment");
+        assertEquals(command.getCommand(), "viewSlot");
     }
 }

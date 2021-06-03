@@ -23,8 +23,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class BookAppointmentCommandTest {
-
+public class DeleteBookAppointmentCommandTest {
     @InjectMocks
     BookAppointmentCommand command;
 
@@ -52,22 +51,21 @@ public class BookAppointmentCommandTest {
     @Test
     public void testExecuteSuccess() throws Exception {;
         String args[] = {dummyToken};
-        String res = "Booking slot event telah dibuat!";
-        lenient().when(service.createBooking(dummyId, dummyToken)).thenReturn(res);
+        String res = "Booking slot event telah dihapus!";
+        lenient().when(service.deleteBooking(dummyId, dummyToken)).thenReturn(res);
         command.execute(args, event);
     }
-
 
     @Test
     public void testGetHelp() {
         String res = command.getHelp();
-        assertEquals(res, "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-                "Penggunaan: !bookAppointment <token_event>\n" +
-                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
+        assertEquals(res, "Digunakan untuk menghapus booking pada slot event dalam sebuah appointment.\n" +
+                "Penggunaan: !unbookAppointment <token_event>\n" +
+                "Contoh: !unbookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
     }
 
     @Test
     public void testGetCommand() {
-        assertEquals(command.getCommand(), "bookAppointment");
+        assertEquals(command.getCommand(), "unbookAppointment");
     }
 }

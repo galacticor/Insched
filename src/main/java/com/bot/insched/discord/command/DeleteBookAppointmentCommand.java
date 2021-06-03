@@ -5,13 +5,13 @@ import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.BookingAppointmentService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-public class BookAppointmentCommand implements Command {
+public class DeleteBookAppointmentCommand implements Command{
 
     private BookingAppointmentService bookingAppointmentService;
 
     private MessageSender sender = MessageSender.getInstance();
 
-    public BookAppointmentCommand(BookingAppointmentService bookingAppointmentService) {
+    public DeleteBookAppointmentCommand(BookingAppointmentService bookingAppointmentService) {
         this.bookingAppointmentService = bookingAppointmentService;
     }
 
@@ -22,15 +22,15 @@ public class BookAppointmentCommand implements Command {
             if (args[0].equalsIgnoreCase("help")) {
                 sender.sendPrivateMessage(getHelp(), event);
             } else {
-                String result = creationHandler(args, event);
+                String result = deletionHandler(args, event);
                 InschedEmbed response = embedHandler(result);
                 sender.sendPrivateMessage(response.build(), event);
             }
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
                     "Masukkan argumen yang sesuai!\n" +
-                            "Penggunaan: !bookAppointment <token_event>\n" +
-                            "Help: !bookAppointment help", event);
+                            "Penggunaan: !unbookAppointment <token_event>\n" +
+                            "Help: !unbookAppointment help", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
@@ -39,28 +39,28 @@ public class BookAppointmentCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "bookAppointment";
+        return "unbookAppointment";
     }
 
     @Override
     public String getHelp() {
-        return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-               "Penggunaan: !bookAppointment <token_event>\n" +
-               "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        return "Digunakan untuk menghapus booking pada slot event dalam sebuah appointment.\n" +
+                "Penggunaan: !unbookAppointment <token_event>\n" +
+                "Contoh: !unbookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
     }
 
-    public String creationHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
+    public String deletionHandler(String[] args, PrivateMessageReceivedEvent event) throws Exception {
 
         String userId = event.getAuthor().getId();
         String token = args[0];
 
-        return bookingAppointmentService.createBooking(userId, token);
+        return bookingAppointmentService.deleteBooking(userId, token);
     }
 
     public InschedEmbed embedHandler(String result) {
 
         InschedEmbed embed = new InschedEmbed();
-        embed.setTitle("Book Appointment");
+        embed.setTitle("Unbook Appointment");
         embed.setDescription(result);
 
         return embed;
