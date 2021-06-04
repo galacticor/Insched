@@ -45,18 +45,14 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         }
 
         List<DiscordUser> listAttendee = event.getListAttendee();
-        if (listAttendee.contains(attendee)) {
+        List<Event> listEvent = attendee.getListEvent();
+        if (listAttendee.contains(attendee) || listEvent.contains(event)) {
             throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
         }
         listAttendee.add(attendee);
         event.setListAttendee(listAttendee);
         event.updateAvailability();
         eventRepository.save(event);
-
-        List<Event> listEvent = attendee.getListEvent();
-        if (listEvent.contains(event)) {
-            throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
-        }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
         discordUserRepository.save(attendee);
@@ -72,7 +68,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         Event event = checkEventValidUUID(token);
 
         List<DiscordUser> listAttendee = event.getListAttendee();
-        if (!listAttendee.contains(attendee)) {
+        List<Event> listEvent = attendee.getListEvent();
+        if (!listAttendee.contains(attendee) || !listEvent.contains(event)) {
             throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
         }
         do {
@@ -81,11 +78,6 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         event.setListAttendee(listAttendee);
         event.updateAvailability();
         eventRepository.save(event);
-
-        List<Event> listEvent = attendee.getListEvent();
-        if (!listEvent.contains(event)) {
-            throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
-        }
         do {
             listEvent.remove(event);
         } while (listEvent.contains(event));
