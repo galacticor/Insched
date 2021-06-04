@@ -44,9 +44,9 @@ public class UpdateEventCommand implements Command {
         String idEvent = args[0];
         String jenis = args[1];
         String newData = args[2];
-        if(jenis.equalsIgnoreCase("deskripsi")){
-            for(int i=3;i < args.length;i++){
-                newData += " "+args[i];
+        if (jenis.equalsIgnoreCase("deskripsi")) {
+            for (int i = 3; i < args.length; i++) {
+                newData += " " + args[i];
             }
         }
         return eventService.updateEventService(idUser, idEvent, jenis, newData);

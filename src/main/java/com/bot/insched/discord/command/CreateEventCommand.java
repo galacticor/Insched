@@ -52,8 +52,8 @@ public class CreateEventCommand implements Command {
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
                 .setTimeZone("America/Los_Angeles");
         String deskripsi = args[6];
-        for(int i=7;i < args.length;i++){
-            deskripsi += " "+args[i];
+        for (int i = 7; i < args.length; i++) {
+            deskripsi += " " + args[i];
         }
 
         event = new Event();
