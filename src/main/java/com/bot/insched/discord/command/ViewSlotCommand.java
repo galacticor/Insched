@@ -51,6 +51,11 @@ public class ViewSlotCommand implements Command {
     public List<Event> viewHandler(String[] args, PrivateMessageReceivedEvent event)
             throws Exception {
 
+        int argsLength = args.length;
+        if (argsLength != 1) {
+            throw new IndexOutOfBoundsException();
+        }
+
         String userId = event.getAuthor().getId();
         String token = args[0];
 

@@ -48,6 +48,11 @@ public class DeleteBookAppointmentCommand implements Command {
     public String deletionHandler(String[] args,
                                   PrivateMessageReceivedEvent event) throws Exception {
 
+        int argsLength = args.length;
+        if (argsLength != 1) {
+            throw new IndexOutOfBoundsException();
+        }
+
         String userId = event.getAuthor().getId();
         String token = args[0];
 
