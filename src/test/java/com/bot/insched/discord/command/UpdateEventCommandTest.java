@@ -85,7 +85,23 @@ public class UpdateEventCommandTest {
 
     @Test
     public void testCorrectArgument() throws Exception {
-        String[] args = {"!updateEvent", "fjbqeoaufbqeo", "summary", "Kuliah"};
+        String[] args = {"fjbqeoaufbqeo", "summary", "Kuliah"};
+        User user = mock(User.class);
+        InschedEmbed embed = new InschedEmbed();
+        String ret = "Event Berhasil diperbaharui";
+        embed.setTitle("Update Event");
+        embed.setDescription("Event Berhasil diperbaharui");
+        lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
+        lenient().when(eventService.updateEventService(anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(ret);
+        lenient().when(user.getId()).thenReturn("123");
+        lenient().doNothing().when(sender).sendPrivateMessage(embed.build(), event);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testCorrectArgumentDescription() throws Exception {
+        String[] args = {"fjbqeoaufbqeo", "deskripsi", "Kuliah","adpro","ada"};
         User user = mock(User.class);
         InschedEmbed embed = new InschedEmbed();
         String ret = "Event Berhasil diperbaharui";
@@ -101,7 +117,7 @@ public class UpdateEventCommandTest {
 
     @Test
     public void testErrorArgument() throws Exception {
-        String[] args = {"!updateEvent", "selesai"};
+        String[] args = {"selesai"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.updateEventService(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn("error");
@@ -124,9 +140,12 @@ public class UpdateEventCommandTest {
     @Test
     public void testGetHelp() {
         String expected = "!updateEvent <eventID> <jenis> <dataBaru> \n"
-                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai 2021-05-21T05:30:00.000+07:00 \n"
-                + "note: jenis data data yang dapat di-update\n"
-                + " deskripsi, summary, mulai, dan selesai";
+                + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai "
+                + "2021-05-21T05:30:00.000+07:00 \n"
+                + "\n"
+                + "note: jenis data data yang dapat di-update\n "
+                + "deskripsi, summary, mulai, dan selesai"
+                + "Untuk deskripsi data baru dapat lebih dari dari satu kata";
         assertEquals(command.getHelp(), expected);
     }
 

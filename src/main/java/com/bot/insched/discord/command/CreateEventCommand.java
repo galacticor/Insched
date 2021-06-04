@@ -52,6 +52,9 @@ public class CreateEventCommand implements Command {
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
                 .setTimeZone("America/Los_Angeles");
         String deskripsi = args[6];
+        for (int i = 7; i < args.length; i++) {
+            deskripsi += " " + args[i];
+        }
 
         event = new Event();
         event.setId(id);
@@ -69,9 +72,10 @@ public class CreateEventCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!createEvent <summary> <token_event> <tanggal_mulai> <jam_mulai> "
-                + "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n"
-                + "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
+        return "!createEvent <token_event> <tanggal_mulai> <jam_mulai> "
+                + "<tanggal_selesai> <jam_selesai> <deskripsi_event> <deskripsi_event> ...\n"
+                + "Contoh: !createEvent 0123klm4o5678abdefhij9prstuv "
+                + "tes 2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro";
     }
 
 }

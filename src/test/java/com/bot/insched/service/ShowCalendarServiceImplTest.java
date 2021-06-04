@@ -91,13 +91,35 @@ public class ShowCalendarServiceImplTest {
         lenient().when(calendar.events()).thenReturn(calendarEvents);
         lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setMaxResults(any(Integer.class))).thenReturn(calendarEventsList);
-        lenient().when(calendarEventsList.setTimeMin(now)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setTimeMin(any(DateTime.class))).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setOrderBy("startTime")).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.setSingleEvents(true)).thenReturn(calendarEventsList);
         lenient().when(calendarEventsList.execute()).thenReturn(events);
         lenient().when(events.getItems()).thenReturn(listEvent);
 
-//        assertNotNull(showCalendarService.getListEvents(userId));
+        assertNotNull(showCalendarService.getListEvents(userId));
+    }
+
+    @Test
+    public void testGetListEventSuccessDifferentParam() throws Exception {
+        String userId = "userId";
+        DateTime min = new DateTime("2021-03-20T01:00:00.001+07:00");
+        DateTime max = new DateTime("2021-04-20T01:00:00.001+07:00");
+        Calendar.Events calendarEvents = mock(Calendar.Events.class);
+        Calendar.Events.List calendarEventsList = mock(Calendar.Events.List.class);
+
+        lenient().when(manager.getCalendarService(userId)).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(calendarEvents);
+        lenient().when(calendarEvents.list("primary")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setMaxResults(any(Integer.class))).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setTimeMin(min)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setTimeMax(max)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setOrderBy("startTime")).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.setSingleEvents(true)).thenReturn(calendarEventsList);
+        lenient().when(calendarEventsList.execute()).thenReturn(events);
+        lenient().when(events.getItems()).thenReturn(listEvent);
+
+        assertNotNull(showCalendarService.getListEvents(userId,min,max));
     }
 
     @Test
@@ -108,6 +130,15 @@ public class ShowCalendarServiceImplTest {
         });
     }
 
+    @Test
+    public void testGetListDiffParamEventNotSuccess() throws Exception {
+        DateTime min = new DateTime("2021-03-20T01:00:00.001+07:00");
+        DateTime max = new DateTime("2021-04-20T01:00:00.001+07:00");
+        lenient().when(manager.getCalendarService("userId")).thenReturn(null);
+        assertThrows(NotLoggedInException.class, () -> {
+            showCalendarService.getListEvents("userId",min,max);
+        });
+    }
 
     @Test
     public void testGetCalStart(){
@@ -126,9 +157,7 @@ public class ShowCalendarServiceImplTest {
         event.setDescription(null);
         String res = showCalendarService.getCalDescription(event);
         assertEquals(res, "no description");
-
     }
-
 
     @Test
     public void testGetCalDescriptionMoreThan1000char(){
@@ -136,6 +165,5 @@ public class ShowCalendarServiceImplTest {
         event.setDescription(regex);
         String res = showCalendarService.getCalDescription(event);
         assertEquals(res, regex.substring(0,90) + "...");
-
     }
 }

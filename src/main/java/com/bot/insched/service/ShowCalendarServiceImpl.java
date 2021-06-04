@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShowCalendarServiceImpl implements ShowCalendarService {
+public class ShowCalendarServiceImpl implements
+        ShowCalendarService {
 
     @Autowired
     GoogleApiManager manager;
@@ -19,22 +20,50 @@ public class ShowCalendarServiceImpl implements ShowCalendarService {
     List<Event> listEvent = null;
 
     public List<Event> getListEvents(String userId) throws Exception {
+        List<Event> items = new ArrayList<>();
+
         Calendar calendar = manager.getCalendarService(userId);
         if (calendar == null) {
             throw new NotLoggedInException();
         }
 
         DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = calendar.events().list("primary")
-                .setMaxResults(7)
+        Calendar.Events.List events = calendar.events()
+                .list("primary")
+                .setMaxResults(10)
                 .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        List<Event> items = events.getItems();
+                .setOrderBy("startTime");
+        if (events != null) {
+            items = events.setSingleEvents(true).execute().getItems();
+        }
+        return items;
+    }
+
+
+    public List<Event> getListEvents(String userId, DateTime min, DateTime max) throws Exception {
+        List<Event> items = new ArrayList<>();
+
+        Calendar calendar = manager.getCalendarService(userId);
+        if (calendar == null) {
+            throw new NotLoggedInException();
+        }
+
+        Calendar.Events.List events = calendar.events()
+                .list("primary")
+                .setMaxResults(10)
+                .setTimeMin(min)
+                .setTimeMax(max)
+                .setOrderBy("startTime");
+        if (events != null) {
+            items = events.setSingleEvents(true).execute().getItems();
+        }
+
+        System.out.println("MIN = " + min.toString());
+        System.out.println("MAX = " + max.toString());
 
         return items;
     }
+
 
     public String getCalSummary(Event event) {
         return event.getSummary();
