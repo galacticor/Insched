@@ -44,6 +44,11 @@ public class UpdateEventCommand implements Command {
         String idEvent = args[0];
         String jenis = args[1];
         String newData = args[2];
+        if (jenis.equalsIgnoreCase("deskripsi")) {
+            for (int i = 3; i < args.length; i++) {
+                newData += " " + args[i];
+            }
+        }
         return eventService.updateEventService(idUser, idEvent, jenis, newData);
     }
 
@@ -57,8 +62,10 @@ public class UpdateEventCommand implements Command {
         return "!updateEvent <eventID> <jenis> <dataBaru> \n"
                 + "Contoh: !updateEvent 0123kl4mn7o568abdefhij9prstuv mulai "
                 + "2021-05-21T05:30:00.000+07:00 \n"
+                + "\n"
                 + "note: jenis data data yang dapat di-update\n "
-                + "deskripsi, summary, mulai, dan selesai";
+                + "deskripsi, summary, mulai, dan selesai"
+                + "Untuk deskripsi data baru dapat lebih dari dari satu kata";
     }
 
 }

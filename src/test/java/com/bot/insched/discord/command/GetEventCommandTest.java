@@ -91,7 +91,7 @@ public class GetEventCommandTest {
     public void testCorrectArgument() throws Exception {
         PrivateChannel channel = mock(PrivateChannel.class);
         MessageAction action = mock(MessageAction.class);
-        String[] args = {"!getEvent","0123456789abcdefghijklmnopqrstuv"};
+        String[] args = {"0123456789abcdefghijklmnopqrstuv"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.deleteEventService(any(), any()))
                 .thenReturn("Event Berhasil dihapus");

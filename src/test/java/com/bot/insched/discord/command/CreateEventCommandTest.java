@@ -105,7 +105,28 @@ public class CreateEventCommandTest {
         String ret = "Event Berhasil dibuat";
         embed.setTitle("Create Event");
         embed.setDescription(ret);
-        String[] args = {"!createEvent","KUIS","2021-05-20", "15:30", "2021-05-21" ,"15:30","Kuliah"};
+        String[] args = {"idEvent","KUIS","2021-05-20", "15:30", "2021-05-21" ,"15:30","Kuliah"};
+        lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
+        lenient().when(eventService.createEventService(any(), any()))
+                .thenReturn(ret);
+        lenient().when(event.getChannel()).thenReturn(channel);
+        lenient().when(channel.sendMessage(anyString())).thenReturn(action);
+        lenient().when(event.getAuthor()).thenReturn(user);
+        lenient().when(user.getId()).thenReturn("123");
+        lenient().doNothing().when(sender).sendPrivateMessage(ret, event);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testCorrectArgumentDesription() throws Exception {
+        InschedEmbed embed = mock(InschedEmbed.class);
+        PrivateChannel channel = mock(PrivateChannel.class);
+        MessageAction action = mock(MessageAction.class);
+        User user = mock(User.class);
+        String ret = "Event Berhasil dibuat";
+        embed.setTitle("Create Event");
+        embed.setDescription(ret);
+        String[] args = {"idEvent","KUIS","2021-05-20", "15:30", "2021-05-21" ,"15:30","Kuliah","adpro"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
                 .thenReturn(ret);
@@ -129,7 +150,7 @@ public class CreateEventCommandTest {
 
     @Test
     public void testErrorArgument() throws Exception {
-        String[] args = {"!createEvent","a","a","a","a"};
+        String[] args = {"a","a","a","a"};
         lenient().when(eventService.getCalendarbyId(anyString())).thenReturn(calendar);
         lenient().when(eventService.createEventService(any(), any()))
                 .thenReturn("error");
@@ -146,9 +167,10 @@ public class CreateEventCommandTest {
 
     @Test
     public void testGetHelp() {
-        String expected = "!createEvent <summary> <token_event> <tanggal_mulai> <jam_mulai> " +
-                "<tanggal_selesai> <jam_selesai> <deskripsi_event> \n" +
-                "Contoh: !createEvent KUIS 2021-05-20 15:30 2021-05-21 15:30 Kuliah";
+        String expected = "!createEvent <token_event> <tanggal_mulai> <jam_mulai> "
+                + "<tanggal_selesai> <jam_selesai> <deskripsi_event> <deskripsi_event> ...\n"
+                + "Contoh: !createEvent 0123klm4o5678abdefhij9prstuv "
+                + "tes 2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro";
         assertEquals(command.getHelp(), expected);
     }
 
