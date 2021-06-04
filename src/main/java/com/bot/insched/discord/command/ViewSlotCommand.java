@@ -23,13 +23,9 @@ public class ViewSlotCommand implements Command {
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         try {
-            if (args[0].equalsIgnoreCase("help")) {
-                sender.sendPrivateMessage(getHelp(), event);
-            } else {
-                List<Event> eventList = viewHandler(args, event);
-                InschedEmbed response = embedHandler(eventList, args[0]);
-                sender.sendPrivateMessage(response.build(), event);
-            }
+            List<Event> eventList = viewHandler(args, event);
+            InschedEmbed response = embedHandler(eventList, args[0]);
+            sender.sendPrivateMessage(response.build(), event);
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
                     "Masukkan argumen yang sesuai!\n"

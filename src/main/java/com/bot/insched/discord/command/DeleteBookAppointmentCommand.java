@@ -19,13 +19,9 @@ public class DeleteBookAppointmentCommand implements Command {
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
 
         try {
-            if (args[0].equalsIgnoreCase("help")) {
-                sender.sendPrivateMessage(getHelp(), event);
-            } else {
-                String result = deletionHandler(args, event);
-                InschedEmbed response = embedHandler(result);
-                sender.sendPrivateMessage(response.build(), event);
-            }
+            String result = deletionHandler(args, event);
+            InschedEmbed response = embedHandler(result);
+            sender.sendPrivateMessage(response.build(), event);
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
                     "Masukkan argumen yang sesuai!\n"

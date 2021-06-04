@@ -13,8 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookAppointmentCommandTest {
@@ -51,13 +50,35 @@ public class BookAppointmentCommandTest {
         command.execute(args, event);
     }
 
+    @Test
+    public void testInsufficientArgumentExecution() {
+        String emptyString = "";
+        String[] args = {emptyString};
+        String res =
+                "Masukkan argumen yang sesuai!\n"
+                        + "Penggunaan: !bookAppointment <token_event>\n"
+                        + "Help: !bookAppointment help";
+        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testGeneralException() throws Exception {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String[] args = {dummyToken};
+
+        when(service.createBooking(dummyId, dummyToken))
+                .thenThrow(new Exception("dummy exception"));
+        command.execute(args, event);
+    }
 
     @Test
     public void testGetHelp() {
         String res = command.getHelp();
-        assertEquals(res, "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n" +
-                "Penggunaan: !bookAppointment <token_event>\n" +
-                "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
+        assertEquals(res,
+                "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
+                + "Penggunaan: !bookAppointment <token_event>\n"
+                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
     }
 
     @Test
