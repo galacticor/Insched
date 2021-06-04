@@ -51,9 +51,11 @@ public class BookAppointmentCommandTest {
     }
 
     @Test
-    public void testInsufficientArgumentExecution() {
-        String emptyString = "";
-        String[] args = {emptyString};
+    public void testWrongArguments() {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String extra = "extra";
+        String[] args = {dummyToken, extra};
+
         String res =
                 "Masukkan argumen yang sesuai!\n"
                         + "Penggunaan: !bookAppointment <token_event>\n"

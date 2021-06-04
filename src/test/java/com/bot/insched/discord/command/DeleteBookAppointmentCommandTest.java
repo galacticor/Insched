@@ -50,13 +50,15 @@ public class DeleteBookAppointmentCommandTest {
     }
 
     @Test
-    public void testInsufficientArgumentExecution() {
-        String emptyString = "";
-        String[] args = {emptyString};
+    public void testWrongArguments() {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String extra = "extra";
+        String[] args = {dummyToken, extra};
+
         String res =
                 "Masukkan argumen yang sesuai!\n"
-                        + "Penggunaan: !bookAppointment <token_event>\n"
-                        + "Help: !bookAppointment help";
+                        + "Penggunaan: !unbookAppointment <token_event>\n"
+                        + "Help: !unbookAppointment help";
         lenient().doNothing().when(sender).sendPrivateMessage(res, event);
         command.execute(args, event);
     }
