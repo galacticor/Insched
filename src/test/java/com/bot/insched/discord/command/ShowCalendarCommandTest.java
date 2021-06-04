@@ -122,7 +122,26 @@ class ShowCalendarCommandTest {
         lenient().when(showCalendarService.getCalDescription(listEvent.get(0))).thenReturn("description");
         lenient().when(showCalendarService.getCalStart(listEvent.get(0))).thenReturn(dateTimeMulai.toString());
         lenient().when(showCalendarService.getCalEnd(listEvent.get(0))).thenReturn(dateTimeSelesai.toString());
-        assertNotNull(showCalendarCommand.createEmbed("userId",privateMessageevent));
+        assertNotNull(showCalendarCommand.createEmbed(args,"userId",privateMessageevent));
+
+    }
+
+    @Test
+    void testCreateEmbed2(){
+        String [] args = {"2021-03-20","sampai","2021-03-27"};
+        InschedEmbed embed = new InschedEmbed();
+        DateTime timeMulai = new DateTime(args[0] + "T01:00:00.001+07:00");
+        DateTime timeSelesai = new DateTime(args[2] + "T01:00:00.001+07:00");
+        try {
+            lenient().when(showCalendarService.getListEvents("userId",timeMulai,timeSelesai)).thenReturn(listEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        lenient().when(showCalendarService.getCalSummary(listEvent.get(0))).thenReturn("Tes 1");
+        lenient().when(showCalendarService.getCalDescription(listEvent.get(0))).thenReturn("description");
+        lenient().when(showCalendarService.getCalStart(listEvent.get(0))).thenReturn(dateTimeMulai.toString());
+        lenient().when(showCalendarService.getCalEnd(listEvent.get(0))).thenReturn(dateTimeSelesai.toString());
+        assertNotNull(showCalendarCommand.createEmbed(args,"userId",privateMessageevent));
 
     }
 
