@@ -295,15 +295,7 @@ public class EventServiceImplTest {
         assertNotNull(res);
     }
 
-//    @Test
-//    public void testDeleteEventSuccess() throws Exception{
-//        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
-//        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
-//        lenient().when(calendar.events().delete("primary","tes")).thenReturn(mock(Calendar.Events.Delete.class));
-//        lenient().doNothing().when(calendar.events().delete("primary","tes")).execute();
-//        String res = eventService.deleteEventService("123456",event.getId());
-//        assertEquals(res, "Event Berhasil dihapus");
-//    }
+
     // Delete Event Test
     @Test
     public void testDeleteEventException() throws Exception {
