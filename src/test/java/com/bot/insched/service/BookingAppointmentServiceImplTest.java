@@ -122,7 +122,6 @@ public class BookingAppointmentServiceImplTest {
         List<DiscordUser> listUser = new ArrayList<>();
         dummyEvent.setListAttendee(listUser);
         dummyEvent.updateAvailability();
-        dummyEvent.setAvailable(true);
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
         String res = service.createBooking(dummyId, dummyToken);

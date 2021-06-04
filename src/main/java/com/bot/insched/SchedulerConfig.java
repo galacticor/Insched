@@ -32,7 +32,7 @@ public class SchedulerConfig {
         this.eventRepository = eventRepository;
         this.taskFactory = new TaskFactory();
         this.scheduler = new ConcurrentTaskScheduler(
-                            Executors.newScheduledThreadPool(2));
+            Executors.newScheduledThreadPool(2));
     }
 
     public void doScheduler() {
@@ -63,30 +63,29 @@ public class SchedulerConfig {
     public void doCheckEventNotif(int minutes, int every) {
         log.warn("running check event notif for {} minutes", minutes);
         List<Event> events = eventRepository.findAllByStartTimeBetween(
-                LocalDateTime.now().plusMinutes(minutes),
-                LocalDateTime.now().plusMinutes(minutes + every));
+            LocalDateTime.now().plusMinutes(minutes),
+            LocalDateTime.now().plusMinutes(minutes + every));
 
         log.warn("{} event found", events.size());
-        for (Event event: events) {
+        for (Event event : events) {
             log.warn("checking event [{}]", event.getIdEvent());
             List<DiscordUser> listAttendee = event.getListAttendee();
             String message = "Kamu memiliki appointment pada "
-                    + event.getWaktu()
-                    + " , jangan lupa untuk hadir !!";
+                + event.getWaktu() + " , jangan lupa untuk hadir !!";
             InschedEmbed embed = new InschedEmbed();
             embed.setTitle("Notification");
             embed.setDescription(message);
 
             Date date = Date.from(event.getStartTime()
-                            .minusMinutes(minutes)
-                            .atZone(ZoneId.systemDefault())
-                            .toInstant());
+                .minusMinutes(minutes)
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
 
-            for (DiscordUser user: listAttendee) {
+            for (DiscordUser user : listAttendee) {
                 String userId = user.getIdDiscord();
                 log.warn("setting up notification task for [{}]", userId);
                 scheduler.schedule(taskFactory.newNotificationTask(embed.build(), userId),
-                                    date);
+                    date);
             }
         }
     }
