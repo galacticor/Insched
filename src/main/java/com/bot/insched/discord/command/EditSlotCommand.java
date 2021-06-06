@@ -30,6 +30,8 @@ public class EditSlotCommand implements Command {
                 embed.setDescription(response);
                 sender.sendPrivateMessage(embed.build(), event);
             }
+        } catch(IndexOutOfBoundsException e) {
+            sender.sendPrivateMessage("Masukkan argumen yang sesuai!", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
@@ -50,10 +52,20 @@ public class EditSlotCommand implements Command {
     }
 
     public String handleUpdate(String[] args, PrivateMessageReceivedEvent event) throws Exception {
+
+        if (args.length < 3) {
+            throw new IndexOutOfBoundsException();
+        }
+
         String token = args[0];
         String jamBaru = args[1];
         int durasiBaru = Integer.parseInt(args[2]);
-        String judulBaru = args[3];
+        String judulBaru = "";
+
+        for (int i = 3; i < args.length; i++) {
+            judulBaru += args[i] +" ";
+        }
+
         String idDiscord = event.getAuthor().getId();
         return appointmentService.editSlot(token, jamBaru, durasiBaru, judulBaru, idDiscord);
     }

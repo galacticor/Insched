@@ -30,5 +30,4 @@ public class Appointment {
 
     @OneToOne
     private DiscordUser owner;
-
 }

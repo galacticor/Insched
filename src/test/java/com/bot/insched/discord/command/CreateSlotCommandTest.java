@@ -83,6 +83,12 @@ public class CreateSlotCommandTest {
     }
 
     @Test
+    public void testInsufficientArgument() throws Exception {
+        String[] args = {"dummy_args"};
+        command.execute(args, event);
+    }
+
+    @Test
     public void testGetCommand() {
         String res = command.getCommand();
         assertEquals(res, "createSlot");
