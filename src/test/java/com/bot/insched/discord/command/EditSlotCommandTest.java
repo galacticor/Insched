@@ -28,9 +28,6 @@ public class EditSlotCommandTest {
     PrivateMessageReceivedEvent event;
 
     @Mock
-    DiscordUserService discordUserService;
-
-    @Mock
     AppointmentService appointmentService;
 
     @Mock
@@ -47,11 +44,6 @@ public class EditSlotCommandTest {
         String[] args = {"dummy_token", "15:30", "30", "dummy_judul", "123"};
         User user = mock(User.class);
         String res = "Slot berhasil di-update";
-        String token = args[0];
-        String jam = args[1];
-        int durasi = Integer.parseInt(args[2]);
-        String judul = args[3];
-        String idDiscord = args[4];
 
         lenient().when(event.getAuthor()).thenReturn(user);
         lenient().when(user.getId()).thenReturn("123");
@@ -62,20 +54,15 @@ public class EditSlotCommandTest {
     @Test
     public void testExecuteGetException() throws Exception{
         String[] args = {"dummy_token", "15:30", "30", "dummy_judul", "123"};
-        User user = mock(User.class);
-        String res = "Tidak ada slot dengan kode tersebut!";
-        String token = args[0];
-        String jam = args[1];
-        int durasi = Integer.parseInt(args[2]);
-        String judul = args[3];
-        String idDiscord = args[4];
-
-
-        lenient().when(event.getAuthor()).thenReturn(user);
-        lenient().when(user.getId()).thenReturn("123");
-        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
-        lenient().when(appointmentService.editSlot(token, jam, durasi, judul, idDiscord))
+        lenient().when(appointmentService.editSlot(anyString(), anyString(), anyInt(), anyString(), anyString()))
             .thenThrow(new NotLoggedInException());
+        command.execute(args, event);
+    }
+
+
+    @Test
+    public void testExecuteInsufficientArgument() {
+        String[] args = {"dummy"};
         command.execute(args, event);
     }
 
