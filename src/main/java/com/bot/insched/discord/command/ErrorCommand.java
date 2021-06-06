@@ -3,7 +3,6 @@ package com.bot.insched.discord.command;
 import com.bot.insched.discord.util.MessageSender;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-
 public class ErrorCommand implements Command {
     private MessageSender sender = MessageSender.getInstance();
 

@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+
 public class EventServiceImpl implements EventService {
     @Autowired
     private GoogleApiManager manager;
+
     @Autowired
     EventRepository eventRepository;
 

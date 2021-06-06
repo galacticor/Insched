@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Event {
+public class Event implements Comparable<Event> {
 
     public Event(String startTime, int duration, int capacity, String desc) {
         this.startTime = LocalDateTime.parse(startTime);
@@ -81,15 +81,30 @@ public class Event {
     }
 
     private String getWaktuMulai() {
-        return startTime.getHour() + ":" + startTime.getMinute();
+        String minute = startTime.getMinute() < 10 ? "0" + startTime.getMinute() :
+            startTime.getMinute() + "";
+        return startTime.getHour() + ":" + minute;
     }
 
     private String getWaktuSelesai() {
-        return endTime.getHour() + ":" + endTime.getMinute();
+        String minute = endTime.getMinute() < 10 ? "0" + endTime.getMinute() :
+            endTime.getMinute() + "";
+        return endTime.getHour() + ":" + minute;
     }
 
     public LocalDate getTanggal() {
         return startTime.toLocalDate();
+    }
+
+
+    // HACK: Lombok does not generate this for some reason
+    public boolean isAvailable() {
+        return this.isAvailable;
+    }
+
+    @Override
+    public int compareTo(Event e) {
+        return getTanggal().compareTo(e.getTanggal());
     }
 
 }
