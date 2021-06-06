@@ -1,7 +1,6 @@
 package com.bot.insched.service;
 
 import com.bot.insched.model.Event;
-
 import java.util.List;
 
 public interface BookingAppointmentService {

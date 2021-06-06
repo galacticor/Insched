@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event> {
 
     public Event(String startTime, int duration, int capacity, String desc) {
         this.startTime = LocalDateTime.parse(startTime);
@@ -81,12 +81,14 @@ public class Event implements Comparable<Event>{
     }
 
     private String getWaktuMulai() {
-        String minute = startTime.getMinute() < 10 ? "0" + startTime.getMinute() : startTime.getMinute() + "";
+        String minute = startTime.getMinute() < 10 ? "0" + startTime.getMinute() :
+            startTime.getMinute() + "";
         return startTime.getHour() + ":" + minute;
     }
 
     private String getWaktuSelesai() {
-        String minute = endTime.getMinute() < 10 ? "0" + endTime.getMinute() : endTime.getMinute() + "";
+        String minute = endTime.getMinute() < 10 ? "0" + endTime.getMinute() :
+            endTime.getMinute() + "";
         return endTime.getHour() + ":" + minute;
     }
 
@@ -102,10 +104,6 @@ public class Event implements Comparable<Event>{
 
     @Override
     public int compareTo(Event e) {
-//        if (getCreatedOn() == null || u.getCreatedOn() == null) {
-//            return 0;
-//        }
-//        return getCreatedOn().compareTo(u.getCreatedOn());
         return getTanggal().compareTo(e.getTanggal());
     }
 
