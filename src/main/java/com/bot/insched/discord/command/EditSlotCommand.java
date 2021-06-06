@@ -16,8 +16,6 @@ public class EditSlotCommand implements Command {
         this.appointmentService = appointmentService;
     }
 
-    ;
-
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         try {
@@ -30,7 +28,7 @@ public class EditSlotCommand implements Command {
                 embed.setDescription(response);
                 sender.sendPrivateMessage(embed.build(), event);
             }
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage("Masukkan argumen yang sesuai!", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
@@ -63,7 +61,7 @@ public class EditSlotCommand implements Command {
         String judulBaru = "";
 
         for (int i = 3; i < args.length; i++) {
-            judulBaru += args[i] +" ";
+            judulBaru += args[i] + " ";
         }
 
         String idDiscord = event.getAuthor().getId();
