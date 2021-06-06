@@ -11,8 +11,9 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.DiscordUserRepository;
 import com.bot.insched.repository.EventRepository;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -46,7 +47,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         }
 
         List<DiscordUser> listAttendee = event.getListAttendee();
-        if (listAttendee.contains(attendee)) {
+        List<Event> listEvent = attendee.getListEvent();
+        if (listAttendee.contains(attendee) || listEvent.contains(event)) {
             throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
         }
         listAttendee.add(attendee);
@@ -54,11 +56,6 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         event.updateAvailability();
 
         eventRepository.save(event);
-
-        List<Event> listEvent = attendee.getListEvent();
-        if (listEvent.contains(event)) {
-            throw new ObjectAlreadyExistsException("Sudah melakukan booking slot event!");
-        }
         listEvent.add(event);
         attendee.setListEvent(listEvent);
 
@@ -75,7 +72,8 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         Event event = checkEventValidUUID(token);
 
         List<DiscordUser> listAttendee = event.getListAttendee();
-        if (!listAttendee.contains(attendee)) {
+        List<Event> listEvent = attendee.getListEvent();
+        if (!listAttendee.contains(attendee) || !listEvent.contains(event)) {
             throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
         }
         do {
@@ -86,11 +84,6 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
 
         eventRepository.save(event);
 
-
-        List<Event> listEvent = attendee.getListEvent();
-        if (!listEvent.contains(event)) {
-            throw new ObjectNotFoundException("Tidak ada booking untuk slot event ini!");
-        }
         do {
             listEvent.remove(event);
         } while (listEvent.contains(event));
@@ -113,6 +106,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         }
 
         List<Event> eventList = appointment.getListEvent();
+        Collections.sort(eventList);
         return eventList;
     }
 

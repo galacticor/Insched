@@ -23,13 +23,9 @@ public class ViewSlotCommand implements Command {
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         try {
-            if (args[0].equalsIgnoreCase("help")) {
-                sender.sendPrivateMessage(getHelp(), event);
-            } else {
-                List<Event> eventList = viewHandler(args, event);
-                InschedEmbed response = embedHandler(eventList, args[0]);
-                sender.sendPrivateMessage(response.build(), event);
-            }
+            List<Event> eventList = viewHandler(args, event);
+            InschedEmbed response = embedHandler(eventList, args[0]);
+            sender.sendPrivateMessage(response.build(), event);
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
                     "Masukkan argumen yang sesuai!\n"
@@ -54,6 +50,11 @@ public class ViewSlotCommand implements Command {
 
     public List<Event> viewHandler(String[] args, PrivateMessageReceivedEvent event)
             throws Exception {
+        int argsLength = args.length;
+        if (argsLength != 1) {
+            throw new IndexOutOfBoundsException();
+        }
+
         String userId = event.getAuthor().getId();
         String token = args[0];
 
@@ -61,18 +62,19 @@ public class ViewSlotCommand implements Command {
     }
 
     public InschedEmbed embedHandler(List<Event> eventList, String appointmentToken) {
-        LocalDate date = LocalDate.now();
+        LocalDate now = LocalDate.now();
         InschedEmbed embed = new InschedEmbed();
         embed.setTitle("Appointment List");
         embed.setDescription("Token: " + appointmentToken);
 
         for (Event event : eventList) {
-            if (event.getTanggal().isEqual(date)) {
+            if (!event.getTanggal().isBefore(now)) {
                 String desc = event.getDescription();
+                String date = "Tanggal: " + event.getTanggal().toString() + "\n";
                 String eventToken = "Token: " + event.getIdEvent().toString() + "\n";
                 String time = event.getWaktu() + "\n";
                 String bookingStatus = event.getStatusBooking();
-                embed.addField(desc, time + eventToken + bookingStatus, false);
+                embed.addField(desc, date + time + eventToken + bookingStatus, false);
 
             }
         }

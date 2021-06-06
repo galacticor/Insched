@@ -8,6 +8,7 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.EventRepository;
 import com.google.api.client.auth.oauth2.StoredCredential;
+import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -211,6 +212,11 @@ public class AppointmentServiceImplTest {
         Event event = new Event();
         event.setListAttendee(new ArrayList<>());
         event.setStartTime(LocalDateTime.parse("2021-07-09T15:00:00"));
+
+        Appointment app = new Appointment();
+        app.setOwner(user);
+        event.setAppointment(app);
+
         when(discordUserService.findByUserId(anyString()))
             .thenReturn(user);
 
@@ -235,6 +241,10 @@ public class AppointmentServiceImplTest {
         list.add(user);
         event.setListAttendee(list);
         event.setStartTime(LocalDateTime.parse("2021-07-09T15:00:00"));
+
+        Appointment app = new Appointment();
+        app.setOwner(user);
+        event.setAppointment(app);
 
         when(discordUserService.findByUserId(anyString()))
             .thenReturn(user);
@@ -278,10 +288,15 @@ public class AppointmentServiceImplTest {
     @Test
     public void testDeleteSlotHaveBeenBooked() throws Exception {
         DiscordUser user = new DiscordUser();
+        user.setIdDiscord("dummy_id");
         Event event = new Event();
         ArrayList<DiscordUser> list = new ArrayList<>();
         list.add(user);
         event.setListAttendee(list);
+
+        Appointment app = new Appointment();
+        app.setOwner(user);
+        event.setAppointment(app);
 
         when(discordUserService.findByUserId(anyString())).thenReturn(user);
         when(eventRepository.findByIdEvent(any(UUID.class))).thenReturn(event);
@@ -300,6 +315,10 @@ public class AppointmentServiceImplTest {
         ArrayList<DiscordUser> list = new ArrayList<>();
         event.setListAttendee(list);
 
+        Appointment app = new Appointment();
+        app.setOwner(user);
+        event.setAppointment(app);
+
         ReflectionTestUtils.setField(appointmentService, "eventRepository", eventRepository);
 
         when(discordUserService.findByUserId(anyString())).thenReturn(user);
@@ -310,6 +329,47 @@ public class AppointmentServiceImplTest {
             appointmentService.deleteSlot(event.getIdEvent().toString(),"dummy_id");
 
         assertEquals(response, "Slot berhasil dihapus!");
+    }
+
+    @Test
+    public void testEditNoAccess() {
+        String token = UUID.randomUUID().toString();
+        String jamBaru = "15:30";
+        int durasiBaru = 30;
+        String judulBaru = "dummy_judul";
+        String idDiscord = "123";
+
+
+        Event e =  new Event();
+        Appointment app = new Appointment();
+        app.setOwner(null);
+        e.setIdEvent(UUID.fromString(token));
+        e.setAppointment(app);
+
+        when(discordUserService.findByUserId("123")).thenReturn(new DiscordUser());
+        when(eventRepository.findByIdEvent(any(UUID.class))).thenReturn(e);
+
+        assertThrows(SlotUnavailableException.class, () -> {
+            appointmentService.editSlot(token, jamBaru, durasiBaru, judulBaru, idDiscord);
+        });
+    }
+
+    @Test
+    public void testDeleteNoAccess() {
+        String token = UUID.randomUUID().toString();
+
+        Event e =  new Event();
+        Appointment app = new Appointment();
+        app.setOwner(null);
+        e.setIdEvent(UUID.fromString(token));
+        e.setAppointment(app);
+
+        when(discordUserService.findByUserId("123")).thenReturn(new DiscordUser());
+        when(eventRepository.findByIdEvent(any(UUID.class))).thenReturn(e);
+
+        assertThrows(SlotUnavailableException.class, () -> {
+            appointmentService.deleteSlot(token, "123");
+        });
     }
 
 }

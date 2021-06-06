@@ -23,7 +23,7 @@ public class Receiver {
             ShowCalendarService showCalendarService
     ) {
         addCommand(new HelloCommand(googleService));
-        addCommand(new BookAppointmentCommand(bookingAppointmentService));
+        addCommand(new BookAppointmentCommand(bookingAppointmentService, eventService));
         addCommand(new DeleteBookAppointmentCommand(bookingAppointmentService));
         addCommand(new CreateEventCommand(eventService, discordUserService));
         addCommand(new UpdateEventCommand(eventService, discordUserService));

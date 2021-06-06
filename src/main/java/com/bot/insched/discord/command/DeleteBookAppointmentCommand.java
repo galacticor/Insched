@@ -20,13 +20,9 @@ public class DeleteBookAppointmentCommand implements Command {
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
 
         try {
-            if (args[0].equalsIgnoreCase("help")) {
-                sender.sendPrivateMessage(getHelp(), event);
-            } else {
-                String result = deletionHandler(args, event);
-                InschedEmbed response = embedHandler(result);
-                sender.sendPrivateMessage(response.build(), event);
-            }
+            String result = deletionHandler(args, event);
+            InschedEmbed response = embedHandler(result);
+            sender.sendPrivateMessage(response.build(), event);
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
                     "Masukkan argumen yang sesuai!\n"
@@ -53,6 +49,11 @@ public class DeleteBookAppointmentCommand implements Command {
 
     public String deletionHandler(String[] args,
                                   PrivateMessageReceivedEvent event) throws Exception {
+
+        int argsLength = args.length;
+        if (argsLength != 1) {
+            throw new IndexOutOfBoundsException();
+        }
 
         String userId = event.getAuthor().getId();
         String token = args[0];

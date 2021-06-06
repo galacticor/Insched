@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Event {
+public class Event implements Comparable<Event>{
 
     public Event(String startTime, int duration, int capacity, String desc) {
         this.startTime = LocalDateTime.parse(startTime);
@@ -62,7 +62,7 @@ public class Event {
     private List<DiscordUser> listAttendee;
 
     public void updateAvailability() {
-        if (this.capacity < listAttendee.size()) {
+        if (this.capacity > listAttendee.size()) {
             isAvailable = true;
             return;
         }
@@ -71,7 +71,7 @@ public class Event {
 
     public String getStatusBooking() {
         if (listAttendee != null && listAttendee.size() > 0) {
-            return "Telah dibooking";
+            return "Telah dibooking oleh " + listAttendee.size() + " orang";
         }
         return "Belum ada yang booking";
     }
@@ -81,11 +81,13 @@ public class Event {
     }
 
     private String getWaktuMulai() {
-        return startTime.getHour() + ":" + startTime.getMinute();
+        String minute = startTime.getMinute() < 10 ? "0" + startTime.getMinute() : startTime.getMinute() + "";
+        return startTime.getHour() + ":" + minute;
     }
 
     private String getWaktuSelesai() {
-        return endTime.getHour() + ":" + endTime.getMinute();
+        String minute = endTime.getMinute() < 10 ? "0" + endTime.getMinute() : endTime.getMinute() + "";
+        return endTime.getHour() + ":" + minute;
     }
 
     public LocalDate getTanggal() {
@@ -96,6 +98,15 @@ public class Event {
     // HACK: Lombok does not generate this for some reason
     public boolean isAvailable() {
         return this.isAvailable;
+    }
+
+    @Override
+    public int compareTo(Event e) {
+//        if (getCreatedOn() == null || u.getCreatedOn() == null) {
+//            return 0;
+//        }
+//        return getCreatedOn().compareTo(u.getCreatedOn());
+        return getTanggal().compareTo(e.getTanggal());
     }
 
 }

@@ -2,19 +2,8 @@ package com.bot.insched.discord.command;
 
 import com.bot.insched.discord.util.MessageSender;
 import com.bot.insched.service.BookingAppointmentService;
-<<<<<<< HEAD
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-=======
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
->>>>>>> 732c0d5bd97def3df6fc0fded00a4f6bca3f597f
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,17 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteBookAppointmentCommandTest {
     @InjectMocks
-<<<<<<< HEAD
-    BookAppointmentCommand command;
-=======
     DeleteBookAppointmentCommand command;
->>>>>>> 732c0d5bd97def3df6fc0fded00a4f6bca3f597f
 
     @Mock
     BookingAppointmentService service;
@@ -45,12 +29,7 @@ public class DeleteBookAppointmentCommandTest {
     @Mock
     private MessageSender sender;
 
-<<<<<<< HEAD
-    private String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
-    private String dummyId = "0";
-=======
     private final String dummyId = "0";
->>>>>>> 732c0d5bd97def3df6fc0fded00a4f6bca3f597f
 
     @BeforeEach
     public void setup() {
@@ -62,16 +41,35 @@ public class DeleteBookAppointmentCommandTest {
     }
 
     @Test
-<<<<<<< HEAD
-    public void testExecuteSuccess() throws Exception {;
-        String args[] = {dummyToken};
-=======
     public void testExecuteSuccess() throws Exception {
         String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
         String[] args = {dummyToken};
->>>>>>> 732c0d5bd97def3df6fc0fded00a4f6bca3f597f
         String res = "Booking slot event telah dihapus!";
         lenient().when(service.deleteBooking(dummyId, dummyToken)).thenReturn(res);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testWrongArguments() {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String extra = "extra";
+        String[] args = {dummyToken, extra};
+
+        String res =
+                "Masukkan argumen yang sesuai!\n"
+                        + "Penggunaan: !unbookAppointment <token_event>\n"
+                        + "Help: !unbookAppointment help";
+        lenient().doNothing().when(sender).sendPrivateMessage(res, event);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testGeneralException() throws Exception {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String[] args = {dummyToken};
+
+        when(service.deleteBooking(dummyId, dummyToken))
+                .thenThrow(new Exception("dummy exception"));
         command.execute(args, event);
     }
 
