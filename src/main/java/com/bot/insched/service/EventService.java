@@ -12,9 +12,15 @@ public interface EventService {
 
     String createEventService(String discordId, Event event);
 
+    Event createSlotEventService(String discordId, String eventId,
+                                 com.bot.insched.model.Event eventModel);
+
     String deleteEventService(String discordId, String eventId);
 
     String updateEventService(String discordId, String eventId, String jenis, String newData);
+
+    Event updateSlotEventService(String discordId,
+                                 String newData, com.bot.insched.model.Event event);
 
     com.bot.insched.model.Event save(com.bot.insched.model.Event event);
 

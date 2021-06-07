@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -272,6 +274,125 @@ public class EventServiceImplTest {
                 + ":clock: Selesai pada: 629775688 \n"
                 + "\n"
                 + "Deskripsi Event anda adalah tes");
+    }
+    @Test
+    public void testUpdateEventAttendeeSuccess() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()
+                .getSummary()).thenReturn("tes");
+        com.bot.insched.model.Event event = new com.bot.insched.model.Event();
+        event.setIdGoogleEvent("qefewfwef");
+        event.setStartTime(mock(LocalDateTime.class));
+        event.setEndTime(mock(LocalDateTime.class));
+        event.setDescription("deskripsi");
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
+    }
+    @Test
+    public void testUpdateEventAttendeeFullCapacity() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(event1);
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1)).thenReturn(mock(Calendar.Events.Update.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()).thenReturn(mock(Event.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getStart().getDateTime().toString()).thenReturn("8844488");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd()).thenReturn(mock(EventDateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime()).thenReturn(mock(DateTime.class));
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getEnd().getDateTime().toString()).thenReturn("629775688");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getHtmlLink()).thenReturn("HTML");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute().getDescription()).thenReturn("tes");
+        lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()
+                .getSummary()).thenReturn("tes");
+        com.bot.insched.model.Event event = new com.bot.insched.model.Event();
+        event.setIdGoogleEvent("qefewfwef");
+        event.setStartTime(mock(LocalDateTime.class));
+        event.setEndTime(mock(LocalDateTime.class));
+        event.setDescription("deskripsi");
+        event.setCapacity(-1);
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
+    }
+    @Test
+    public void testCreateSlotEventSuccess() throws Exception {
+        com.bot.insched.model.Event event1 = new com.bot.insched.model.Event();
+        event1.setIdGoogleEvent("0123kl4o5678bfhijprstuvpqrs");
+        event1.setStartTime(LocalDateTime.now());
+        event1.setEndTime(LocalDateTime.now());
+        event1.setDescription("deskripsi");
+        event.setId("0123kl4o5678bfhijprstuvpqrs");
+        event.setDescription("deskripsi");
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        DateTime dateTime = new DateTime(event1.getStartTime().format(dateFormatter));
+        event.setStart(new EventDateTime().setDateTime(dateTime));
+        dateTime = new DateTime(event1.getEndTime().format(dateFormatter));
+        event.setEnd(new EventDateTime().setDateTime(dateTime));
+
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().insert("primary", event)).thenReturn(mock(Calendar.Events.Insert.class));
+        lenient().when(calendar.events().insert("primary", event).execute()).thenReturn(mock(Event.class));
+        eventService.createSlotEventService("123456","qefewfwef",event1);
+    }
+    @Test
+    public void testUpdateEventMustCreateEventException() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(calendar);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(null);
+        com.bot.insched.model.Event event = new com.bot.insched.model.Event();
+        event.setIdGoogleEvent(" 0123kl4o5678bfhijprstuvpqrs");
+        event.setStartTime(LocalDateTime.now());
+        event.setEndTime(LocalDateTime.now());
+        event.setDescription("deskripsi");
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
+    }
+
+    @Test
+    public void testUpdateEventNullCalendar() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(null);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(null);
+        com.bot.insched.model.Event event = new com.bot.insched.model.Event();
+        event.setIdGoogleEvent(" 0123kl4o5678bfhijprstuvpqrs");
+        event.setStartTime(LocalDateTime.now());
+        event.setEndTime(LocalDateTime.now());
+        event.setDescription("deskripsi");
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
+    }
+
+    @Test
+    public void testCreateEventNullCalendar() throws Exception {
+        lenient().when(manager.getCalendarService(any(String.class))).thenReturn(null);
+        lenient().when(calendar.events()).thenReturn(mock(Calendar.Events.class));
+        lenient().when(calendar.events().get("primary", "qefewfwef")).thenReturn(mock(Calendar.Events.Get.class));
+        Event event1 = mock(Event.class);
+        lenient().when(calendar.events().get("primary", "qefewfwef").execute()).thenReturn(null);
+        com.bot.insched.model.Event event = new com.bot.insched.model.Event();
+        event.setIdGoogleEvent(" 0123kl4o5678bfhijprstuvpqrs");
+        event.setStartTime(LocalDateTime.now());
+        event.setEndTime(LocalDateTime.now());
+        event.setDescription("deskripsi");
+        eventService.createSlotEventService("123456","qefewfwef",event);
     }
 
     // save event Test

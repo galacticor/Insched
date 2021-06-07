@@ -5,7 +5,10 @@ import com.bot.insched.repository.EventRepository;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,13 +45,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = event.getEnd().getDateTime().toString();
             String deskripsi = event.getDescription();
             String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                + "Berikut link event yang anda cari: [LINK](%s) \n"
-                + ":id: %s \n"
-                + "\n"
-                + ":clock: Mulai pada  : %s \n"
-                + ":clock: Selesai pada: %s \n"
-                + "\n"
-                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                    + "Berikut link event yang anda cari: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,13 +78,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                + "Berikut link event yang anda cari: [LINK](%s) \n"
-                + ":id: %s \n"
-                + "\n"
-                + ":clock: Mulai pada  : %s \n"
-                + ":clock: Selesai pada: %s \n"
-                + "\n"
-                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                    + "Berikut link event yang anda cari: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,13 +134,13 @@ public class EventServiceImpl implements EventService {
             String tglSelesai = newEvent.getEnd().getDateTime().toString();
             String deskripsi = newEvent.getDescription();
             String ret = String.format("Event Berhasil di-update \n"
-                + "Berikut link event baru anda: [LINK](%s) \n"
-                + ":id: %s \n"
-                + "\n"
-                + ":clock: Mulai pada  : %s \n"
-                + ":clock: Selesai pada: %s \n"
-                + "\n"
-                + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                    + "Berikut link event baru anda: [LINK](%s) \n"
+                    + ":id: %s \n"
+                    + "\n"
+                    + ":clock: Mulai pada  : %s \n"
+                    + ":clock: Selesai pada: %s \n"
+                    + "\n"
+                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
 
         } catch (Exception e) {
@@ -145,6 +148,78 @@ public class EventServiceImpl implements EventService {
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
+
+    // create appointment -> buat event di model
+    // booking appointment -> panggil updateSlotEventService untuk:
+    // apabila attendee pertama: panggil updateSlotEvent yang akan memanggil createSlotEvent
+    // untuk membuat event di google calendar sesuai event di model dan menambah attendee pertama
+    // apabila attendee kedua dan seterusnya: panggil updateSlotEvent untuk menambah attendee
+    @Override
+    public Event updateSlotEventService(String discordId,
+                                        String newData, com.bot.insched.model.Event eventModel) {
+        Calendar calendar = getCalendarbyId(discordId);
+        if (calendar == null) {
+            return null;
+        }
+        try {
+            // event di google calendar
+            String eventId = eventModel.getIdGoogleEvent();
+            Event eventCalendar = getEventService(discordId, eventId);
+
+            // cek eventnya sudah ada atau belum di google calendar
+            if (eventCalendar == null) {
+                eventCalendar = createSlotEventService(discordId, eventId, eventModel);
+            }
+            List<EventAttendee> attendeeList = eventCalendar.getAttendees();
+
+            // cek kapasitas
+            if (eventModel.getCapacity() < attendeeList.size()) {
+                return null;
+            }
+            EventAttendee attendee = new EventAttendee();
+            attendee.setEmail(newData);
+            attendeeList.add(attendee);
+            eventCalendar.setAttendees(attendeeList);
+            Event newEvent = calendar.events().update("primary", eventId, eventCalendar).execute();
+            return newEvent;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Dipanggil saat saat attendee pertama pada slot
+    @Override
+    public Event createSlotEventService(String discordId, String eventId,
+                                        com.bot.insched.model.Event eventModel) {
+        Calendar calendar = getCalendarbyId(discordId);
+        if (calendar == null) {
+            return null;
+        }
+        try {
+            // event di google calendar
+            Event eventCalendar = new Event();
+            eventCalendar.setId(eventModel.getIdGoogleEvent());
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
+
+            DateTime dateTime = new DateTime(eventModel.getStartTime().format(dateFormatter));
+            eventCalendar.setStart(new EventDateTime().setDateTime(dateTime));
+            dateTime = new DateTime(eventModel.getEndTime().format(dateFormatter));
+            eventCalendar.setEnd(new EventDateTime().setDateTime(dateTime));
+
+            eventCalendar.setDescription(eventModel.getDescription());
+            Event newEvent = calendar.events().insert("primary", eventCalendar).execute();
+            return newEvent;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
 
     @Override
     public com.bot.insched.model.Event save(com.bot.insched.model.Event event) {
