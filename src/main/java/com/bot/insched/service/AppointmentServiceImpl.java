@@ -8,8 +8,11 @@ import com.bot.insched.model.Event;
 import com.bot.insched.repository.AppointmentRepository;
 import com.bot.insched.repository.EventRepository;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +87,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new NotLoggedInException();
         }
         Appointment app = appointmentRepository.findAppointmentByOwner(user);
-        return app.getListEvent();
+        Set<Event> eventSet = new HashSet<>(app.getListEvent());
+        List<Event> eventList = eventSet.stream().collect(Collectors.toList());
+        return eventList;
     }
 
     @Override
