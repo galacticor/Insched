@@ -7,11 +7,9 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -157,7 +155,7 @@ public class EventServiceImpl implements EventService {
     // untuk membuat event di google calendar sesuai event di model dan menambah attendee pertama
     // apabila attendee kedua dan seterusnya: panggil updateSlotEvent untuk menambah attendee
     @Override
-    public Event updateSlotEventService(String discordId, String eventId,
+    public Event updateSlotEventService(String discordId,
                                         String newData, com.bot.insched.model.Event eventModel) {
         Calendar calendar = getCalendarbyId(discordId);
         if (calendar == null) {
@@ -165,6 +163,7 @@ public class EventServiceImpl implements EventService {
         }
         try {
             // event di google calendar
+            String eventId = eventModel.getIdGoogleEvent();
             Event eventCalendar = getEventService(discordId, eventId);
 
             // cek eventnya sudah ada atau belum di google calendar

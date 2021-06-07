@@ -20,7 +20,7 @@ public interface EventService {
 
     String updateEventService(String discordId, String eventId, String jenis, String newData);
 
-    Event updateSlotEventService(String discordId, String eventId,
+    Event updateSlotEventService(String discordId,
                                  String newData, com.bot.insched.model.Event event);
 
     com.bot.insched.model.Event save(com.bot.insched.model.Event event);

@@ -295,11 +295,11 @@ public class EventServiceImplTest {
         lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()
                 .getSummary()).thenReturn("tes");
         com.bot.insched.model.Event event = new com.bot.insched.model.Event();
-        event.setIdGoogleEvent(" 0123kl4o5678bfhijprstuvpqrs");
+        event.setIdGoogleEvent("qefewfwef");
         event.setStartTime(mock(LocalDateTime.class));
         event.setEndTime(mock(LocalDateTime.class));
         event.setDescription("deskripsi");
-        eventService.updateSlotEventService("123456","qefewfwef","budi@gmail.com",event);
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
     }
     @Test
     public void testUpdateEventAttendeeFullCapacity() throws Exception {
@@ -321,12 +321,12 @@ public class EventServiceImplTest {
         lenient().when(calendar.events().update("primary", "qefewfwef", event1).execute()
                 .getSummary()).thenReturn("tes");
         com.bot.insched.model.Event event = new com.bot.insched.model.Event();
-        event.setIdGoogleEvent(" 0123kl4o5678bfhijprstuvpqrs");
+        event.setIdGoogleEvent("qefewfwef");
         event.setStartTime(mock(LocalDateTime.class));
         event.setEndTime(mock(LocalDateTime.class));
         event.setDescription("deskripsi");
         event.setCapacity(-1);
-        eventService.updateSlotEventService("123456","qefewfwef","budi@gmail.com",event);
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
     }
     @Test
     public void testCreateSlotEventSuccess() throws Exception {
@@ -362,7 +362,7 @@ public class EventServiceImplTest {
         event.setStartTime(LocalDateTime.now());
         event.setEndTime(LocalDateTime.now());
         event.setDescription("deskripsi");
-        eventService.updateSlotEventService("123456","qefewfwef","budi@gmail.com",event);
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
     }
 
     @Test
@@ -377,7 +377,7 @@ public class EventServiceImplTest {
         event.setStartTime(LocalDateTime.now());
         event.setEndTime(LocalDateTime.now());
         event.setDescription("deskripsi");
-        eventService.updateSlotEventService("123456","qefewfwef","budi@gmail.com",event);
+        eventService.updateSlotEventService("123456","budi@gmail.com",event);
     }
 
     @Test
