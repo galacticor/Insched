@@ -14,6 +14,7 @@ import com.bot.insched.repository.EventRepository;
 import java.util.*;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,6 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         eventRepository.save(event);
         listEvent.add(event);
         attendee.setListEvent(listEvent);
-
         discordUserRepository.save(attendee);
 
         return "Booking slot event telah dibuat!";
@@ -104,8 +104,10 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
             throw new ObjectNotFoundException("Appointment tidak ditemukan!");
         }
 
-        List<Event> eventList = appointment.getListEvent();
+        Set<Event> eventSet = new HashSet<>(appointment.getListEvent());
+        List<Event> eventList = eventSet.stream().collect(Collectors.toList());
         Collections.sort(eventList);
+
         return eventList;
     }
 
