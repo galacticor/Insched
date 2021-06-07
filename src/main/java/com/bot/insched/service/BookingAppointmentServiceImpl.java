@@ -35,8 +35,11 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
     @Autowired
     AppointmentRepository appointmentRepository;
 
+    @Autowired
+    EventService eventService;
+
     @Override
-    public String createBooking(String requesterId, String token) throws Exception {
+    public String createBooking(String requesterId, String token, String email) throws Exception {
         DiscordUser attendee = checkUserLoggedIn(requesterId);
 
         Event event = checkEventValidUUID(token);
@@ -54,6 +57,10 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         listAttendee.add(attendee);
         event.setListAttendee(listAttendee);
         event.updateAvailability();
+
+        String ownerId = event.getAppointment().getOwner().getIdDiscord();
+        
+        if (eventService.updateSlotEventService(ownerId, email, event) == null) return "Booking slot event gagal";
 
         eventRepository.save(event);
         listEvent.add(event);

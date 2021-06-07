@@ -6,6 +6,7 @@ import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.BookingAppointmentService;
 import com.bot.insched.service.EventService;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class BookAppointmentCommand implements Command {
@@ -14,16 +15,24 @@ public class BookAppointmentCommand implements Command {
 
     private EventService eventService;
 
+    private GoogleService googleService;
+
     private MessageSender sender = MessageSender.getInstance();
 
     public BookAppointmentCommand(BookingAppointmentService bookingAppointmentService,
-                                  EventService eventService) {
+                                  EventService eventService,
+                                  GoogleService googleService) {
         this.bookingAppointmentService = bookingAppointmentService;
         this.eventService = eventService;
+        this.googleService = googleService;
     }
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
+        if (args[0].equals("help")){
+            sender.sendPrivateMessage(getHelp(), event);
+            return;
+        }
 
         try {
             String result = creationHandler(args, event);
@@ -54,6 +63,9 @@ public class BookAppointmentCommand implements Command {
     @Override
     public String getHelp() {
         return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
+                + "Penggunaan: !bookAppointment <token_event> <email_kamu>\n"
+                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 joe@gmail.com\n"
+                + "Atau jika kamu sudah login, maka\n"
                 + "Penggunaan: !bookAppointment <token_event>\n"
                 + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
     }
@@ -61,15 +73,25 @@ public class BookAppointmentCommand implements Command {
     public String creationHandler(String[] args,
                                   PrivateMessageReceivedEvent event) throws Exception {
 
-        int argsLength = args.length;
-        if (argsLength != 1) {
-            throw new IndexOutOfBoundsException();
-        }
-
         String userId = event.getAuthor().getId();
         String token = args[0];
 
-        return bookingAppointmentService.createBooking(userId, token);
+        int argsLength = args.length;
+        if (argsLength == 0) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        String email;
+
+        if (argsLength == 2) {
+            if (!args[1].contains("@")) throw new Exception("Masukkan email kamu dengan benar.");
+            email = args[1];
+        }
+        else {
+            email = googleService.getUserInfo(userId);
+        }
+
+        return bookingAppointmentService.createBooking(userId, token, email);
     }
 
     public InschedEmbed embedHandler(String result) {

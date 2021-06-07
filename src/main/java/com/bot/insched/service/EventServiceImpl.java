@@ -9,13 +9,14 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
-
 public class EventServiceImpl implements EventService {
     @Autowired
     private GoogleApiManager manager;
@@ -29,7 +30,7 @@ public class EventServiceImpl implements EventService {
             Event event = calendar.events().get("primary", eventId).execute();
             return event;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when getEventService: {}", e.getMessage());
             return null;
         }
     }
@@ -54,7 +55,7 @@ public class EventServiceImpl implements EventService {
                     + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when getEventIdService: {}", e.getMessage());
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
@@ -87,7 +88,7 @@ public class EventServiceImpl implements EventService {
                     + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when createEventService: {}", e.getMessage());
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
@@ -102,7 +103,7 @@ public class EventServiceImpl implements EventService {
             calendar.events().delete("primary", eventId).execute();
             return "Event berhasil terhapus!";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when deleteEventService: {}", e.getMessage());
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
@@ -144,7 +145,7 @@ public class EventServiceImpl implements EventService {
             return ret;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when updateEventService: {}", e.getMessage());
             return "Terjadi kesalahan pastikan anda memasukkan input dengan benar";
         }
     }
@@ -169,8 +170,10 @@ public class EventServiceImpl implements EventService {
             // cek eventnya sudah ada atau belum di google calendar
             if (eventCalendar == null) {
                 eventCalendar = createSlotEventService(discordId, eventId, eventModel);
+                eventId = eventCalendar.getId();
             }
             List<EventAttendee> attendeeList = eventCalendar.getAttendees();
+            if (attendeeList == null) attendeeList = new ArrayList<EventAttendee>();
 
             // cek kapasitas
             if (eventModel.getCapacity() < attendeeList.size()) {
@@ -184,7 +187,7 @@ public class EventServiceImpl implements EventService {
             return newEvent;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("------ Error when updateSlotEventService: {}", e.getMessage());
             return null;
         }
     }
@@ -200,7 +203,6 @@ public class EventServiceImpl implements EventService {
         try {
             // event di google calendar
             Event eventCalendar = new Event();
-            eventCalendar.setId(eventModel.getIdGoogleEvent());
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
@@ -208,14 +210,14 @@ public class EventServiceImpl implements EventService {
             eventCalendar.setStart(new EventDateTime().setDateTime(dateTime));
             dateTime = new DateTime(eventModel.getEndTime().format(dateFormatter));
             eventCalendar.setEnd(new EventDateTime().setDateTime(dateTime));
-
             eventCalendar.setDescription(eventModel.getDescription());
             Event newEvent = calendar.events().insert("primary", eventCalendar).execute();
+            eventModel.setIdGoogleEvent(eventCalendar.getId());
+            eventRepository.save(eventModel);
             return newEvent;
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.toString());
+            log.error("------ Error when createSlotEventService: {}", e.getMessage());
             return null;
         }
     }
