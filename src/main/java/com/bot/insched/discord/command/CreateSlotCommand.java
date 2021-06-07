@@ -42,10 +42,20 @@ public class CreateSlotCommand implements Command {
 
     public String creationHandler(String[] args, PrivateMessageReceivedEvent event)
         throws Exception {
+
+        if (args.length < 4) {
+            throw new IndexOutOfBoundsException();
+        }
+
         String waktu = args[0] + "T" + args[1] + ":00"; // ex: 2021-05-03T15:30:00
         int durasi = Integer.parseInt(args[2]);
         int kapasitas = Integer.parseInt(args[3]);
-        String deskripsi = args[4];
+        String deskripsi = "";
+
+        for (int i = 4; i < args.length; i++) {
+            deskripsi += args[i] + " ";
+        }
+
         String idUser = event.getAuthor().getId();
 
         return appointmentService.createSlot(deskripsi, waktu, durasi, kapasitas, idUser);
