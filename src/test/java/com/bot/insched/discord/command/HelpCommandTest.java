@@ -1,5 +1,6 @@
 package com.bot.insched.discord.command;
 
+import com.bot.insched.discord.util.InschedEmbed;
 import com.bot.insched.discord.util.MessageSender;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,15 +34,13 @@ public class HelpCommandTest {
     @Test
     public void testExecute() {
         String[] args = {"help"};
-        doNothing().when(sender).sendPrivateMessage(command.getHelp(), event);
-
         command.execute(args, event);
     }
 
     @Test
     public void testGetHelp() {
         String res = command.getHelp();
-        assertNotEquals(res, null);
+        assertEquals(res, null);
     }
 
     @Test
