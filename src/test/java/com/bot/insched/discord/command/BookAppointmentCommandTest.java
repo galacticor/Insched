@@ -6,6 +6,7 @@ import com.bot.insched.model.DiscordUser;
 import com.bot.insched.model.Event;
 import com.bot.insched.service.BookingAppointmentService;
 import com.bot.insched.service.EventService;
+import com.bot.insched.service.GoogleService;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,6 +41,9 @@ public class BookAppointmentCommandTest {
 
     @Mock
     private MessageSender sender;
+
+    @Mock
+    GoogleService googleService;
 
     private final String dummyId = "0";
 
@@ -68,9 +73,21 @@ public class BookAppointmentCommandTest {
     @Test
     public void testExecuteSuccess() throws Exception {
         String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
-        String[] args = {dummyToken};
         String res = "Booking slot event telah dibuat!";
-        lenient().when(service.createBooking(dummyId, dummyToken)).thenReturn(res);
+        String email = "testing@gmail.com";
+        String[] args = {dummyToken};
+        lenient().when(googleService.getUserInfo(anyString())).thenReturn(email);
+        lenient().when(service.createBooking(dummyId, dummyToken, email)).thenReturn(res);
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testExecuteSuccess2() throws Exception {
+        String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+        String res = "Booking slot event telah dibuat!";
+        String email = "testing@gmail.com";
+        String[] args = {dummyToken, email};
+        lenient().when(service.createBooking(dummyId, dummyToken, email)).thenReturn(res);
         command.execute(args, event);
     }
 
@@ -92,9 +109,23 @@ public class BookAppointmentCommandTest {
     public void testGeneralException() throws Exception {
         String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
         String[] args = {dummyToken};
+        String dummyemail = "dummy@gmail.com";
 
-        when(service.createBooking(dummyId, dummyToken))
+        lenient().when(service.createBooking(dummyId, dummyToken, dummyemail))
                 .thenThrow(new Exception("dummy exception"));
+        command.execute(args, event);
+    }
+
+    @Test
+    public void testIndexOutOfBounds() {
+        String[] args = {};
+        command.execute(args, event);
+
+    }
+
+    @Test
+    public void testHelpCommand() {
+        String[] args = {"help"};
         command.execute(args, event);
     }
 
@@ -102,7 +133,10 @@ public class BookAppointmentCommandTest {
     public void testGetHelp() {
         String res = command.getHelp();
         assertEquals(res,
-                "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
+            "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
+                + "Penggunaan: !bookAppointment <token_event> <email_kamu>\n"
+                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 joe@gmail.com\n"
+                + "Atau jika kamu sudah login, maka\n"
                 + "Penggunaan: !bookAppointment <token_event>\n"
                 + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2");
     }
@@ -110,6 +144,25 @@ public class BookAppointmentCommandTest {
     @Test
     public void testGetCommand() {
         assertEquals(command.getCommand(), "bookAppointment");
+    }
+
+    @Test
+    public void testCreationHandlerZeroArgs() {
+        String[] args = {};
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            command.creationHandler(args, event);
+        });
+    }
+
+    @Test
+    public void testCreationHandlerOneArgs() throws Exception {
+        String[] args = {"dummyToken"};
+        when(googleService.getUserInfo(anyString()))
+            .thenReturn("testing@gmail.com");
+        lenient().when(service.createBooking(anyString(), anyString(), anyString()))
+            .thenReturn("Booking Slot event telah dibuat!");
+
+        command.creationHandler(args, event);
     }
 
 
