@@ -39,10 +39,10 @@ public class BookAppointmentCommand implements Command {
             InschedEmbed response = embedHandler(result);
 
             String hostIdDiscord = findHostUser(args[0]).getIdDiscord();
-            String notifMessage = handleNotifMessage(args[0]);
+            InschedEmbed notifMessage = handleNotifMessage(args[0]);
 
             sender.sendPrivateMessage(response.build(), event);
-            sender.sendPrivateNotificationById(notifMessage, hostIdDiscord);
+            sender.sendPrivateNotificationById(notifMessage.build(), hostIdDiscord);
 
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
@@ -109,13 +109,17 @@ public class BookAppointmentCommand implements Command {
         return user;
     }
 
-    public String handleNotifMessage(String eventToken) {
+    public InschedEmbed handleNotifMessage(String eventToken) {
         Event e = eventService.findById(eventToken);
         String res = "Slot pada ";
         res += e.getTanggal() + " ";
         res += e.getWaktu() + " ";
         res += "telah dibooking!";
 
-        return res;
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Notification");
+        embed.addField("", res, false);
+
+        return embed;
     }
 }
