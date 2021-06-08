@@ -22,8 +22,6 @@ public class DeleteEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-                + "Tunggu sebentar,Event anda sedang dihapus", event);
         if (args[0].equalsIgnoreCase("help")) {
             sender.sendPrivateMessage(getHelp(), event);
         } else {
@@ -31,7 +29,8 @@ public class DeleteEventCommand implements Command {
                 String res = handleCreation(args, event.getAuthor().getId());
                 sender.sendPrivateMessage(res, event);
             } catch (Exception e) {
-                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai! \n"
+                        + "!deleteEvent help (untuk penjelasan penggunaan fitur)", event);
             }
         }
     }

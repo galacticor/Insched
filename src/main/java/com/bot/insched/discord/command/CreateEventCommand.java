@@ -24,8 +24,6 @@ public class CreateEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-                + "Tunggu sebentar,Event anda sedang dibuat", event);
         if (args[0].equalsIgnoreCase("help")) {
             sender.sendPrivateMessage(getHelp(), event);
         } else {
@@ -37,7 +35,8 @@ public class CreateEventCommand implements Command {
                 sender.sendPrivateMessage(embed.build(), event);
             } catch (Exception e) {
                 sender.sendPrivateMessage("Input yang anda masukkan salah, "
-                        + "Harap mengecek kembali input anda", event);
+                        + "Harap mengecek kembali input anda \n"
+                        + "!createEvent help (untuk penjelasan penggunaan fitur)", event);
             }
         }
     }
@@ -45,12 +44,12 @@ public class CreateEventCommand implements Command {
     private String handleCreation(String[] args, String idUser) throws Exception {
         String id = args[0];
         String summary = args[1];
-        DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00-07:00");
+        DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00");
         EventDateTime eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai)
-                .setTimeZone("America/Los_Angeles");
-        DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00-07:00");
+                .setTimeZone("Asia/Jakarta");
+        DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00");
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("Asia/Jakarta");
         String deskripsi = args[6];
         for (int i = 7; i < args.length; i++) {
             deskripsi += " " + args[i];
@@ -72,10 +71,11 @@ public class CreateEventCommand implements Command {
 
     @Override
     public String getHelp() {
-        return "!createEvent <token_event> <tanggal_mulai> <jam_mulai> "
+        return "!createEvent <id_event> <judul> <tanggal_mulai> <jam_mulai> "
                 + "<tanggal_selesai> <jam_selesai> <deskripsi_event> <deskripsi_event> ...\n"
-                + "Contoh: !createEvent 0123klm4o5678abdefhij9prstuv "
-                + "tes 2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro";
+                + "Contoh: !createEvent 0123klm4o5678abdefhij9prstuv belajar "
+                + "2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro \n"
+                + "note: pastikan id event lebih dari 10 karakter yang terdiri dari angka dan huruf";
     }
 
 }

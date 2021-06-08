@@ -27,13 +27,15 @@ public class GetEventCommand implements Command {
             sender.sendPrivateMessage(getHelp(), event);
         } else {
             try {
+                sender.sendPrivateMessage("Tunggu sebentar,Event anda sedang dicari :slight_smile:", event);
                 InschedEmbed embed = new InschedEmbed();
                 embed.setTitle("Get Event");
                 String res = handleCreation(args, event.getAuthor().getId());
                 embed.setDescription(res);
                 sender.sendPrivateMessage(embed.build(), event);
             } catch (Exception e) {
-                sender.sendPrivateMessage("Masukan argumen yang sesuai! :smiley:", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai! :smiley: \n"
+                        + "!getEvent help (untuk penjelasan fitur)", event);
             }
         }
     }
