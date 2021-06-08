@@ -59,7 +59,7 @@ public class BookingAppointmentServiceImpl implements BookingAppointmentService 
         event.updateAvailability();
 
         String ownerId = event.getAppointment().getOwner().getIdDiscord();
-        
+
         if (eventService.updateSlotEventService(ownerId, email, event) == null) {
             return "Booking slot event gagal";
         }
