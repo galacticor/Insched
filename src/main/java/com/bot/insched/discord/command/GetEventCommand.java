@@ -33,7 +33,8 @@ public class GetEventCommand implements Command {
                 embed.setDescription(res);
                 sender.sendPrivateMessage(embed.build(), event);
             } catch (Exception e) {
-                sender.sendPrivateMessage("Masukan argumen yang sesuai! :smiley:", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai! :smiley: \n"
+                        + "!getEvent help (untuk penjelasan fitur)", event);
             }
         }
     }

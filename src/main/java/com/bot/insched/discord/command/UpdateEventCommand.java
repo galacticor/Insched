@@ -23,8 +23,6 @@ public class UpdateEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sender.sendPrivateMessage("Selamat Datang di fitur Create Event \n"
-                + "Tunggu sebentar,Event anda sedang di-update", event);
         if (args[0].equalsIgnoreCase("help")) {
             sender.sendPrivateMessage(getHelp(), event);
         } else {
@@ -35,7 +33,8 @@ public class UpdateEventCommand implements Command {
                 embed.setDescription(res);
                 sender.sendPrivateMessage(embed.build(), event);
             } catch (Exception e) {
-                sender.sendPrivateMessage("Masukan argumen yang sesuai!", event);
+                sender.sendPrivateMessage("Masukan argumen yang sesuai!\n"
+                        + "!updateEvent help (untuk penjelasan penggunaan fitur)", event);
             }
         }
     }

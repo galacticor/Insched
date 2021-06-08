@@ -167,10 +167,11 @@ public class CreateEventCommandTest {
 
     @Test
     public void testGetHelp() {
-        String expected = "!createEvent <token_event> <tanggal_mulai> <jam_mulai> "
+        String expected = "!createEvent <id_event> <judul> <tanggal_mulai> <jam_mulai> "
                 + "<tanggal_selesai> <jam_selesai> <deskripsi_event> <deskripsi_event> ...\n"
                 + "Contoh: !createEvent 0123klm4o5678abdefhij9prstuv "
-                + "tes 2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro";
+                + "belajar 2000-04-22 15:30 2000-05-23 15:30 Kuliah adpro \n"
+                + "note: pastikan id event lebih dari 10 karakter yang terdiri dari angka dan huruf";
         assertEquals(command.getHelp(), expected);
     }
 

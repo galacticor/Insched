@@ -40,19 +40,26 @@ public class EventServiceImpl implements EventService {
         Calendar calendar = manager.getCalendarService(discordId);
         try {
             Event event = getEventService(discordId, eventId);
+            String judul = event.getSummary();
             String link = event.getHtmlLink();
             String id = event.getId();
-            String tglAwal = event.getStart().getDateTime().toString();
-            String tglSelesai = event.getEnd().getDateTime().toString();
+            String awal = event.getStart().getDateTime().toString();
+            String tglAwal = awal.split("T")[0];
+            String jamAwal = awal.split("T")[1];
+            String selesai = event.getEnd().getDateTime().toString();
+            String tglSelesai = selesai.split("T")[0];
+            String jamSelesai = selesai.split("T")[1];
             String deskripsi = event.getDescription();
             String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                    + "Berikut link event yang anda cari: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+                            + "Berikut link event-nya: [LINK](%s) \n"
+                            + ":id: %s \n"
+                            + "judul: %s \n"
+                            + "\n"
+                            + ":clock: Mulai pada  : %s jam %s \n"
+                            + ":clock: Selesai pada: %s jam %s \n"
+                            + "\n"
+                            + "Deskripsi Event anda adalah %s", link, id, judul, tglAwal, jamAwal,
+                    tglSelesai, jamSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             log.error("------ Error when getEventIdService: {}", e.getMessage());
@@ -73,19 +80,26 @@ public class EventServiceImpl implements EventService {
         }
         try {
             Event newEvent = calendar.events().insert("primary", event).execute();
+            String judul = newEvent.getSummary();
             String link = newEvent.getHtmlLink();
             String id = newEvent.getId();
-            String tglAwal = newEvent.getStart().getDateTime().toString();
-            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String awal = newEvent.getStart().getDateTime().toString();
+            String tglAwal = awal.split("T")[0];
+            String jamAwal = awal.split("T")[1];
+            String selesai = newEvent.getEnd().getDateTime().toString();
+            String tglSelesai = selesai.split("T")[0];
+            String jamSelesai = selesai.split("T")[1];
             String deskripsi = newEvent.getDescription();
-            String ret = String.format("Event yang anda cari berhasil ditemukan \n"
-                    + "Berikut link event yang anda cari: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            String ret = String.format("Event anda berhasil dibuat \n"
+                            + "Berikut link event anda: [LINK](%s) \n"
+                            + ":id: %s \n"
+                            + "judul: %s \n"
+                            + "\n"
+                            + ":clock: Mulai pada  : %s jam %s \n"
+                            + ":clock: Selesai pada: %s jam %s \n"
+                            + "\n"
+                            + "Deskripsi Event anda adalah %s", link, id, judul, tglAwal, jamAwal,
+                    tglSelesai, jamSelesai, deskripsi);
             return ret;
         } catch (Exception e) {
             log.error("------ Error when createEventService: {}", e.getMessage());
@@ -129,19 +143,26 @@ public class EventServiceImpl implements EventService {
                 event.setSummary(newData);
             }
             Event newEvent = calendar.events().update("primary", eventId, event).execute();
+            String judul = newEvent.getSummary();
             String link = newEvent.getHtmlLink();
             String id = newEvent.getId();
-            String tglAwal = newEvent.getStart().getDateTime().toString();
-            String tglSelesai = newEvent.getEnd().getDateTime().toString();
+            String awal = newEvent.getStart().getDateTime().toString();
+            String tglAwal = awal.split("T")[0];
+            String jamAwal = awal.split("T")[1];
+            String selesai = newEvent.getEnd().getDateTime().toString();
+            String tglSelesai = selesai.split("T")[0];
+            String jamSelesai = selesai.split("T")[1];
             String deskripsi = newEvent.getDescription();
-            String ret = String.format("Event Berhasil di-update \n"
-                    + "Berikut link event baru anda: [LINK](%s) \n"
-                    + ":id: %s \n"
-                    + "\n"
-                    + ":clock: Mulai pada  : %s \n"
-                    + ":clock: Selesai pada: %s \n"
-                    + "\n"
-                    + "Deskripsi Event anda adalah %s", link, id, tglAwal, tglSelesai, deskripsi);
+            String ret = String.format("Event anda berhasil di-update \n"
+                            + "Berikut link event anda: [LINK](%s) \n"
+                            + ":id: %s \n"
+                            + "judul: %s \n"
+                            + "\n"
+                            + ":clock: Mulai pada  : %s jam %s \n"
+                            + ":clock: Selesai pada: %s jam %s \n"
+                            + "\n"
+                            + "Deskripsi Event anda adalah %s", link, id, judul, tglAwal, jamAwal,
+                    tglSelesai, jamSelesai, deskripsi);
             return ret;
 
         } catch (Exception e) {
