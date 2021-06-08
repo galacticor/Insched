@@ -230,7 +230,8 @@ public class EventServiceImpl implements EventService {
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
-            DateTime dateTime = new DateTime(eventModel.getStartTime().minusHours(7).format(dateFormatter));
+            DateTime dateTime = new DateTime(eventModel.getStartTime().minusHours(7)
+                                .format(dateFormatter));
             eventCalendar.setStart(new EventDateTime().setDateTime(dateTime));
             dateTime = new DateTime(eventModel.getEndTime().minusHours(7).format(dateFormatter));
             eventCalendar.setEnd(new EventDateTime().setDateTime(dateTime));
