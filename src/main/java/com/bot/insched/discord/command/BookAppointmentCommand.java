@@ -29,7 +29,7 @@ public class BookAppointmentCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        if (args[0].equals("help")){
+        if (args.length > 0 && args[0].equals("help")) {
             sender.sendPrivateMessage(getHelp(), event);
             return;
         }
@@ -39,16 +39,16 @@ public class BookAppointmentCommand implements Command {
             InschedEmbed response = embedHandler(result);
 
             String hostIdDiscord = findHostUser(args[0]).getIdDiscord();
-            String notifMessage = handleNotifMessage(args[0]);
+            InschedEmbed notifMessage = handleNotifMessage(args[0]);
 
             sender.sendPrivateMessage(response.build(), event);
-            sender.sendPrivateNotificationById(notifMessage, hostIdDiscord);
+            sender.sendPrivateNotificationById(notifMessage.build(), hostIdDiscord);
 
         } catch (IndexOutOfBoundsException e) {
             sender.sendPrivateMessage(
-                    "Masukkan argumen yang sesuai!\n"
-                            + "Penggunaan: !bookAppointment <token_event>\n"
-                            + "Help: !bookAppointment help", event);
+                "Masukkan argumen yang sesuai!\n"
+                    + "Penggunaan: !bookAppointment <token_event>\n"
+                    + "Help: !bookAppointment help", event);
         } catch (Exception e) {
             sender.sendPrivateMessage(e.getMessage(), event);
         }
@@ -63,11 +63,11 @@ public class BookAppointmentCommand implements Command {
     @Override
     public String getHelp() {
         return "Digunakan untuk membuat booking pada slot event dalam sebuah appointment.\n"
-                + "Penggunaan: !bookAppointment <token_event> <email_kamu>\n"
-                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 joe@gmail.com\n"
-                + "Atau jika kamu sudah login, maka\n"
-                + "Penggunaan: !bookAppointment <token_event>\n"
-                + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
+            + "Penggunaan: !bookAppointment <token_event> <email_kamu>\n"
+            + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2 joe@gmail.com\n"
+            + "Atau jika kamu sudah login, maka\n"
+            + "Penggunaan: !bookAppointment <token_event>\n"
+            + "Contoh: !bookAppointment e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
     }
 
     public String creationHandler(String[] args,
@@ -84,10 +84,11 @@ public class BookAppointmentCommand implements Command {
         String email;
 
         if (argsLength == 2) {
-            if (!args[1].contains("@")) throw new Exception("Masukkan email kamu dengan benar.");
+            if (!args[1].contains("@")) {
+                throw new Exception("Masukkan email kamu dengan benar.");
+            }
             email = args[1];
-        }
-        else {
+        } else {
             email = googleService.getUserInfo(userId);
         }
 
@@ -108,13 +109,17 @@ public class BookAppointmentCommand implements Command {
         return user;
     }
 
-    public String handleNotifMessage(String eventToken) {
+    public InschedEmbed handleNotifMessage(String eventToken) {
         Event e = eventService.findById(eventToken);
         String res = "Slot pada ";
         res += e.getTanggal() + " ";
         res += e.getWaktu() + " ";
         res += "telah dibooking!";
 
-        return res;
+        InschedEmbed embed = new InschedEmbed();
+        embed.setTitle("Notification");
+        embed.addField("", res, false);
+
+        return embed;
     }
 }

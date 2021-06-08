@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +38,9 @@ public class BookingAppointmentServiceImplTest {
     @Mock
     private EventRepository eventRepository;
 
+    @Mock
+    private EventService eventService;
+
     @InjectMocks
     BookingAppointmentServiceImpl service;
 
@@ -46,6 +50,7 @@ public class BookingAppointmentServiceImplTest {
 
     private final String dummyToken = "e79e7cf1-0b8c-48db-a05b-baafcb5953d2";
     private final String dummyId = "0";
+    private final String dummyEmail = "testing@gmail.com";
 
     @BeforeEach
     public void setUp() {
@@ -53,9 +58,11 @@ public class BookingAppointmentServiceImplTest {
         dummyUser.setIdDiscord(dummyId);
         dummyAppointment = new Appointment();
         dummyAppointment.setIdAppointment(UUID.fromString(dummyToken));
+        dummyAppointment.setOwner(dummyUser);
         dummyEvent = new Event();
         dummyEvent.setCapacity(1);
         dummyEvent.setIdEvent(UUID.fromString(dummyToken));
+        dummyEvent.setAppointment(dummyAppointment);
     }
 
     @Test
@@ -84,7 +91,7 @@ public class BookingAppointmentServiceImplTest {
         list.add(new DiscordUser());
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
-        assertThrows(SlotUnavailableException.class, () -> service.createBooking(dummyId, dummyToken));
+        assertThrows(SlotUnavailableException.class, () -> service.createBooking(dummyId, dummyToken, dummyEmail));
     }
 
     @Test
@@ -96,7 +103,7 @@ public class BookingAppointmentServiceImplTest {
         dummyEvent.setListAttendee(list);
         dummyEvent.updateAvailability();
         dummyEvent.setAvailable(true);
-        assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken));
+        assertThrows(ObjectAlreadyExistsException.class, () -> service.createBooking(dummyId, dummyToken, dummyEmail));
     }
 
     @Test
@@ -108,7 +115,10 @@ public class BookingAppointmentServiceImplTest {
         dummyEvent.updateAvailability();
         when(discordUserRepository.findByIdDiscord(any())).thenReturn(dummyUser);
         when(eventRepository.findByIdEvent(any())).thenReturn(dummyEvent);
-        String res = service.createBooking(dummyId, dummyToken);
+        when(eventService.updateSlotEventService(anyString(), anyString(), any(Event.class)))
+            .thenReturn(new com.google.api.services.calendar.model.Event());
+        String res = service.createBooking(dummyId, dummyToken, dummyEmail);
+
         assertEquals(res, "Booking slot event telah dibuat!");
     }
 

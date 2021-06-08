@@ -71,7 +71,9 @@ public class SchedulerConfig {
             log.info("checking event [{}]", event.getIdEvent());
             
             List<DiscordUser> listAttendee = event.getListAttendee();
-            if (listAttendee.size() == 0) continue;
+            if (listAttendee.size() == 0) {
+                continue;
+            }
 
             String message = "Kamu memiliki appointment pada "
                 + event.getWaktu() + " , jangan lupa untuk hadir !!";
