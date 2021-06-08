@@ -21,8 +21,6 @@ public class GetEventCommand implements Command {
 
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
-        sender.sendPrivateMessage("Selamat Datang di fitur Get Event \n"
-                + "Tunggu sebentar,Event anda sedang dicari :slight_smile:", event);
         if (args[0].equalsIgnoreCase("help")) {
             sender.sendPrivateMessage(getHelp(), event);
         } else {

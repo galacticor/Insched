@@ -44,10 +44,10 @@ public class CreateEventCommand implements Command {
     private String handleCreation(String[] args, String idUser) throws Exception {
         String id = args[0];
         String summary = args[1];
-        DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00");
+        DateTime dateTimeMulai = new DateTime(args[2] + "T" + args[3] + ":00.000+07:00");
         EventDateTime eventDateTimeMulai = new EventDateTime().setDateTime(dateTimeMulai)
                 .setTimeZone("Asia/Jakarta");
-        DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00");
+        DateTime dateTimeSelesai = new DateTime(args[4] + "T" + args[5] + ":00.000+07:00");
         EventDateTime eventDateTimeSelesai = new EventDateTime().setDateTime(dateTimeSelesai)
                 .setTimeZone("Asia/Jakarta");
         String deskripsi = args[6];
