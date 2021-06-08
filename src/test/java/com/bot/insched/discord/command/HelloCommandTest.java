@@ -47,7 +47,8 @@ public class HelloCommandTest {
         when(event.getAuthor()).thenReturn(jdaUser);
         when(jdaUser.getId()).thenReturn("123");
         when(googleService.getUserInfo(anyString())).thenReturn("User");
-        doNothing().when(sender).sendPrivateMessage("Hello User!!", event);
+        doNothing().when(sender).sendPrivateMessage("Hello User!! \n" +
+                "!help untuk melihat command yang tersedia", event);
 
         command.execute(args, event);
     }

@@ -16,7 +16,8 @@ public class HelloCommand implements Command {
     @Override
     public void execute(String[] args, PrivateMessageReceivedEvent event) {
         String userId = event.getAuthor().getId();
-        String reply = "Hello " + googleService.getUserInfo(userId) + "!!";
+        String reply = "Hello " + googleService.getUserInfo(userId) + "!! \n"
+                + "!help untuk melihat command yang tersedia";
         sender.sendPrivateMessage(reply, event);
     }
 
