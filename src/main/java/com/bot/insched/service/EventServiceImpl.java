@@ -8,8 +8,8 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,7 +173,9 @@ public class EventServiceImpl implements EventService {
                 eventId = eventCalendar.getId();
             }
             List<EventAttendee> attendeeList = eventCalendar.getAttendees();
-            if (attendeeList == null) attendeeList = new ArrayList<EventAttendee>();
+            if (attendeeList == null) {
+                attendeeList = new ArrayList<EventAttendee>();
+            }
 
             // cek kapasitas
             if (eventModel.getCapacity() < attendeeList.size()) {
@@ -210,7 +212,7 @@ public class EventServiceImpl implements EventService {
             eventCalendar.setStart(new EventDateTime().setDateTime(dateTime));
             dateTime = new DateTime(eventModel.getEndTime().format(dateFormatter));
             eventCalendar.setEnd(new EventDateTime().setDateTime(dateTime));
-            eventCalendar.setDescription(eventModel.getDescription());
+            eventCalendar.setSummary(eventModel.getDescription());
             Event newEvent = calendar.events().insert("primary", eventCalendar).execute();
             eventModel.setIdGoogleEvent(eventCalendar.getId());
             eventRepository.save(eventModel);
