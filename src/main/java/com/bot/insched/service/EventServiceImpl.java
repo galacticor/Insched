@@ -189,6 +189,7 @@ public class EventServiceImpl implements EventService {
             Event eventCalendar = getEventService(discordId, eventId);
 
             // cek eventnya sudah ada atau belum di google calendar
+            log.warn("######### : CalendarEvent {}", eventCalendar);
             if (eventCalendar == null) {
                 eventCalendar = createSlotEventService(discordId, eventId, eventModel);
                 eventId = eventCalendar.getId();
@@ -229,15 +230,15 @@ public class EventServiceImpl implements EventService {
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
-            DateTime dateTime = new DateTime(eventModel.getStartTime().format(dateFormatter));
+            DateTime dateTime = new DateTime(eventModel.getStartTime().minusHours(7).format(dateFormatter));
             eventCalendar.setStart(new EventDateTime().setDateTime(dateTime));
-            dateTime = new DateTime(eventModel.getEndTime().format(dateFormatter));
+            dateTime = new DateTime(eventModel.getEndTime().minusHours(7).format(dateFormatter));
             eventCalendar.setEnd(new EventDateTime().setDateTime(dateTime));
             eventCalendar.setSummary(eventModel.getDescription());
-            Event newEvent = calendar.events().insert("primary", eventCalendar).execute();
+            eventCalendar = calendar.events().insert("primary", eventCalendar).execute();
             eventModel.setIdGoogleEvent(eventCalendar.getId());
             eventRepository.save(eventModel);
-            return newEvent;
+            return eventCalendar;
 
         } catch (Exception e) {
             log.error("------ Error when createSlotEventService: {}", e.getMessage());
