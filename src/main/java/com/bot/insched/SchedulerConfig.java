@@ -82,6 +82,7 @@ public class SchedulerConfig {
             embed.setDescription(message);
 
             Date date = Date.from(event.getStartTime()
+                            .minusHours(7)
                             .minusMinutes(minutes)
                             .atZone(ZoneId.systemDefault())
                             .toInstant());
