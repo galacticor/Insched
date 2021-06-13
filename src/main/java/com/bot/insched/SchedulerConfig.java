@@ -82,9 +82,8 @@ public class SchedulerConfig {
             embed.setDescription(message);
 
             Date date = Date.from(event.getStartTime()
-                            .minusHours(7)
                             .minusMinutes(minutes)
-                            .atZone(ZoneId.systemDefault())
+                            .atZone(ZoneId.of("Asia/Jakarta"))
                             .toInstant());
 
             String ownerId = event.getAppointment().getOwner().getIdDiscord();
